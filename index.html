@@ -1,60 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>MD Naime Rahman</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Style -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Three.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
 </head>
 <body>
 
-<div class="container">
+  <!-- 3D Canvas -->
+  <canvas id="bg"></canvas>
 
+  <!-- Overlay Content -->
   <header class="hero">
-    <img src="assets/logo/naim.svg" class="logo" alt="NAIM logo">
+    <img src="assets/logo/naim.svg" alt="NAIM logo" class="logo">
 
     <h1>MD Naime Rahman</h1>
-    <p class="tagline">
-      Electronics student · Circuit thinker · Documentation focused
+    <p>
+      Electronics student · Circuit thinker ·<br>
+      Long-term engineering documentation
     </p>
   </header>
 
-  <nav class="nav">
-    <a href="about.html">About</a>
-    <a href="notes/index.html">Notes</a>
-    <a href="projects/index.html">Projects</a>
-  </nav>
-
-  <main>
-    <p class="intro">
-      I focus on understanding electronics from fundamentals.
-      This website is a long-term archive of my notes, projects,
-      and engineering thinking.
-    </p>
-
-    <section class="cards">
-      <div class="card">
-        <h3>Electronics Notes</h3>
-        <p>Clear explanations of concepts written for long-term understanding.</p>
-      </div>
-
-      <div class="card">
-        <h3>Projects</h3>
-        <p>Practical circuit designs with reasoning and lessons learned.</p>
-      </div>
-
-      <div class="card">
-        <h3>Engineering Philosophy</h3>
-        <p>Simplicity, reliability, and documentation over noise.</p>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>© MD Naime Rahman</p>
-  </footer>
-
-</div>
-
+  <script src="main.js"></script>
 </body>
 </html>
