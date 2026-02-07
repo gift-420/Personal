@@ -1,99 +1,99 @@
-// Scene
-const scene = new THREE.Scene();
+/* ============================
+   MENU TOGGLE
+============================ */
 
-// Camera
-const camera = new THREE.PerspectiveCamera(
-  60,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
-camera.position.z = 7;
-
-// Renderer
-const renderer = new THREE.WebGLRenderer({
-  canvas: document.getElementById("bg"),
-  antialias: true,
-  alpha: true
-});
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
-
-// Circuit geometry
-const geoOuter = new THREE.IcosahedronGeometry(2.2, 2);
-const matOuter = new THREE.MeshBasicMaterial({
-  color: 0x00d4ff,
-  wireframe: true,
-  transparent: true,
-  opacity: 0.45
-});
-const circuitOuter = new THREE.Mesh(geoOuter, matOuter);
-scene.add(circuitOuter);
-
-const geoInner = new THREE.OctahedronGeometry(1.2, 1);
-const matInner = new THREE.MeshBasicMaterial({
-  color: 0x00aacc,
-  wireframe: true,
-  transparent: true,
-  opacity: 0.25
-});
-const circuitInner = new THREE.Mesh(geoInner, matInner);
-scene.add(circuitInner);
-
-// Light
-scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-
-// Mouse
-let mouseX = 0;
-let mouseY = 0;
-
-document.addEventListener("mousemove", e => {
-  mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-});
-
-// Logo
-const logo = document.querySelector(".site-logo img");
-
-// Pulse clock
-let t = 0;
-
-// Animation
-function animate() {
-  requestAnimationFrame(animate);
-  t += 0.02;
-
-  circuitOuter.rotation.x += 0.0012;
-  circuitOuter.rotation.y += 0.0016;
-  circuitInner.rotation.x -= 0.001;
-  circuitInner.rotation.y -= 0.0014;
-
-  circuitOuter.rotation.z = Math.sin(t) * 0.15;
-  circuitInner.rotation.z = -Math.sin(t + 1.5) * 0.12;
-
-  matOuter.opacity = 0.35 + Math.sin(t) * 0.15;
-  matInner.opacity = 0.2 + Math.sin(t + 1.5) * 0.1;
-
-  if (logo) {
-    logo.style.transform = `translate(${mouseX * 6}px, ${mouseY * 6}px)`;
-  }
-
-  renderer.render(scene, camera);
-}
-
-animate();
-
-// Resize
-window.addEventListener("resize", () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
-
-// Menu
 const menuBtn = document.getElementById("menuBtn");
 const menuOverlay = document.getElementById("menuOverlay");
 const menuClose = document.getElementById("menuClose");
 
-menuBtn.onclick = () => menuOverlay.classList.add("active");
-menuClose.onclick = () => menuOverlay.classList.remove("active");
+function openMenu() {
+  menuOverlay.classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+
+function closeMenu() {
+  menuOverlay.classList.remove("active");
+  document.body.style.overflow = "";
+}
+
+menuBtn.addEventListener("click", openMenu);
+menuClose.addEventListener("click", closeMenu);
+
+// Close menu when clicking outside nav
+menuOverlay.addEventListener("click", (e) => {
+  if (e.target === menuOverlay) {
+    closeMenu();
+  }
+});
+
+// ESC key close
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    closeMenu();
+  }
+});
+
+/* ============================
+   LOGO PARALLAX (SUBTLE)
+============================ */
+
+const logo = document.querySelector(".site-logo img");
+
+let targetX = 0;
+let targetY = 0;
+let currentX = 0;
+let currentY = 0;
+
+document.addEventListener("mousemove", (e) => {
+  targetX = (e.clientX / window.innerWidth - 0.5) * 10;
+  targetY = (e.clientY / window.innerHeight - 0.5) * 10;
+});
+
+function animateLogo() {
+  currentX += (targetX - currentX) * 0.08;
+  currentY += (targetY - currentY) * 0.08;
+
+  if (logo) {
+    logo.style.transform =
+      `translate(${currentX}px, ${currentY}px)`;
+  }
+
+  requestAnimationFrame(animateLogo);
+}
+
+animateLogo();
+
+/* ============================
+   SCROLL TEXT AUTO FADE
+============================ */
+
+const scrollText = document.querySelector(".scroll");
+
+let scrolled = false;
+
+window.addEventListener("scroll", () => {
+  if (!scrollText) return;
+
+  if (window.scrollY > 30 && !scrolled) {
+    scrollText.style.opacity = "0";
+    scrollText.style.transition = "0.5s ease";
+    scrolled = true;
+  }
+});
+
+/* ============================
+   VIDEO SAFETY (MOBILE)
+============================ */
+
+const bgVideo = document.getElementById("bg-video");
+
+if (bgVideo) {
+  bgVideo.addEventListener("loadeddata", () => {
+    bgVideo.classList.add("ready");
+  });
+
+  // Fallback play (mobile)
+  document.addEventListener("touchstart", () => {
+    bgVideo.play().catch(() => {});
+  }, { once: true });
+}
