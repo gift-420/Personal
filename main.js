@@ -8,7 +8,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-camera.position.z = 6;
+camera.position.z = 7;
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({
@@ -19,43 +19,81 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 
-// Geometry (electronics-style)
-const geometry = new THREE.TorusKnotGeometry(1.6, 0.45, 160, 32);
+// Circuit geometry
+const geoOuter = new THREE.IcosahedronGeometry(2.2, 2);
+const matOuter = new THREE.MeshBasicMaterial({
+  color: 0x00d4ff,
+  wireframe: true,
+  transparent: true,
+  opacity: 0.45
+});
+const circuitOuter = new THREE.Mesh(geoOuter, matOuter);
+scene.add(circuitOuter);
 
-// Material
-const material = new THREE.MeshStandardMaterial({
-  color: 0x00aaff,
-  metalness: 0.7,
-  roughness: 0.25
+const geoInner = new THREE.OctahedronGeometry(1.2, 1);
+const matInner = new THREE.MeshBasicMaterial({
+  color: 0x00aacc,
+  wireframe: true,
+  transparent: true,
+  opacity: 0.25
+});
+const circuitInner = new THREE.Mesh(geoInner, matInner);
+scene.add(circuitInner);
+
+// Light
+scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+
+// Mouse
+let mouseX = 0;
+let mouseY = 0;
+
+document.addEventListener("mousemove", e => {
+  mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
 });
 
-// Mesh
-const knot = new THREE.Mesh(geometry, material);
-scene.add(knot);
+// Logo
+const logo = document.querySelector(".site-logo img");
 
-// Lights
-const ambient = new THREE.AmbientLight(0xffffff, 0.4);
-scene.add(ambient);
+// Pulse clock
+let t = 0;
 
-const pointLight = new THREE.PointLight(0x00ccff, 1.2);
-pointLight.position.set(4, 4, 6);
-scene.add(pointLight);
-
-// Animation loop
+// Animation
 function animate() {
   requestAnimationFrame(animate);
+  t += 0.02;
 
-  knot.rotation.x += 0.002;
-  knot.rotation.y += 0.003;
+  circuitOuter.rotation.x += 0.0012;
+  circuitOuter.rotation.y += 0.0016;
+  circuitInner.rotation.x -= 0.001;
+  circuitInner.rotation.y -= 0.0014;
+
+  circuitOuter.rotation.z = Math.sin(t) * 0.15;
+  circuitInner.rotation.z = -Math.sin(t + 1.5) * 0.12;
+
+  matOuter.opacity = 0.35 + Math.sin(t) * 0.15;
+  matInner.opacity = 0.2 + Math.sin(t + 1.5) * 0.1;
+
+  if (logo) {
+    logo.style.transform = `translate(${mouseX * 6}px, ${mouseY * 6}px)`;
+  }
 
   renderer.render(scene, camera);
 }
 
 animate();
 
-// Responsive
+// Resize
 window.addEventListener("resize", () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
+// Menu
+const menuBtn = document.getElementById("menuBtn");
+const menuOverlay = document.getElementById("menuOverlay");
+const menuClose = document.getElementById("menuClose");
+
+menuBtn.onclick = () => menuOverlay.classList.add("active");
+menuClose.onclick = () => menuOverlay.classList.remove("active");
