@@ -1,33 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 100">
-
-  <!-- NAME -->
-  <text x="10" y="58"
-        font-size="54"
-        font-family="Georgia, 'Times New Roman', serif"
-        letter-spacing="7"
-        fill="#000000">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80">
+  <text x="0" y="55"
+    font-size="56"
+    font-family="Georgia, serif"
+    letter-spacing="6"
+    fill="white">
     NAIM
   </text>
 
-  <!-- STYLISH UNDERLINE -->
-  <path d="M10 75
-           Q40 74 70 75
-           Q100 76 130 75
-           Q160 74 190 75"
-        fill="none"
-        stroke="#000000"
-        stroke-width="3"
-        stroke-linecap="round"/>
+  <line x1="0" y1="70" x2="160" y2="70"
+    stroke="white"
+    stroke-width="3"
+    stroke-linecap="round"/>
 
-  <!-- ACCENT NODE -->
-  <circle cx="200" cy="75" r="3.2" fill="#000000"/>
-
-  <!-- ELECTRONICS TICK -->
-  <path d="M215 75 L215 63 L228 63"
-        fill="none"
-        stroke="#000000"
-        stroke-width="3"
-        stroke-linecap="round"
-        stroke-linejoin="round"/>
-
+  <circle cx="180" cy="70" r="4" fill="white"/>
 </svg>
