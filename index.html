@@ -5,25 +5,52 @@
   <title>MD Naime Rahman</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Style -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Three.js CDN -->
+  <!-- Three.js -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
 </head>
 <body>
 
-  <!-- 3D Canvas -->
+  <!-- Left top logo -->
+  <div class="site-logo">
+    <img src="assets/logo/naim.svg" alt="NAIM logo">
+  </div>
+
+  <!-- Right top menu button -->
+  <div class="menu-btn" id="menuBtn">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <!-- Fullscreen menu -->
+  <div class="menu-overlay" id="menuOverlay">
+    <div class="menu-close" id="menuClose">✕</div>
+
+    <nav class="menu-nav">
+      <a href="#">HOME</a>
+      <a href="#">ABOUT</a>
+      <a href="#">WORK</a>
+      <a href="#">CONTACT</a>
+    </nav>
+
+    <div class="menu-tagline">
+      <p>ELECTRONICS ENGINEER</p>
+      <p>AI EXPERT</p>
+      <p>CIRCUIT & SYSTEM DESIGN</p>
+    </div>
+  </div>
+
+  <!-- 3D background -->
   <canvas id="bg"></canvas>
 
-  <!-- Overlay Content -->
+  <!-- Center hero -->
   <header class="hero">
-    <img src="assets/logo/naim.svg" alt="NAIM logo" class="logo">
-
-    <h1>MD Naime Rahman</h1>
+    <h1>ELECTRONICS ENGINEER</h1>
     <p>
-      Electronics student · Circuit thinker ·<br>
-      Long-term engineering documentation
+      AI Systems · Circuit Design · Signal Thinking<br>
+      Engineering clarity over noise
     </p>
   </header>
 
