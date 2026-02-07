@@ -4,56 +4,55 @@
   <meta charset="UTF-8" />
   <title>MD Naime Rahman</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Three.js -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
 </head>
 <body>
 
-  <!-- Left top logo -->
+<!-- Background Video -->
+<video id="bg-video" autoplay muted loop playsinline>
+  <source src="assets/video/hero.mp4" type="video/mp4" />
+</video>
+
+<!-- Header -->
+<header class="top-bar">
   <div class="site-logo">
     <img src="assets/logo/naim.svg" alt="NAIM logo">
   </div>
 
-  <!-- Right top menu button -->
   <div class="menu-btn" id="menuBtn">
     <span></span>
     <span></span>
     <span></span>
   </div>
+</header>
 
-  <!-- Fullscreen menu -->
-  <div class="menu-overlay" id="menuOverlay">
-    <div class="menu-close" id="menuClose">✕</div>
+<!-- Menu Overlay -->
+<div class="menu-overlay" id="menuOverlay">
+  <div class="menu-close" id="menuClose">✕</div>
+  <nav>
+    <a href="#">01 · HOME</a>
+    <a href="#">02 · ABOUT</a>
+    <a href="#">03 · WORK</a>
+    <a href="#">04 · CONTACT</a>
+  </nav>
+</div>
 
-    <nav class="menu-nav">
-      <a href="#">HOME</a>
-      <a href="#">ABOUT</a>
-      <a href="#">WORK</a>
-      <a href="#">CONTACT</a>
-    </nav>
+<!-- Hero Section -->
+<main class="hero">
+  <h1 class="hero-title">
+    ELECTRONICS<br>
+    <span>AI EXPERT</span>
+  </h1>
 
-    <div class="menu-tagline">
-      <p>ELECTRONICS ENGINEER</p>
-      <p>AI EXPERT</p>
-      <p>CIRCUIT & SYSTEM DESIGN</p>
-    </div>
+  <p class="hero-sub">
+    Circuit thinker · Electronics engineer · AI systems
+  </p>
+
+  <div class="scroll">
+    Scroll to explore
   </div>
+</main>
 
-  <!-- 3D background -->
-  <canvas id="bg"></canvas>
-
-  <!-- Center hero -->
-  <header class="hero">
-    <h1>ELECTRONICS ENGINEER</h1>
-    <p>
-      AI Systems · Circuit Design · Signal Thinking<br>
-      Engineering clarity over noise
-    </p>
-  </header>
-
-  <script src="main.js"></script>
+<script src="main.js"></script>
 </body>
 </html>
