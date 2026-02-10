@@ -1,0 +1,94 @@
+@import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@300;500;700&display=swap");
+
+:root {
+  --first-color: #00f7ff;
+  --bg-color: #05080d;
+  --card-color: #0c1218;
+  --text-color: #e6f1ff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Unbounded", sans-serif;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 1rem;
+}
+
+.section {
+  padding: 4rem 0;
+}
+
+.section__title {
+  text-align: center;
+  color: var(--first-color);
+  margin-bottom: 2rem;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav__list {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav__link {
+  color: var(--text-color);
+}
+
+.home img {
+  width: 260px;
+}
+
+.button {
+  background: var(--first-color);
+  color: #000;
+  padding: .7rem 1.4rem;
+  border-radius: .5rem;
+  display: inline-block;
+}
+
+.card {
+  background: var(--card-color);
+  padding: 1.5rem;
+  border-radius: .6rem;
+  border: 1px solid rgba(0,255,255,.2);
+}
+
+.skill__bar {
+  background: #111;
+  height: 6px;
+  margin-bottom: 1rem;
+}
+
+.skill__value {
+  background: var(--first-color);
+  height: 100%;
+}
+
+.scrollup {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--first-color);
+  padding: .4rem;
+  border-radius: .4rem;
+  display: none;
+}
+.show-scroll {
+  display: block;
+}
