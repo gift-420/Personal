@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naime Rahman - Projects</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        /* CSS Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark-bg: #000000;
+            --dark-gray: #111111;
+            --accent-blue: #00CED1;
+            --light-text: #FFFFFF;
+            --gray-text: #CCCCCC;
+            --transition: all 0.3s ease;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 15px 0;
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-link {
+            font-size: 16px;
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--accent-blue);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-blue);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--light-text);
+        }
+
+        /* Projects Hero Section */
+        .projects-hero {
+            padding: 150px 0 80px;
+            text-align: center;
+            background-color: var(--dark-gray);
+        }
+
+        .projects-hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--accent-blue);
+        }
+
+        .projects-hero p {
+            font-size: 18px;
+            color: var(--gray-text);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Projects Grid */
+        .projects-section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 60px;
+            color: var(--light-text);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--accent-blue);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .project-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 206, 209, 0.2);
+            border-color: var(--accent-blue);
+        }
+
+        .project-img {
+            height: 250px;
+            width: 100%;
+            background-color: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-blue);
+            font-size: 70px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--accent-blue);
+            color: var(--dark-bg);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .project-info {
+            padding: 30px;
+        }
+
+        .project-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--light-text);
+        }
+
+        .project-desc {
+            color: var(--gray-text);
+            font-size: 16px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .project-features {
+            margin-bottom: 25px;
+        }
+
+        .project-features h4 {
+            color: var(--accent-blue);
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .project-features ul {
+            padding-left: 20px;
+        }
+
+        .project-features li {
+            color: var(--gray-text);
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .project-btn {
+            background-color: transparent;
+            color: var(--accent-blue);
+            border: 2px solid var(--accent-blue);
+            padding: 10px 25px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-block;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .project-btn:hover {
+            background-color: rgba(0, 206, 209, 0.1);
+        }
+
+        /* Project Details Modal */
+        .project-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 40px 20px;
+        }
+
+        .modal-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--dark-gray);
+            border-radius: 12px;
+            padding: 40px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 28px;
+            color: var(--light-text);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--accent-blue);
+        }
+
+        .modal-title {
+            font-size: 32px;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+        }
+
+        .modal-desc {
+            color: var(--gray-text);
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .modal-img {
+            width: 100%;
+            height: 300px;
+            background-color: #333;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-blue);
+            font-size: 60px;
+        }
+
+        .modal-features, .modal-tech, .modal-outcome {
+            margin-bottom: 30px;
+        }
+
+        .modal-features h4, .modal-tech h4, .modal-outcome h4 {
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .modal-features ul, .modal-tech ul {
+            padding-left: 20px;
+        }
+
+        .modal-features li, .modal-tech li {
+            color: var(--gray-text);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .modal-outcome p {
+            color: var(--gray-text);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Back to Home Button */
+        .back-home {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 12px 28px;
+            background-color: var(--accent-blue);
+            color: var(--dark-bg);
+            border-radius: 4px;
+            font-weight: 500;
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+        }
+
+        .back-home:hover {
+            background-color: #00b6b8;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 206, 209, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            background-color: var(--dark-gray);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .copyright {
+            color: var(--gray-text);
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 65px;
+                right: -100%;
+                flex-direction: column;
+                background-color: rgba(0, 0, 0, 0.98);
+                width: 100%;
+                text-align: center;
+                padding: 25px 0;
+                gap: 25px;
+                transition: var(--transition);
+                z-index: 999;
+            }
+
+            .nav-menu.active {
+                right: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .projects-hero {
+                padding: 120px 0 60px;
+            }
+
+            .projects-hero h1 {
+                font-size: 36px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .modal-content {
+                padding: 30px 20px;
+            }
+
+            .modal-title {
+                font-size: 28px;
+            }
+        }
+
+        @media screen and (max-width: 576px) {
+            .projects-hero {
+                padding: 100px 0 50px;
+            }
+
+            .projects-hero h1 {
+                font-size: 32px;
+            }
+
+            .section-title {
+                font-size: 28px;
+                margin-bottom: 40px;
+            }
+
+            .project-info {
+                padding: 20px;
+            }
+
+            .project-title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container nav-container">
+            <a href="index.html" class="logo">Naime</a>
+            <div class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="ri-menu-line"></i>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="projects.html" class="nav-link">Projects</a></li>
+                <li><a href="index.html#education" class="nav-link">Education</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Projects Hero Section -->
+    <section class="projects-hero">
+        <div class="container">
+            <h1>My Electronics Projects</h1>
+            <p>Explore my innovative electronics projects ranging from IoT systems to renewable energy solutions and automation systems.</p>
+        </div>
+    </section>
+
+    <!-- Projects Grid Section -->
+    <section class="projects-section">
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="projects-grid">
+                <!-- Project 1 - Automatic Street Light -->
+                <div class="project-card" onclick="openProjectModal('street-light')">
+                    <div class="project-img">
+                        <i class="ri-lightbulb-line"></i>
+                        <div class="project-tag">Energy Efficiency</div>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Automatic Street Light System</h3>
+                        <p class="project-desc">
+                            LDR-based automatic street light system using relay & microcontroller for energy efficiency.
+                        </p>
+                        <div class="project-features">
+                            <h4>Key Features:</h4>
+                            <ul>
+                                <li>LDR-based light sensing</li>
+                                <li>Microcontroller control</li>
+                                <li>Relay switching</li>
+                                <li>Energy efficient design</li>
+                            </ul>
+                        </div>
+                        <a href="#" class="project-btn">View Project</a>
+                    </div>
+                </div>
+                
+                <!-- Project 2 - Solar Inverter -->
+                <div class="project-card" onclick="openProjectModal('solar-inverter')">
+                    <div class="project-img">
+                        <i class="ri-sun-line"></i>
+                        <div class="project-tag">Renewable Energy</div>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Solar Inverter System</h3>
+                        <p class="project-desc">
+                            Design and implementation of a solar inverter with battery management and protection circuits.
+                        </p>
+                        <div class="project-features">
+                            <h4>Key Features:</h4>
+                            <ul>
+                                <li>Solar power conversion</li>
+                                <li>Battery management system</li>
+                                <li>Protection circuits</li>
+                                <li>Pure sine wave output</li>
+                            </ul>
+                        </div>
+                        <a href="#" class="project-btn">Details</a>
+                    </div>
+                </div>
+                
+                <!-- Project 3 - IoT Home Automation -->
+                <div class="project-card" onclick="openProjectModal('iot-home')">
+                    <div class="project-img">
+                        <i class="ri-home-smart-line"></i>
+                        <div class="project-tag">IoT System</div>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">IoT Home Automation</h3>
+                        <p class="project-desc">
+                            Smart home automation system using ESP32, sensors, and mobile app control.
+                        </p>
+                        <div class="project-features">
+                            <h4>Key Features:</h4>
+                            <ul>
+                                <li>ESP32 microcontroller</li>
+                                <li>Multiple sensor integration</li>
+                                <li>Mobile app control</li>
+                                <li>Remote monitoring</li>
+                            </ul>
+                        </div>
+                        <a href="#" class="project-btn">View Demo</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Back to Home Button -->
+            <div style="text-align: center; margin-top: 60px;">
+                <a href="index.html" class="back-home">
+                    <i class="ri-arrow-left-line"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project 1 Modal -->
+    <div id="street-light-modal" class="project-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('street-light-modal')">
+                <i class="ri-close-line"></i>
+            </span>
+            <h2 class="modal-title">Automatic Street Light System</h2>
+            <p class="modal-desc">
+                An intelligent street lighting system that automatically turns on/off based on ambient light conditions using LDR sensors. The system uses a microcontroller to process sensor data and control relay circuits for efficient energy management.
+            </p>
+            
+            <div class="modal-img">
+                <i class="ri-lightbulb-line"></i>
+            </div>
+            
+            <div class="modal-features">
+                <h4>Features</h4>
+                <ul>
+                    <li>Automatic ON/OFF based on light intensity</li>
+                    <li>Energy-efficient operation</li>
+                    <li>Relay-based power switching</li>
+                    <li>Microcontroller (Arduino/ESP8266) control</li>
+                    <li>LDR sensor for light detection</li>
+                    <li>Manual override capability</li>
+                    <li>Low power consumption</li>
+                </ul>
+            </div>
+            
+            <div class="modal-tech">
+                <h4>Technologies Used</h4>
+                <ul>
+                    <li>Arduino/ATmega328P Microcontroller</li>
+                    <li>LDR (Light Dependent Resistor)</li>
+                    <li>Relay Module (5V/12V)</li>
+                    <li>LED Street Lights</li>
+                    <li>PCB Design (Eagle/KiCAD)</li>
+                    <li>C++ Programming</li>
+                    <li>Power Supply Circuit</li>
+                </ul>
+            </div>
+            
+            <div class="modal-outcome">
+                <h4>Project Outcome</h4>
+                <p>
+                    This project successfully demonstrates an energy-efficient street lighting solution that can reduce electricity consumption by up to 60% compared to traditional street lights. The system automatically adjusts to natural light conditions, eliminating the need for manual operation and ensuring optimal energy usage.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project 2 Modal -->
+    <div id="solar-inverter-modal" class="project-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('solar-inverter-modal')">
+                <i class="ri-close-line"></i>
+            </span>
+            <h2 class="modal-title">Solar Inverter System</h2>
+            <p class="modal-desc">
+                A complete solar power solution that converts DC power from solar panels to AC power for household use. Includes battery management, protection circuits, and efficient power conversion for reliable renewable energy utilization.
+            </p>
+            
+            <div class="modal-img">
+                <i class="ri-sun-line"></i>
+            </div>
+            
+            <div class="modal-features">
+                <h4>Features</h4>
+                <ul>
+                    <li>DC to AC power conversion</li>
+                    <li>Battery charging management</li>
+                    <li>Overcharge/Over-discharge protection</li>
+                    <li>Pure sine wave output</li>
+                    <li>MPPT (Maximum Power Point Tracking)</li>
+                    <li>LCD display for status monitoring</li>
+                    <li>Multiple protection circuits</li>
+                </ul>
+            </div>
+            
+            <div class="modal-tech">
+                <h4>Technologies Used</h4>
+                <ul>
+                    <li>Solar Panels (100W-500W)</li>
+                    <li>Lead-acid/Lithium batteries</li>
+                    <li>Inverter circuit (H-bridge)</li>
+                    <li>Microcontroller for control</li>
+                    <li>Voltage/Current sensors</li>
+                    <li>PCB Design and fabrication</li>
+                    <li>Power electronics components</li>
+                </ul>
+            </div>
+            
+            <div class="modal-outcome">
+                <h4>Project Outcome</h4>
+                <p>
+                    The solar inverter system provides a reliable off-grid power solution with 90% efficiency in power conversion. It successfully manages battery charging/discharging cycles and provides clean AC power for various household appliances, contributing to sustainable energy utilization.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project 3 Modal -->
+    <div id="iot-home-modal" class="project-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('iot-home-modal')">
+                <i class="ri-close-line"></i>
+            </span>
+            <h2 class="modal-title">IoT Home Automation System</h2>
+            <p class="modal-desc">
+                A comprehensive smart home automation system that integrates various sensors and actuators with ESP32 microcontroller for remote monitoring and control through a mobile application.
+            </p>
+            
+            <div class="modal-img">
+                <i class="ri-home-smart-line"></i>
+            </div>
+            
+            <div class="modal-features">
+                <h4>Features</h4>
+                <ul>
+                    <li>Remote control via mobile app</li>
+                    <li>Real-time sensor monitoring</li>
+                    <li>Wi-Fi/Bluetooth connectivity</li>
+                    <li>Voice control integration</li>
+                    <li>Scheduled automation</li>
+                    <li>Energy consumption tracking</li>
+                    <li>Security system integration</li>
+                </ul>
+            </div>
+            
+            <div class="modal-tech">
+                <h4>Technologies Used</h4>
+                <ul>
+                    <li>ESP32 Microcontroller</li>
+                    <li>DHT11/DHT22 Temperature-Humidity sensors</li>
+                    <li>PIR Motion sensors</li>
+                    <li>Relay modules for appliance control</li>
+                    <li>Blynk/Adafruit IO platform</li>
+                    <li>Mobile App development</li>
+                    <li>MQTT protocol for communication</li>
+                </ul>
+            </div>
+            
+            <div class="modal-outcome">
+                <h4>Project Outcome</h4>
+                <p>
+                    This IoT home automation system provides seamless control of home appliances, environmental monitoring, and security features. Users can control their home remotely, receive real-time notifications, and automate routines for enhanced comfort, security, and energy efficiency.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p class="copyright">© 2023 Naime Rahman - Electronics Engineering Diploma. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const navMenu = document.getElementById('nav-menu');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                mobileMenuBtn.innerHTML = navMenu.classList.contains('active') 
+                    ? '<i class="ri-close-line"></i>' 
+                    : '<i class="ri-menu-line"></i>';
+            });
+
+            // Close mobile menu when clicking on a link
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navMenu.classList.remove('active');
+                    mobileMenuBtn.innerHTML = '<i class="ri-menu-line"></i>';
+                });
+            });
+        });
+
+        // Project Modal Functions
+        function openProjectModal(projectId) {
+            const modalId = projectId + '-modal';
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto'; // Restore scrolling
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('project-modal')) {
+                event.target.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const modals = document.querySelectorAll('.project-modal');
+                modals.forEach(modal => {
+                    modal.style.display = 'none';
+                });
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script>
+</body>
+</html>
