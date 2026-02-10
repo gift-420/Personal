@@ -1,0 +1,48 @@
+/*=============== ELECTRONICS ADVANCED ===============*/
+
+/* PCB card glow */
+.card {
+  background: var(--container-color);
+  border: 1px solid rgba(0,255,255,.2);
+  border-radius: .75rem;
+  padding: 1.5rem;
+  transition: transform .3s, box-shadow .3s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 18px rgba(0,255,255,.25);
+}
+
+/* Skills voltage bar */
+.skill__bar {
+  height: 6px;
+  background: #0b0f14;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.skill__value {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--first-color),
+    #00ff9c
+  );
+}
+
+/* Scroll Up */
+.scrollup {
+  position: fixed;
+  right: 1.5rem;
+  bottom: -50%;
+  background: var(--first-color);
+  color: var(--black-color);
+  padding: .4rem;
+  border-radius: .4rem;
+  transition: .4s;
+}
+
+.show-scroll {
+  bottom: 2rem;
+}
