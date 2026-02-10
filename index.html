@@ -1,72 +1,188 @@
 <!DOCTYPE html>
-   <html lang="en">
-   <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kai Marx | Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Remix Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header" id="header">
+    <nav class="nav container">
+      <a href="#" class="nav__logo">
+        <span class="nav__logo-name">Kai Marx</span>
+      </a>
 
-      <!--=============== FAVICON ===============-->
-      <link rel="shortcut icon" href="assets/img/favicon.png" type="image/x-icon">
+      <div class="nav__menu" id="nav-menu">
+        <ul class="nav__list">
+          <li class="nav__item">
+            <a href="#home" class="nav__link active-link">Home</a>
+          </li>
+          <li class="nav__item">
+            <a href="#about" class="nav__link">About</a>
+          </li>
+          <li class="nav__item">
+            <a href="#projects" class="nav__link">Projects</a>
+          </li>
+          <li class="nav__item">
+            <a href="#contact" class="nav__link">Contact</a>
+          </li>
+        </ul>
 
-      <!--=============== REMIXICONS ===============-->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+        <!-- Close button -->
+        <div class="nav__close" id="nav-close">
+          <i class="ri-close-line"></i>
+        </div>
+      </div>
 
-      <!--=============== CSS ===============-->
-      <link rel="stylesheet" href="assets/css/styles.css">
+      <!-- Toggle button -->
+      <div class="nav__toggle" id="nav-toggle">
+        <i class="ri-menu-line"></i>
+      </div>
+    </nav>
+  </header>
 
-      <title>Responsive portfolio website Kai - Bedimcode</title>
-   </head>
-   <body>
-      <!--==================== HEADER ====================-->
-      <header class="header" id="header">
-         
-      </header>
+  <!-- MAIN -->
+  <main class="main">
+    <!-- HOME SECTION -->
+    <section class="home section" id="home">
+      <div class="home__container container grid">
+        <div class="home__content">
+          <h1 class="home__title">
+            Let's Do <br>
+            <span class="home__title-color">HARD WORK</span>
+          </h1>
+          <p class="home__description">
+            <span class="home__profession">WEBSITE DESIGNER | UI/UX DESIGNER | WEB DEVELOPER | SOFTWARE ENGINEER</span>
+            <br><br>
+            I create digital experiences that are beautiful, functional, and user‑centered.
+          </p>
+          <a href="#contact" class="button">Get In Touch</a>
+        </div>
 
-      <!--==================== MAIN ====================-->
-      <main class="main">
-         <!--==================== HOME ====================-->
-         <section class="home section" id="home">
-            
-         </section>
+        <div class="home__image">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Kai Marx">
+        </div>
+      </div>
+    </section>
 
-         <!--==================== ABOUT ====================-->
-         <section class="about section" id="about">
-            
-         </section>
+    <!-- ABOUT SECTION -->
+    <section class="about section" id="about">
+      <h2 class="section__title">About Me</h2>
+      <div class="about__container container grid">
+        <div class="about__image">
+          <img src="https://images.unsplash.com/photo-1557862921-37829c790f19?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="About Kai">
+        </div>
+        <div class="about__content">
+          <h3 class="about__subtitle">Creative Problem Solver</h3>
+          <p class="about__description">
+            With expertise across design, development, and product management, I bridge the gap between vision and execution. I specialize in creating responsive, accessible, and high‑performance digital products.
+          </p>
+          <div class="about__skills">
+            <h4>Core Skills:</h4>
+            <ul class="skills__list">
+              <li>UI/UX Design</li>
+              <li>Frontend Development</li>
+              <li>Product Strategy</li>
+              <li>Project Management</li>
+              <li>Digital Marketing</li>
+              <li>Content Creation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
 
-         <!--==================== PROJECTS ====================-->
-         <section class="projects section" id="projects">
-            
-         </section>
+    <!-- PROJECTS SECTION -->
+    <section class="projects section" id="projects">
+      <h2 class="section__title">Projects</h2>
+      <div class="projects__container container grid">
+        <div class="project__card">
+          <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Project 1">
+          <h3 class="project__title">E‑Commerce Platform</h3>
+          <p class="project__description">Full‑stack e‑commerce solution with React, Node.js, and MongoDB.</p>
+          <div class="project__tags">
+            <span>React</span>
+            <span>Node.js</span>
+            <span>MongoDB</span>
+          </div>
+          <a href="#" class="project__link">View Project →</a>
+        </div>
 
-         <!--==================== RESUME ====================-->
-         <section class="resume section" id="resume">
-            
-         </section>
+        <div class="project__card">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Project 2">
+          <h3 class="project__title">Travel App UI/UX</h3>
+          <p class="project__description">Mobile‑first travel application design with Figma and prototyping.</p>
+          <div class="project__tags">
+            <span>Figma</span>
+            <span>UI/UX</span>
+            <span>Prototyping</span>
+          </div>
+          <a href="#" class="project__link">View Project →</a>
+        </div>
 
-         <!--==================== CONTACT ====================-->
-         <section class="contact section" id="contact">
-            
-         </section>
-      </main>
+        <div class="project__card">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Project 3">
+          <h3 class="project__title">Corporate Website</h3>
+          <p class="project__description">Responsive corporate website with CMS integration and SEO optimization.</p>
+          <div class="project__tags">
+            <span>WordPress</span>
+            <span>PHP</span>
+            <span>JavaScript</span>
+          </div>
+          <a href="#" class="project__link">View Project →</a>
+        </div>
+      </div>
+    </section>
 
-      <!--==================== FOOTER ====================-->
-      <footer class="footer">
-         
-      </footer>
+    <!-- CONTACT SECTION -->
+    <section class="contact section" id="contact">
+      <h2 class="section__title">Contact</h2>
+      <div class="contact__container container grid">
+        <div class="contact__info">
+          <h3>Let's Work Together</h3>
+          <p>Have a project in mind? I'd love to hear about it.</p>
+          <div class="contact__details">
+            <p><i class="ri-mail-line"></i> hello@kaimarx.com</p>
+            <p><i class="ri-phone-line"></i> +1 (555) 123‑4567</p>
+            <p><i class="ri-map-pin-line"></i> San Francisco, CA</p>
+          </div>
+          <div class="contact__social">
+            <a href="#"><i class="ri-github-fill"></i></a>
+            <a href="#"><i class="ri-linkedin-fill"></i></a>
+            <a href="#"><i class="ri-dribbble-line"></i></a>
+            <a href="#"><i class="ri-twitter-fill"></i></a>
+          </div>
+        </div>
+        <form class="contact__form">
+          <input type="text" placeholder="Your Name" required>
+          <input type="email" placeholder="Your Email" required>
+          <textarea placeholder="Your Message" rows="5" required></textarea>
+          <button type="submit" class="button">Send Message</button>
+        </form>
+      </div>
+    </section>
+  </main>
 
-      <!--========== SCROLL UP ==========-->
-      
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__container container">
+      <p>&copy; 2024 Kai Marx. All Rights Reserved.</p>
+      <p>Made with <i class="ri-heart-fill"></i> and hard work.</p>
+    </div>
+  </footer>
 
-      <!--=============== SCROLLREVEAL ===============-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/scrollReveal.js/4.0.9/scrollreveal.min.js"></script>
+  <!-- SCROLL UP -->
+  <a href="#" class="scrollup" id="scroll-up">
+    <i class="ri-arrow-up-line"></i>
+  </a>
 
-      <!--=============== TYPED JS ===============-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.1.0/typed.umd.min.js"></script>
-
-      <!--=============== EMAIL JS ===============-->
-      <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
-      <!--=============== MAIN JS ===============-->
-      <script src="assets/js/main.js"></script>
-   </body>
-   </html>
+  <!-- SCROLL REVEAL -->
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <!-- MAIN JS -->
+  <script src="script.js"></script>
+</body>
+             </html>
