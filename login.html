@@ -35,6 +35,7 @@
             --accent: #a78bfa;
             --logo-border: #34d399;
             --green-glow: 0 0 25px rgba(52, 211, 153, 0.4);
+            --error-color: #f87171;
         }
         [data-theme="light"] {
             --bg-gradient: radial-gradient(circle at 50% 0%, #e0d8f0 0%, #f0eef5 65%, #f2f2f7 100%);
@@ -45,6 +46,7 @@
             --accent: #7c3aed;
             --logo-border: #059669;
             --green-glow: 0 0 25px rgba(5, 150, 105, 0.3);
+            --error-color: #dc2626;
         }
 
         body {
@@ -82,90 +84,43 @@
             padding: 30px 24px;
         }
 
-        /* ========= FIXED LOGO ========= */
         .logo-circle {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 2px solid var(--logo-border);
-            box-shadow: var(--green-glow);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-            overflow: hidden;           /* prevent overflow */
-            line-height: 1;
-            padding: 2px;              /* breathing space */
+            width: 64px; height: 64px; border-radius: 50%; background: var(--glass-bg);
+            backdrop-filter: blur(20px); border: 2px solid var(--logo-border);
+            box-shadow: var(--green-glow); display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px; overflow: hidden; line-height: 1; padding: 2px;
         }
-        .logo-text {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            width: 100%;
-            height: 100%;
-        }
-        .logo-text .bn {
-            font-family: var(--font-bengali);
-            font-size: 10px;            /* slightly smaller */
-            font-weight: 800;
-            color: var(--text);
-            line-height: 1.1;
-        }
-        .logo-text .en {
-            font-size: 7.5px;
-            font-weight: 600;
-            color: var(--text2);
-            letter-spacing: 0.4px;
-            line-height: 1.1;
-        }
+        .logo-text { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; width: 100%; height: 100%; }
+        .logo-text .bn { font-family: var(--font-bengali); font-size: 10px; font-weight: 800; color: var(--text); line-height: 1.1; }
+        .logo-text .en { font-size: 7.5px; font-weight: 600; color: var(--text2); letter-spacing: 0.4px; line-height: 1.1; }
 
         .input-box {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 14px;
-            padding: 14px 16px;
-            color: var(--text);
-            margin-bottom: 14px;
-            outline: none;
+            width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px; padding: 14px 16px; color: var(--text); margin-bottom: 14px; outline: none;
         }
-        .input-box:focus {
-            border-color: var(--accent);
-            background: rgba(255, 255, 255, 0.08);
-        }
+        .input-box:focus { border-color: var(--accent); background: rgba(255, 255, 255, 0.08); }
+
         .btn-submit {
-            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-            border: none;
-            padding: 14px;
-            border-radius: 14px;
-            color: white;
-            font-weight: 700;
-            cursor: pointer;
-            width: 100%;
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9); border: none; padding: 14px;
+            border-radius: 14px; color: white; font-weight: 700; cursor: pointer; width: 100%;
             box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
         }
-        .btn-submit:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
+        .btn-submit:hover { opacity: 0.9; transform: translateY(-2px); }
+
         .tab {
-            padding: 8px 12px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            background: transparent;
-            color: var(--text2);
-            border: none;
+            padding: 8px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer;
+            background: transparent; color: var(--text2); border: none;
         }
-        .tab.active {
-            background: #8b5cf6;
-            color: #fff;
+        .tab.active { background: #8b5cf6; color: #fff; }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.85rem;
+            margin-top: 12px;
+            text-align: center;
+            display: none;
         }
+        .error-message.show { display: block; }
     </style>
 </head>
 <body>
@@ -177,7 +132,7 @@
         </div>
     </div>
     <h2 class="text-xl font-bold text-center mb-1">Manager Portal</h2>
-    <p class="text-xs text-center mb-6" style="color: var(--text2);">M M NAIME RAHMAN</p>
+    <p class="text-xs text-center mb-6" style="color: var(--text2);">Secure Login for Management</p>
 
     <div class="grid grid-cols-2 gap-2 mb-5 p-1 bg-white/5 rounded-xl">
         <button class="tab active" id="tabAdmin" onclick="setRole('admin')">Main Manager</button>
@@ -188,29 +143,48 @@
         <input type="email" id="email" class="input-box" placeholder="Email Address" required>
         <input type="password" id="password" class="input-box" placeholder="Password" required>
         <button type="submit" class="btn-submit mt-2">Login to Console →</button>
+        <div class="error-message" id="errorMsg">Invalid email or password. Try again.</div>
     </form>
     <div class="text-center mt-6">
         <a href="index.html" class="text-xs text-purple-300 hover:underline">← Back to Public Dashboard</a>
     </div>
 </div>
+
 <script>
+    // URL থেকে role প্যারামিটার পড়ে ট্যাব সেট করা
+    const urlParams = new URLSearchParams(window.location.search);
+    const roleFromUrl = urlParams.get('role');
     let selectedRole = 'admin';
+
+    if (roleFromUrl === 'assistant') {
+        selectedRole = 'assistant';
+    }
+
     function setRole(role) {
         selectedRole = role;
         document.getElementById('tabAdmin').className = role === 'admin' ? 'tab active' : 'tab';
         document.getElementById('tabAssistant').className = role === 'assistant' ? 'tab active' : 'tab';
     }
+
+    // প্রাথমিক ট্যাব সেট
+    setRole(selectedRole);
+
     async function handleLogin(e) {
         e.preventDefault();
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
+        const errorEl = document.getElementById('errorMsg');
+        errorEl.classList.remove('show');
+
         try {
             await window.signInWithEmailAndPassword(window.auth, email, password);
             window.location.href = selectedRole === 'admin' ? 'admin.html' : 'assistant.html';
         } catch(err) {
-            alert('Login Failed: ' + err.message);
+            errorEl.textContent = err.message.replace('Firebase: ', '').replace(/\(auth\/.*\)\.?/, '');
+            errorEl.classList.add('show');
+            document.getElementById('password').value = '';
         }
     }
 </script>
 </body>
-</html>
+                                     </html>
