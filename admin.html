@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Console - Ma Achiya Villa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-bengali: 'Noto Sans Bengali', sans-serif;
+            --font-emoji: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+            --radius-xl: 32px;
+        }
+
+        [data-theme="dark"] {
+            --bg-gradient: radial-gradient(ellipse 90% 70% at 50% -30%, #1a1040 0%, #0d0d20 40%, #06060e 70%);
+            --glass-bg: rgba(18, 18, 40, 0.55);
+            --glass-bg-light: rgba(25, 25, 50, 0.35);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text: #fff;
+            --text2: rgba(255,255,255,0.7);
+            --text3: rgba(255,255,255,0.5);
+            --accent-purple: #a78bfa;
+            --accent-blue: #60a5fa;
+            --accent-green: #34d399;
+            --accent-red: #f87171;
+            --logo-border: #34d399;
+            --logo-border-glow: rgba(52,211,153,0.5);
+            --logo-inner-glow: rgba(52,211,153,0.15);
+            --glass-shadow: 0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.04);
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: var(--bg-gradient);
+            min-height: 100vh; margin: 0; padding: 24px 16px; color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+        }
+        body::after {
+            content: ''; position: fixed; inset: 0;
+            background: radial-gradient(circle at 20% 60%, var(--accent-purple) 0%, transparent 35%),
+                        radial-gradient(circle at 75% 25%, var(--accent-blue) 0%, transparent 35%);
+            opacity: 0.3; filter: blur(80px); pointer-events: none; z-index: 0;
+        }
+
+        .glass-container {
+            background: var(--glass-bg); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border); border-radius: var(--radius-xl);
+            padding: 20px; margin-bottom: 18px; box-shadow: var(--glass-shadow);
+            position: relative; z-index: 1;
+        }
+
+        .logo-wrapper {
+            position: relative;
+            display: inline-flex;
+            flex-shrink: 0;
+        }
+        .logo-circle {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: var(--glass-bg); backdrop-filter: blur(35px);
+            border: 2.5px solid var(--logo-border); 
+            box-shadow: 0 0 20px var(--logo-border-glow), inset 0 0 15px var(--logo-inner-glow);
+            display: flex; align-items: center; justify-content: center; margin-right: 12px;
+            overflow: hidden; box-sizing: border-box;
+        }
+        .logo-text {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; width: 100%; height: 100%; padding: 4px; box-sizing: border-box;
+        }
+        .logo-text .logo-bn {
+            font-size: 11px; font-weight: 800; color: var(--text);
+            font-family: var(--font-bengali); line-height: 1.1; white-space: nowrap;
+        }
+        .logo-text .logo-en {
+            font-size: 7.5px; font-weight: 700; color: var(--text3); letter-spacing: 0.8px;
+            line-height: 1.1; margin-top: 1px;
+        }
+
+        .section-heading {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+            font-size: 14px; font-weight: 600; color: var(--text2);
+        }
+        
+        .input-glass {
+            width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border);
+            border-radius: 14px; padding: 12px 14px; color: var(--text); font-size: 14px;
+            margin-bottom: 10px; outline: none; transition: all 0.3s;
+        }
+        .input-glass:focus { border-color: var(--accent-purple); background: rgba(255,255,255,0.08); }
+        select.input-glass option { background: #1a103c; color: #fff; }
+
+        .btn-push {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            border: 1px solid rgba(255,255,255,0.1); padding: 12px 18px; border-radius: 20px;
+            color: white; font-weight: 600; font-size: 14px; cursor: pointer; width: 100%;
+            display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(139,92,246,0.25);
+        }
+        .btn-push:active { transform: translateY(2px); }
+
+        .stat-card {
+            background: var(--glass-bg-light); border-radius: 18px; padding: 14px 8px; 
+            text-align: center; border: 1px solid var(--glass-border); backdrop-filter: blur(20px);
+        }
+
+        .btn-home, .btn-logout {
+            padding: 6px 12px; border-radius: 16px; font-size: 11px; font-weight: 500;
+            cursor: pointer; text-decoration: none; border: 1px solid;
+            display: inline-flex; align-items: center; gap: 4px; transition: 0.2s; backdrop-filter: blur(10px);
+        }
+        .btn-home { background: rgba(96,165,250,0.1); border-color: rgba(96,165,250,0.2); color: #60a5fa; margin-right: 6px;}
+        .btn-logout { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.2); color: #f87171;}
+    </style>
+</head>
+<body>
+<div class="max-w-md mx-auto relative z-10">
+    <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center gap-3">
+            <div class="logo-wrapper">
+                <div class="logo-circle">
+                    <div class="logo-text">
+                        <span class="logo-bn">মা আছিয়া</span>
+                        <span class="logo-en">VILLA</span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold">Manager Console</h1>
+                <p id="userEmail" class="text-xs" style="color: var(--text3);"></p>
+            </div>
+        </div>
+        <div class="flex items-center">
+            <a href="index.html" class="btn-home">🏠 Home</a>
+            <button class="btn-logout" onclick="window.AppConsole.handleLogout()">🚪 Logout</button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-2 mb-5">
+        <div class="stat-card">
+            <div class="text-xs" style="color: var(--text3);">Meal Rate</div>
+            <div class="text-lg font-bold" style="color: var(--accent-purple);" id="mealRate">৳0.00</div>
+        </div>
+        <div class="stat-card">
+            <div class="text-xs" style="color: var(--text3);">Total Meals</div>
+            <div class="text-lg font-bold" style="color: var(--accent-blue);" id="totalMeals">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="text-xs" style="color: var(--text3);">Total Bazar</div>
+            <div class="text-lg font-bold" style="color: var(--accent-green);" id="totalBazar">৳0</div>
+        </div>
+    </div>
+
+    <div class="glass-container">
+        <div class="section-heading">👤 Manager Designation</div>
+        <input type="text" id="managerNameInput" class="input-glass" placeholder="Enter manager name">
+        <button class="btn-push" onclick="window.AppConsole.updateManagerName()">💾 Save Name</button>
+    </div>
+
+    <div class="glass-container">
+        <div class="section-heading">👥 Add New Border</div>
+        <input type="text" id="newMemberName" class="input-glass" placeholder="Member full name">
+        <input type="number" id="newMemberDeposit" class="input-glass" placeholder="Initial deposit (৳)">
+        <button class="btn-push" onclick="window.AppConsole.addMember()">➕ Register Border</button>
+    </div>
+
+    <div class="glass-container">
+        <div class="section-heading">💰 Deposit Ledger Entry</div>
+        <select id="memberSelect" class="input-glass"><option value="">Select border...</option></select>
+        <input type="number" id="depositAmount" class="input-glass" placeholder="Amount (৳)">
+        <button class="btn-push" onclick="window.AppConsole.addDeposit()">💸 Record Payment</button>
+    </div>
+
+    <div class="glass-container">
+        <div class="section-heading">🛒 Bazar Expense Log</div>
+        <input type="date" id="bazarDate" class="input-glass">
+        <input type="text" id="purchaser" class="input-glass" placeholder="Purchaser name">
+        <input type="number" id="bazarAmount" class="input-glass" placeholder="Total cost (৳)">
+        <button class="btn-push" onclick="window.AppConsole.addBazar()">🛍️ Commit Expense</button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, updateDoc, doc, getDoc, getDocs, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCU0sucNd62U9aIcGGC3Tx7DW2tZNTvEVQ",
+        authDomain: "smart-mess-8a136.firebaseapp.com",
+        projectId: "smart-mess-8a136",
+        storageBucket: "smart-mess-8a136.firebasestorage.app",
+        messagingSenderId: "826713927112",
+        appId: "1:826713927112:web:288afbe242e6865c5b64fd"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    class EnterpriseConsole {
+        constructor() {
+            this.db = db;
+            this.auth = auth;
+            this.currentUser = null;
+            this.init();
+        }
+
+        init() {
+            onAuthStateChanged(this.auth, async (user) => {
+                // ইমেইল চেকিং বাদ দেওয়া হয়েছে, এখন ইউজার লগইন থাকলেই হবে
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                this.currentUser = user;
+                document.getElementById('userEmail').textContent = user.email || 'Admin';
+                await this.loadAllData();
+            });
+        }
+
+        async loadAllData() {
+            await this.loadMemberDropdown();
+            await this.refreshStats();
+            await this.loadManagerName();
+        }
+
+        async loadMemberDropdown() {
+            try {
+                const snap = await getDocs(collection(this.db, 'members'));
+                const select = document.getElementById('memberSelect');
+                let options = '<option value="">Select border...</option>';
+                snap.forEach(docSnap => {
+                    const d = docSnap.data();
+                    options += `<option value="${docSnap.id}">${d.name} (৳${d.totalDeposit || 0})</option>`;
+                });
+                select.innerHTML = options;
+            } catch(e) { console.error("Dropdown Error:", e); }
+        }
+
+        async loadManagerName() {
+            try {
+                const snap = await getDoc(doc(this.db, 'settings', 'manager'));
+                if (snap.exists()) document.getElementById('managerNameInput').value = snap.data().name || '';
+            } catch(e) {}
+        }
+
+        async refreshStats() {
+            try {
+                const membersSnap = await getDocs(collection(this.db, 'members'));
+                let totalMeals = 0;
+                membersSnap.forEach(d => totalMeals += (d.data().totalMeals || 0));
+                document.getElementById('totalMeals').textContent = totalMeals;
+
+                const bazarSnap = await getDocs(collection(this.db, 'bazar'));
+                let totalBazar = 0;
+                bazarSnap.forEach(d => totalBazar += (d.data().amount || 0));
+                document.getElementById('totalBazar').textContent = '৳' + totalBazar;
+
+                const rate = totalMeals > 0 ? (totalBazar / totalMeals) : 0;
+                document.getElementById('mealRate').textContent = '৳' + rate.toFixed(2);
+                await setDoc(doc(this.db, 'settings', 'mealRate'), { rate }, { merge: true });
+            } catch(e) {}
+        }
+
+        async addMember() {
+            const name = document.getElementById('newMemberName').value.trim();
+            const deposit = parseFloat(document.getElementById('newMemberDeposit').value) || 0;
+            if (!name) return alert('Enter member name!');
+            
+            try {
+                await addDoc(collection(this.db, 'members'), {
+                    name: name, 
+                    totalDeposit: deposit, 
+                    totalMeals: 0, 
+                    createdAt: serverTimestamp()
+                });
+                document.getElementById('newMemberName').value = '';
+                document.getElementById('newMemberDeposit').value = '';
+                await this.loadAllData();
+                alert('✅ Border registered successfully!');
+            } catch (error) {
+                alert('❌ Error Saving Data: ' + error.message);
+            }
+        }
+
+        async addDeposit() {
+            const memberId = document.getElementById('memberSelect').value;
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+            if (!memberId || isNaN(amount) || amount <= 0) return alert('Select border and enter valid amount!');
+            
+            try {
+                const ref = doc(this.db, 'members', memberId);
+                const snap = await getDoc(ref);
+                if (!snap.exists()) return alert('Member not found!');
+                await updateDoc(ref, { totalDeposit: (snap.data().totalDeposit || 0) + amount });
+                document.getElementById('depositAmount').value = '';
+                await this.loadAllData();
+                alert('✅ Payment recorded!');
+            } catch (error) {
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        async addBazar() {
+            const date = document.getElementById('bazarDate').value;
+            const purchaser = document.getElementById('purchaser').value.trim();
+            const amount = parseFloat(document.getElementById('bazarAmount').value);
+            if (!date || !purchaser || isNaN(amount) || amount <= 0) return alert('Fill all fields!');
+            
+            try {
+                await addDoc(collection(this.db, 'bazar'), {
+                    date, purchaser, amount, timestamp: serverTimestamp()
+                });
+                document.getElementById('bazarDate').value = '';
+                document.getElementById('purchaser').value = '';
+                document.getElementById('bazarAmount').value = '';
+                await this.loadAllData();
+                alert('✅ Expense logged!');
+            } catch (error) {
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        async updateManagerName() {
+            const newName = document.getElementById('managerNameInput').value.trim();
+            if (!newName) return alert('Enter name!');
+            
+            try {
+                await setDoc(doc(this.db, 'settings', 'manager'), { name: newName }, { merge: true });
+                alert('✅ Manager name updated in Database!');
+            } catch (error) {
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        handleLogout() {
+            signOut(this.auth).then(() => window.location.href = 'login.html');
+        }
+    }
+
+    window.AppConsole = new EnterpriseConsole();
+</script>
+</body>
+</html>
