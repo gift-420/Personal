@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <!-- ============ META & ENCODING ============ -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="Ma Achiya Villa - Premium Mess Management Dashboard">
+    <meta name="theme-color" content="#0a0a0f">
+    <title>Ma Achiya Villa – Dashboard</title>
+
+    <!-- ============ TAILWIND CSS CDN ============ -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'system-ui', 'sans-serif'],
+                        'bengali': ['Noto Sans Bengali', 'Vrinda', 'Bangla Sangam MN', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- ============ GOOGLE FONTS (Inter + Noto Sans Bengali) ============ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Noto+Sans+Bengali:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- ============ FIREBASE SDK ============ -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCU0sucNd62U9aIcGGC3Tx7DW2tZNTvEVQ",
+            authDomain: "smart-mess-8a136.firebaseapp.com",
+            projectId: "smart-mess-8a136",
+            storageBucket: "smart-mess-8a136.firebasestorage.app",
+            messagingSenderId: "826713927112",
+            appId: "1:826713927112:web:288afbe242e6865c5b64fd"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        window.db = db;
+        window.FirestoreDB = db;
+    </script>
+
+    <!-- ============ COMPREHENSIVE STYLESHEET (Original Premium Design) ============ -->
+    <style>
+        /* ================================================================
+           ROOT VARIABLES & DESIGN TOKENS
+           ================================================================ */
+        :root {
+            --font-primary: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            --font-bengali: 'Noto Sans Bengali', 'Vrinda', 'Bangla Sangam MN', 'Shonar Bangla', 'Arial Unicode MS', 'Kalpurush', 'Siyam Rupali', sans-serif;
+            --font-emoji: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'EmojiOne Color', 'Android Emoji', sans-serif;
+            --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+
+            --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+            --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --duration-fast: 0.2s;
+            --duration-normal: 0.4s;
+            --duration-slow: 0.6s;
+            --duration-slower: 0.8s;
+
+            --radius-sm: 12px;
+            --radius-md: 18px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --radius-2xl: 40px;
+            --radius-full: 9999px;
+
+            --z-base: 1;
+            --z-dropdown: 50;
+            --z-modal: 100;
+            --z-toast: 200;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #06060e;
+            --bg-secondary: #0c0c1a;
+            --bg-gradient: radial-gradient(ellipse 90% 70% at 50% -30%, #1a1040 0%, #0d0d20 40%, #06060e 70%);
+            --glass-bg: rgba(18, 18, 40, 0.55);
+            --glass-bg-strong: rgba(22, 22, 48, 0.7);
+            --glass-bg-light: rgba(25, 25, 50, 0.35);
+            --glass-bg-hover: rgba(30, 30, 58, 0.65);
+            --glass-bg-active: rgba(35, 35, 65, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-border-strong: rgba(255, 255, 255, 0.18);
+            --glass-border-hover: rgba(255, 255, 255, 0.22);
+            --glass-border-active: rgba(255, 255, 255, 0.3);
+            --glass-highlight: rgba(255, 255, 255, 0.04);
+            --glass-shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.3);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            --glass-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            --glass-shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.75);
+            --text-tertiary: rgba(255, 255, 255, 0.5);
+            --text-muted: rgba(255, 255, 255, 0.35);
+            --text-placeholder: rgba(255, 255, 255, 0.25);
+
+            --accent-purple: #a78bfa;
+            --accent-purple-light: #c4b5fd;
+            --accent-purple-dark: #7c3aed;
+            --accent-purple-glow: rgba(167, 139, 250, 0.35);
+            --accent-blue: #60a5fa;
+            --accent-blue-light: #93c5fd;
+            --accent-blue-dark: #3b82f6;
+            --accent-green: #34d399;
+            --accent-green-light: #6ee7b7;
+            --accent-green-dark: #059669;
+            --accent-green-glow: rgba(52, 211, 153, 0.4);
+            --accent-red: #f87171;
+            --accent-red-light: #fca5a5;
+            --accent-red-glow: rgba(248, 113, 113, 0.45);
+            --accent-amber: #fbbf24;
+            --accent-amber-glow: rgba(251, 191, 36, 0.35);
+
+            --logo-border: #34d399;
+            --logo-border-glow: rgba(52, 211, 153, 0.5);
+            --logo-inner-glow: rgba(52, 211, 153, 0.15);
+
+            --overlay-bg: rgba(0, 0, 0, 0.7);
+            --divider: rgba(255, 255, 255, 0.06);
+            --divider-strong: rgba(255, 255, 255, 0.1);
+            --table-hover: rgba(255, 255, 255, 0.03);
+            --table-stripe: rgba(255, 255, 255, 0.015);
+            --skeleton: rgba(255, 255, 255, 0.06);
+            --skeleton-shine: rgba(255, 255, 255, 0.1);
+            --scrollbar-thumb: rgba(255, 255, 255, 0.15);
+            --scrollbar-track: rgba(255, 255, 255, 0.04);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f2f2f7;
+            --bg-secondary: #e8e8ed;
+            --bg-gradient: radial-gradient(ellipse 90% 70% at 50% -30%, #e0d8f0 0%, #f0eef5 40%, #f2f2f7 70%);
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-bg-strong: rgba(255, 255, 255, 0.82);
+            --glass-bg-light: rgba(255, 255, 255, 0.45);
+            --glass-bg-hover: rgba(255, 255, 255, 0.78);
+            --glass-bg-active: rgba(255, 255, 255, 0.88);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --glass-border-strong: rgba(0, 0, 0, 0.13);
+            --glass-border-hover: rgba(0, 0, 0, 0.16);
+            --glass-border-active: rgba(0, 0, 0, 0.22);
+            --glass-highlight: rgba(255, 255, 255, 0.6);
+            --glass-shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.06);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            --glass-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            --glass-shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.75);
+
+            --text-primary: #1c1c1e;
+            --text-secondary: rgba(0, 0, 0, 0.65);
+            --text-tertiary: rgba(0, 0, 0, 0.45);
+            --text-muted: rgba(0, 0, 0, 0.3);
+            --text-placeholder: rgba(0, 0, 0, 0.2);
+
+            --accent-purple: #7c3aed;
+            --accent-purple-light: #a78bfa;
+            --accent-purple-dark: #5b21b6;
+            --accent-purple-glow: rgba(124, 58, 237, 0.2);
+            --accent-blue: #2563eb;
+            --accent-blue-light: #60a5fa;
+            --accent-blue-dark: #1d4ed8;
+            --accent-green: #059669;
+            --accent-green-light: #34d399;
+            --accent-green-dark: #047857;
+            --accent-green-glow: rgba(5, 150, 105, 0.25);
+            --accent-red: #dc2626;
+            --accent-red-light: #f87171;
+            --accent-red-glow: rgba(220, 38, 38, 0.25);
+            --accent-amber: #d97706;
+            --accent-amber-glow: rgba(217, 119, 6, 0.2);
+
+            --logo-border: #059669;
+            --logo-border-glow: rgba(5, 150, 105, 0.35);
+            --logo-inner-glow: rgba(5, 150, 105, 0.08);
+
+            --overlay-bg: rgba(0, 0, 0, 0.35);
+            --divider: rgba(0, 0, 0, 0.06);
+            --divider-strong: rgba(0, 0, 0, 0.1);
+            --table-hover: rgba(0, 0, 0, 0.02);
+            --table-stripe: rgba(0, 0, 0, 0.01);
+            --skeleton: rgba(0, 0, 0, 0.05);
+            --skeleton-shine: rgba(0, 0, 0, 0.08);
+            --scrollbar-thumb: rgba(0, 0, 0, 0.12);
+            --scrollbar-track: rgba(0, 0, 0, 0.03);
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: var(--bg-primary);
+            background-image: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 24px 20px;
+            color: var(--text-primary);
+            transition:
+                background var(--duration-slow) var(--ease-smooth),
+                color var(--duration-normal) var(--ease-smooth);
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        .ambient-orbs {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .ambient-orbs::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            left: -20%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle at 50% 50%, var(--accent-purple) 0%, transparent 60%);
+            opacity: 0.3;
+            filter: blur(100px);
+            animation: floatOrb1 18s ease-in-out infinite;
+        }
+
+        .ambient-orbs::after {
+            content: '';
+            position: absolute;
+            bottom: -25%;
+            right: -15%;
+            width: 70%;
+            height: 70%;
+            background: radial-gradient(circle at 50% 50%, var(--accent-blue) 0%, transparent 60%);
+            opacity: 0.25;
+            filter: blur(90px);
+            animation: floatOrb2 22s ease-in-out infinite;
+        }
+
+        @keyframes floatOrb1 {
+            0%,100% { transform: translate(0,0) scale(1); }
+            25% { transform: translate(40px,-30px) scale(1.08); }
+            50% { transform: translate(-20px,-60px) scale(0.95); }
+            75% { transform: translate(-50px,-10px) scale(1.04); }
+        }
+
+        @keyframes floatOrb2 {
+            0%,100% { transform: translate(0,0) scale(1); }
+            33% { transform: translate(-30px,-40px) scale(1.06); }
+            66% { transform: translate(25px,20px) scale(0.93); }
+        }
+
+        .glass-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(50px) saturate(180%);
+            -webkit-backdrop-filter: blur(50px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--glass-shadow);
+            transition: all var(--duration-normal) var(--ease-smooth);
+            position: relative;
+            z-index: var(--z-base);
+        }
+
+        .glass-card {
+            background: var(--glass-bg-light);
+            backdrop-filter: blur(30px) saturate(160%);
+            -webkit-backdrop-filter: blur(30px) saturate(160%);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--glass-shadow-sm);
+            transition: all var(--duration-normal) var(--ease-smooth);
+        }
+
+        .glass-card:hover {
+            background: var(--glass-bg-hover);
+            border-color: var(--glass-border-hover);
+            box-shadow: var(--glass-shadow-hover);
+            transform: translateY(-3px);
+        }
+
+        .glass-pill {
+            background: var(--glass-bg-light);
+            backdrop-filter: blur(25px) saturate(150%);
+            -webkit-backdrop-filter: blur(25px) saturate(150%);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-full);
+            padding: 10px 22px;
+            box-shadow: var(--glass-shadow-sm);
+            transition: all var(--duration-normal) var(--ease-smooth);
+        }
+
+        .glass-pill:hover {
+            background: var(--glass-bg-hover);
+            border-color: var(--glass-border-hover);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .logo-wrapper {
+            position: relative;
+            display: inline-flex;
+        }
+
+        .logo-circle {
+            width: 70px; height: 70px;
+            border-radius: 50%;
+            background: var(--glass-bg-strong);
+            backdrop-filter: blur(35px) saturate(180%);
+            -webkit-backdrop-filter: blur(35px) saturate(180%);
+            border: 2.5px solid var(--logo-border);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 25px var(--logo-border-glow), 0 0 60px var(--logo-border-glow), inset 0 0 30px var(--logo-inner-glow);
+            animation: logoGlowPulse 3.5s ease-in-out infinite;
+            overflow: hidden;
+            user-select: none;
+            cursor: default;
+            position: relative;
+            z-index: 2;
+            transition: all var(--duration-normal) var(--ease-smooth);
+        }
+
+        .logo-circle::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid transparent;
+            border-top-color: var(--accent-green-light);
+            border-right-color: var(--accent-green-light);
+            opacity: 0;
+            animation: logoSpinGlow 6s linear infinite;
+            transition: opacity var(--duration-normal);
+        }
+
+        .logo-circle:hover::after { opacity: 0.6; }
+
+        @keyframes logoGlowPulse {
+            0%,100% { box-shadow: 0 0 25px var(--logo-border-glow), 0 0 60px var(--logo-border-glow), inset 0 0 30px var(--logo-inner-glow); }
+            50% { box-shadow: 0 0 40px var(--logo-border-glow), 0 0 90px var(--logo-border-glow), 0 0 120px var(--logo-border-glow), inset 0 0 45px var(--logo-inner-glow); }
+        }
+
+        @keyframes logoSpinGlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            padding: 2px;
+            font-family: var(--font-bengali);
+            line-height: 1.15;
+        }
+
+        .logo-text .logo-bn {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: 0.3px;
+        }
+
+        .logo-text .logo-en {
+            font-size: 8.5px;
+            font-weight: 700;
+            color: var(--text-tertiary);
+            letter-spacing: 1.2px;
+            font-family: var(--font-primary);
+            text-transform: uppercase;
+        }
+
+        .manager-pill {
+            background: var(--glass-bg-light);
+            backdrop-filter: blur(30px) saturate(160%);
+            -webkit-backdrop-filter: blur(30px) saturate(160%);
+            border: 1px solid var(--glass-border-strong);
+            border-radius: var(--radius-full);
+            padding: 12px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            box-shadow: var(--glass-shadow);
+            transition: all var(--duration-normal) var(--ease-smooth);
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .manager-pill::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, var(--accent-blue) 30%, var(--accent-purple-light) 70%, transparent 100%);
+            opacity: 0.6;
+        }
+
+        .manager-pill:hover {
+            background: var(--glass-bg-hover);
+            border-color: var(--glass-border-hover);
+            box-shadow: var(--glass-shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .manager-pill .month-text {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            font-family: var(--font-primary);
+        }
+
+        .manager-pill .manager-label {
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            font-family: var(--font-primary);
+        }
+
+        .manager-pill .manager-name {
+            font-size: 13px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue-light), var(--accent-purple-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.3px;
+        }
+
+        .stat-card {
+            background: var(--glass-bg-light);
+            backdrop-filter: blur(25px) saturate(150%);
+            -webkit-backdrop-filter: blur(25px) saturate(150%);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 18px 14px;
+            text-align: center;
+            transition: all var(--duration-normal) var(--ease-bounce);
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.06) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity var(--duration-normal);
+            pointer-events: none;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-6px);
+            background: var(--glass-bg-hover);
+            border-color: var(--glass-border-hover);
+            box-shadow: var(--glass-shadow-lg);
+        }
+
+        .stat-card:hover::after { opacity: 1; }
+
+        .stat-icon-wrap {
+            width: 44px; height: 44px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 22px;
+            font-family: var(--font-emoji);
+            transition: transform var(--duration-normal) var(--ease-spring);
+        }
+
+        .stat-card:hover .stat-icon-wrap { transform: scale(1.12) rotate(-5deg); }
+
+        .stat-icon-wrap.rate { background: rgba(167,139,250,0.15); border: 1px solid rgba(167,139,250,0.3); }
+        .stat-icon-wrap.meals { background: rgba(96,165,250,0.15); border: 1px solid rgba(96,165,250,0.3); }
+        .stat-icon-wrap.bazar { background: rgba(52,211,153,0.15); border: 1px solid rgba(52,211,153,0.3); }
+
+        .stat-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-tertiary);
+            margin-bottom: 4px;
+            font-family: var(--font-primary);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-primary);
+            font-family: var(--font-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .menu-btn {
+            width: 46px; height: 46px;
+            border-radius: var(--radius-md);
+            background: var(--glass-bg-light);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all var(--duration-normal) var(--ease-smooth);
+            position: relative;
+        }
+
+        .menu-btn:hover {
+            background: var(--glass-bg-hover);
+            border-color: var(--glass-border-hover);
+            box-shadow: var(--glass-shadow);
+            gap: 6px;
+        }
+
+        .menu-btn span {
+            display: block;
+            width: 18px;
+            height: 2.5px;
+            background: var(--text-primary);
+            border-radius: 3px;
+            transition: all var(--duration-normal) var(--ease-smooth);
+        }
+
+        .menu-btn:hover span { background: var(--accent-purple-light); }
+        .menu-btn:hover span:nth-child(2) { width: 14px; }
+        .menu-btn:hover span:nth-child(3) { width: 10px; }
+
+        .dropdown-menu {
+            background: var(--glass-bg-strong);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid var(--glass-border-strong);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--glass-shadow-lg);
+            padding: 6px;
+            min-width: 200px;
+            animation: dropdownIn 0.3s var(--ease-bounce);
+        }
+
+        @keyframes dropdownIn {
+            from { opacity: 0; transform: translateY(-8px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all var(--duration-fast) var(--ease-smooth);
+            font-family: var(--font-primary);
+        }
+
+        .dropdown-item:hover {
+            background: var(--glass-bg-hover);
+            color: var(--accent-purple-light);
+        }
+
+        .dropdown-item .dropdown-icon { font-family: var(--font-emoji); font-size: 16px; }
+
+        .theme-toggle {
+            width: 46px; height: 46px;
+            border-radius: 50%;
+            background: var(--glass-bg-light);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            font-family: var(--font-emoji);
+            transition: all var(--duration-normal) var(--ease-smooth);
+            color: var(--text-primary);
+        }
+
+        .theme-toggle:hover {
+            background: var(--glass-bg-hover);
+            border-color: var(--glass-border-hover);
+            box-shadow: var(--glass-shadow);
+            transform: rotate(20deg) scale(1.05);
+        }
+
+        .member-item {
+            background: var(--glass-bg-light);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 15px 18px;
+            transition: all var(--duration-normal) var(--ease-smooth);
+            cursor: default;
+        }
+
+        .member-item:hover {
+            background: var(--glass-bg-hover);
+            border-color: var(--glass-border-hover);
+            box-shadow: var(--glass-shadow-sm);
+            transform: translateX(3px);
+        }
+
+        .member-name {
+            font-family: var(--font-bengali);
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        .balance-positive { color: var(--accent-green); filter: drop-shadow(0 0 10px var(--accent-green-glow)); font-weight: 700; }
+        .balance-negative { color: var(--accent-red); filter: drop-shadow(0 0 10px var(--accent-red-glow)); animation: warnPulse 2.5s ease-in-out infinite; font-weight: 700; }
+
+        @keyframes warnPulse {
+            0%,100% { opacity: 1; }
+            50% { opacity: 0.45; }
+        }
+
+        .bazar-table, .meal-sheet-table { width: 100%; border-collapse: collapse; }
+
+        .bazar-table thead th, .meal-sheet-table thead th {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-tertiary);
+            padding: 14px 16px;
+            text-align: left;
+            font-family: var(--font-primary);
+            border-bottom: 1px solid var(--divider-strong);
+        }
+
+        .bazar-table tbody td, .meal-sheet-table tbody td {
+            padding: 14px 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-family: var(--font-primary);
+        }
+
+        .bazar-row, .meal-sheet-row { border-bottom: 1px solid var(--divider); transition: background var(--duration-fast); }
+        .bazar-row:hover, .meal-sheet-row:hover { background: var(--table-hover); }
+        .bazar-row:last-child, .meal-sheet-row:last-child { border-bottom: none; }
+
+        .meal-sheet-table td:first-child, .meal-sheet-table th:first-child {
+            text-align: left;
+            font-family: var(--font-bengali);
+            font-weight: 600;
+        }
+        .meal-sheet-table td:not(:first-child), .meal-sheet-table th:not(:first-child) { text-align: center; }
+
+        .footer-credit {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-tertiary);
+            margin-top: 24px;
+            padding: 16px;
+            background: var(--glass-bg-light);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            letter-spacing: 0.5px;
+        }
+
+        .spinner-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 40px 0;
+        }
+
+        .spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--divider);
+            border-top: 3px solid var(--accent-purple);
+            border-right: 3px solid var(--accent-purple-light);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--glass-border-strong); }
+
+        @media (max-width: 768px) {
+            body { padding: 14px 10px; }
+            .logo-circle { width: 56px; height: 56px; }
+            .logo-text .logo-bn { font-size: 10px; }
+            .logo-text .logo-en { font-size: 7px; }
+            .stat-card { padding: 14px 8px; }
+            .stat-value { font-size: 18px; }
+            .stat-icon-wrap { width: 36px; height: 36px; font-size: 18px; margin-bottom: 6px; }
+            .manager-pill { padding: 8px 14px; white-space: normal; }
+            .manager-pill .month-text { font-size: 11px; }
+            .manager-pill .manager-name { font-size: 11px; }
+            .bazar-table thead th, .bazar-table tbody td,
+            .meal-sheet-table thead th, .meal-sheet-table tbody td { padding: 10px 8px; font-size: 11px; }
+        }
+
+        @media (max-width: 480px) {
+            .logo-circle { width: 48px; height: 48px; }
+            .logo-text .logo-bn { font-size: 9px; }
+            .logo-text .logo-en { font-size: 6.5px; }
+            .stat-card { padding: 10px 4px; border-radius: var(--radius-md); }
+            .stat-value { font-size: 16px; }
+            .stat-label { font-size: 8px; letter-spacing: 1px; }
+            .stat-icon-wrap { width: 30px; height: 30px; font-size: 15px; }
+            .menu-btn, .theme-toggle { width: 38px; height: 38px; border-radius: 12px; }
+            .menu-btn span { width: 15px; height: 2px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-orbs"></div>
+
+    <div class="max-w-2xl mx-auto relative z-10">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-7">
+            <div class="logo-wrapper">
+                <div class="logo-circle">
+                    <div class="logo-text">
+                        <span class="logo-bn">মা আছিয়া</span>
+                        <span class="logo-en">VILLA</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-1 flex justify-center px-4">
+                <div class="manager-pill">
+                    <span class="month-text" id="currentMonthYear">AUGUST 2026</span>
+                    <span class="manager-label">
+                        👤 Manager —
+                        <strong class="manager-name" id="managerName">Loading…</strong>
+                    </span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button class="theme-toggle" onclick="toggleTheme()" id="themeIcon" aria-label="Toggle theme">🌙</button>
+                <div class="relative">
+                    <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">
+                        <span></span><span></span><span></span>
+                    </button>
+                    <div id="menuDropdown" class="dropdown-menu hidden absolute right-0 mt-3 z-50" style="top: 100%;">
+                        <a href="login.html?role=admin" class="dropdown-item" onclick="closeMenu()">
+                            <span class="dropdown-icon">👤</span> Manager Access
+                        </a>
+                        <a href="login.html?role=assistant" class="dropdown-item" onclick="closeMenu()">
+                            <span class="dropdown-icon">👥</span> Sub Manager Access
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-3 gap-3 sm:gap-4 mb-8">
+            <div class="stat-card">
+                <div class="stat-icon-wrap rate">🍽️</div>
+                <div class="stat-label">Meal Rate</div>
+                <div class="stat-value" id="currentMealRate">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon-wrap meals">📅</div>
+                <div class="stat-label">Total Meals</div>
+                <div class="stat-value" id="totalMeals">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon-wrap bazar">🛒</div>
+                <div class="stat-label">Total Bazar</div>
+                <div class="stat-value" id="totalBazar">—</div>
+            </div>
+        </div>
+
+        <!-- Members -->
+        <div class="glass-container p-5 sm:p-6 mb-5">
+            <h2 class="text-lg sm:text-xl font-bold mb-5 flex items-center gap-3" style="font-family: var(--font-primary);">
+                <span style="font-family: var(--font-emoji);">👥</span> Members Balance
+            </h2>
+            <div id="membersList" class="space-y-3">
+                <div class="spinner-wrap"><div class="spinner"></div><p style="color: var(--text-tertiary); font-size: 13px;">Loading data…</p></div>
+            </div>
+        </div>
+
+        <!-- Bazar History -->
+        <div class="glass-container p-5 sm:p-6 mb-5">
+            <h2 class="text-lg sm:text-xl font-bold mb-5 flex items-center gap-3" style="font-family: var(--font-primary);">
+                <span style="font-family: var(--font-emoji);">🛒</span> Bazar History
+            </h2>
+            <div class="overflow-x-auto -mx-2 sm:mx-0">
+                <table class="bazar-table">
+                    <thead><tr><th>Date</th><th>Purchaser</th><th class="text-right">Total Cost</th></tr></thead>
+                    <tbody id="bazarList">
+                        <tr><td colspan="3"><div class="spinner-wrap" style="padding:30px 0;"><div class="spinner"></div><p style="color: var(--text-tertiary); font-size: 13px;">Loading data…</p></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Master Meal Sheet -->
+        <div class="glass-container p-5 sm:p-6 mb-5">
+            <h2 class="text-lg sm:text-xl font-bold mb-5 flex items-center gap-3" style="font-family: var(--font-primary);">
+                <span style="font-family: var(--font-emoji);">📋</span> Master Meal Sheet
+                <span style="font-size:0.75rem; font-weight:400; color: var(--text-tertiary);" id="mealSheetDate"></span>
+            </h2>
+            <div class="overflow-x-auto">
+                <table class="meal-sheet-table">
+                    <thead><tr><th>Border</th><th>Breakfast</th><th>Lunch</th><th>Dinner</th></tr></thead>
+                    <tbody id="mealSheetBody">
+                        <tr><td colspan="4"><div class="spinner-wrap" style="padding:20px 0;"><div class="spinner"></div><p style="color: var(--text-tertiary); font-size: 13px;">Loading meal data…</p></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-credit">
+            Development by <strong>M M NAIME RAHMAN</strong> · Helped by AI<br>
+            <span style="opacity:0.6;">© Ma Achiya Villa Management System</span>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+            const menuDropdown = document.getElementById('menuDropdown');
+            const managerNameEl = document.getElementById('managerName');
+            const currentMealRateEl = document.getElementById('currentMealRate');
+            const totalMealsEl = document.getElementById('totalMeals');
+            const totalBazarEl = document.getElementById('totalBazar');
+            const membersListEl = document.getElementById('membersList');
+            const bazarListEl = document.getElementById('bazarList');
+            const mealSheetBody = document.getElementById('mealSheetBody');
+            const mealSheetDate = document.getElementById('mealSheetDate');
+            const monthYearEl = document.getElementById('currentMonthYear');
+
+            let db = null;
+            let isMenuOpen = false;
+
+            function setTheme(t) {
+                html.setAttribute('data-theme', t);
+                try { localStorage.setItem('ma-achiya-theme', t); } catch(e) {}
+                themeIcon.textContent = t === 'dark' ? '☀️' : '🌙';
+            }
+            window.toggleTheme = function() {
+                setTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+            };
+            (function() {
+                const saved = localStorage.getItem('ma-achiya-theme');
+                if (saved === 'light' || saved === 'dark') setTheme(saved);
+                else setTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            })();
+
+            monthYearEl.textContent = new Date().toLocaleDateString('en-US', { month:'long', year:'numeric' }).toUpperCase();
+
+            window.toggleMenu = function() {
+                isMenuOpen = !isMenuOpen;
+                menuDropdown.classList.toggle('hidden', !isMenuOpen);
+            };
+            window.closeMenu = function() {
+                isMenuOpen = false;
+                menuDropdown.classList.add('hidden');
+            };
+            document.addEventListener('click', e => {
+                if (isMenuOpen && !e.target.closest('.menu-btn') && !e.target.closest('#menuDropdown')) {
+                    closeMenu();
+                }
+            });
+
+            function getDB() {
+                if (db) return db;
+                if (window.db) { db = window.db; return db; }
+                if (window.FirestoreDB) { db = window.FirestoreDB; return db; }
+                return null;
+            }
+
+            async function loadManagerName() {
+                const firestore = getDB();
+                if (!firestore) { managerNameEl.textContent = 'Shahan'; return; }
+                try {
+                    const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+                    const snap = await getDoc(doc(firestore, 'settings', 'manager'));
+                    managerNameEl.textContent = snap.exists() ? snap.data().name : 'Shahan';
+                } catch(e) { managerNameEl.textContent = 'Shahan'; }
+            }
+
+            async function loadDashboardData() {
+                const firestore = getDB();
+                if (!firestore) { setTimeout(loadDashboardData, 600); return; }
+                try {
+                    const { doc, getDoc, collection, getDocs } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+
+                    const rateSnap = await getDoc(doc(firestore, 'settings', 'mealRate'));
+                    const mealRate = rateSnap.exists() ? (rateSnap.data().rate || 0) : 0;
+                    currentMealRateEl.textContent = '৳' + mealRate.toFixed(1);
+
+                    const membersSnap = await getDocs(collection(firestore, 'members'));
+                    let totalMealsCount = 0;
+                    let memberCardsHTML = '';
+                    const membersArray = [];
+
+                    if (membersSnap.empty) {
+                        memberCardsHTML = '<p class="text-center py-4 text-gray-400">No members yet</p>';
+                    } else {
+                        membersSnap.forEach(docSnap => {
+                            const m = docSnap.data();
+                            membersArray.push({ id: docSnap.id, ...m });
+                            const deposit = m.totalDeposit || 0;
+                            const meals = m.totalMeals || 0;
+                            const balance = deposit - (meals * mealRate);
+                            totalMealsCount += meals;
+                            const isPositive = balance >= 0;
+                            memberCardsHTML += `
+                                <div class="member-item flex justify-between items-center">
+                                    <div>
+                                        <h3 class="member-name">${escapeHTML(m.name || 'Unnamed')}</h3>
+                                        <p style="font-size:0.78rem;color:var(--text-tertiary);margin-top:3px;">
+                                            Deposit: <span style="color:var(--accent-green);">৳${deposit.toFixed(0)}</span>
+                                            &nbsp;·&nbsp;
+                                            Meals: <span style="color:var(--accent-blue);">${meals}</span>
+                                        </p>
+                                    </div>
+                                    <div style="text-align:right;">
+                                        <div class="text-lg font-bold ${isPositive ? 'balance-positive' : 'balance-negative'}">
+                                            ${isPositive ? '+' : '−'}৳${Math.abs(balance).toFixed(0)}
+                                        </div>
+                                        <div style="font-size:0.7rem;color:${isPositive ? 'var(--accent-green)' : 'var(--accent-red)'};margin-top:2px;">
+                                            ${isPositive ? 'In Credit' : 'Overdue'}
+                                        </div>
+                                    </div>
+                                </div>`;
+                        });
+                    }
+                    membersListEl.innerHTML = memberCardsHTML;
+                    totalMealsEl.textContent = totalMealsCount;
+
+                    const bazarSnap = await getDocs(collection(firestore, 'bazar'));
+                    let totalBazarAmount = 0;
+                    let bazarRowsHTML = '';
+                    if (bazarSnap.empty) {
+                        bazarRowsHTML = '<tr><td colspan="3" class="text-center py-4 text-gray-400">No records</td></tr>';
+                    } else {
+                        const bazarArray = [];
+                        bazarSnap.forEach(d => bazarArray.push(d.data()));
+                        bazarArray.sort((a,b) => b.date && a.date ? b.date.localeCompare(a.date) : 0);
+                        bazarArray.forEach(b => {
+                            totalBazarAmount += (b.amount || 0);
+                            bazarRowsHTML += `<tr class="bazar-row"><td>${b.date||'—'}</td><td>${b.purchaser||'—'}</td><td class="text-right font-semibold">৳${(b.amount||0).toFixed(0)}</td></tr>`;
+                        });
+                    }
+                    bazarListEl.innerHTML = bazarRowsHTML;
+                    totalBazarEl.textContent = '৳' + totalBazarAmount.toFixed(0);
+
+                    const today = new Date().toISOString().split('T')[0];
+                    mealSheetDate.textContent = `(${today})`;
+                    const mealSnap = await getDoc(doc(firestore, 'meals', today));
+                    let mealRows = '';
+                    if (mealSnap.exists() && mealSnap.data().members) {
+                        const mealData = mealSnap.data().members;
+                        membersArray.forEach(member => {
+                            const m = mealData[member.id] || { breakfast: 0, lunch: 0, dinner: 0 };
+                            mealRows += `<tr class="meal-sheet-row">
+                                <td>${member.name}</td>
+                                <td>${m.breakfast ? '✅' : '❌'}</td>
+                                <td>${m.lunch ? '✅' : '❌'}</td>
+                                <td>${m.dinner ? '✅' : '❌'}</td>
+                            </tr>`;
+                        });
+                    } else {
+                        mealRows = '<tr><td colspan="4" class="text-center py-4 text-gray-400">No meal record for today</td></tr>';
+                    }
+                    mealSheetBody.innerHTML = mealRows;
+
+                } catch(e) { console.error(e); }
+            }
+
+            function escapeHTML(str) {
+                if (!str) return '—';
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            function init() {
+                const firestore = getDB();
+                if (firestore) {
+                    loadManagerName();
+                    loadDashboardData();
+                } else {
+                    setTimeout(init, 400);
+                }
+            }
+            window.addEventListener('load', init);
+            setInterval(() => { if (getDB()) { loadManagerName(); loadDashboardData(); } }, 35000);
+        })();
+    </script>
+</body>
+</html>
