@@ -11,7 +11,6 @@
         import { getFirestore, collection, addDoc, updateDoc, doc, getDoc, getDocs, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, onAuthStateChanged, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         
-        // নতুন ও সঠিক ফায়ারবেস কনফিগারেশন
         const firebaseConfig = {
             apiKey: "AIzaSyA8wqh_981-ZkvjEDVq9TIRd8W085aLV9c",
             authDomain: "my-mess-1a367.firebaseapp.com",
@@ -21,12 +20,15 @@
             appId: "1:295199809694:web:a78530334d571608c05b8f",
             measurementId: "G-RWHJKGV5LS"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
         window.db = db; window.auth = auth;
-        window.FirebaseSDK = { collection, addDoc, updateDoc, doc, getDoc, getDocs, setDoc, serverTimestamp, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential, onAuthStateChanged };
+        window.FirebaseSDK = { 
+            collection, addDoc, updateDoc, doc, getDoc, getDocs, setDoc, 
+            serverTimestamp, signOut, updatePassword, EmailAuthProvider, 
+            reauthenticateWithCredential, onAuthStateChanged 
+        };
     </script>
     <style>
         :root {
@@ -236,7 +238,7 @@
         }
         init() {
             window.FirebaseSDK.onAuthStateChanged(this.auth, async (user) => {
-                if (!user || user.email !== 'spi@gmail.com') {
+                if (!user) {
                     window.location.href = 'login.html';
                     return;
                 }
@@ -348,4 +350,4 @@
     window.AppConsole = new EnterpriseConsole();
 </script>
 </body>
-</html>
+        </html>
