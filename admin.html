@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Console – Ma Achiya Villa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, updateDoc, doc, getDoc, getDocs, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCU0sucNd62U9aIcGGC3Tx7DW2tZNTvEVQ",
+            authDomain: "smart-mess-8a136.firebaseapp.com",
+            projectId: "smart-mess-8a136",
+            storageBucket: "smart-mess-8a136.firebasestorage.app",
+            messagingSenderId: "826713927112",
+            appId: "1:826713927112:web:288afbe242e6865c5b64fd"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        window.db = db;
+        window.auth = auth;
+        window.FirebaseSDK = { collection, addDoc, updateDoc, doc, getDoc, getDocs, setDoc, serverTimestamp, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential };
+    </script>
+    <style>
+        /* Same global glass styles as index, plus form specific */
+        :root {
+            --font-primary: 'Inter', sans-serif;
+            --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        [data-theme="dark"] {
+            --bg-gradient: radial-gradient(ellipse 90% 70% at 50% -30%, #1a1040 0%, #0d0d20 40%, #06060e 70%);
+            --glass-bg: rgba(20, 18, 35, 0.6);
+            --glass-border: rgba(255,255,255,0.1);
+            --text: #fff;
+            --text2: rgba(255,255,255,0.7);
+            --accent: #a78bfa;
+        }
+        [data-theme="light"] {
+            --bg-gradient: radial-gradient(ellipse 90% 70% at 50% -30%, #e0d8f0 0%, #f0eef5 40%, #f2f2f7 70%);
+            --glass-bg: rgba(255,255,255,0.7);
+            --glass-border: rgba(0,0,0,0.08);
+            --text: #1c1c1e;
+            --text2: rgba(0,0,0,0.6);
+            --accent: #7c3aed;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: var(--bg-gradient);
+            min-height: 100vh; margin: 0; padding: 20px; color: var(--text);
+            transition: background var(--ease-smooth), color var(--ease-smooth);
+        }
+        body::after {
+            content: ''; position: fixed; inset: 0;
+            background: radial-gradient(circle at 20% 60%, var(--accent) 0%, transparent 35%);
+            opacity: 0.2; filter: blur(80px); pointer-events: none;
+        }
+
+        .glass-container {
+            background: var(--glass-bg); backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border); border-radius: 28px;
+            padding: 24px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .input-glass {
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+            border-radius: 14px; padding: 14px; color: var(--text); margin-bottom: 12px; outline: none;
+        }
+        .input-glass:focus { border-color: #8b5cf6; }
+        select.input-glass option { background: #1a103c; }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9); border: none;
+            padding: 14px; border-radius: 14px; color: white; font-weight: bold;
+            cursor: pointer; width: 100%; box-shadow: 0 6px 20px rgba(139,92,246,0.4);
+        }
+
+        .stat-card {
+            background: var(--glass-bg); backdrop-filter: blur(20px);
+            border-radius: 18px; padding: 14px; text-align: center;
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-logout {
+            padding: 8px 16px; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3);
+            border-radius: 12px; color: #f87171; cursor: pointer; font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="max-w-md mx-auto relative z-10">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-xl font-bold">Manager Console</h1>
+            <p id="userEmail" class="text-sm text-gray-400"></p>
+        </div>
+        <button class="btn-logout" onclick="window.AppConsole.handleLogout()">Logout</button>
+    </div>
+
+    <div class="grid grid-cols-3 gap-3 mb-6">
+        <div class="stat-card"><div class="text-xs text-gray-400">Meal Rate</div><div class="text-lg font-bold text-purple-300" id="mealRate">৳0.00</div></div>
+        <div class="stat-card"><div class="text-xs text-gray-400">Total Meals</div><div class="text-lg font-bold text-blue-300" id="totalMeals">0</div></div>
+        <div class="stat-card"><div class="text-xs text-gray-400">Total Bazar</div><div class="text-lg font-bold text-emerald-300" id="totalBazar">৳0</div></div>
+    </div>
+
+    <!-- Manager Designation -->
+    <div class="glass-container">
+        <div class="flex items-center gap-2 mb-3"><span>✏️</span><span class="font-semibold">Manager Designation</span></div>
+        <input type="text" id="managerNameInput" class="input-glass" placeholder="Enter manager name">
+        <button onclick="window.AppConsole.updateManagerName()" class="btn-primary">Save Designation</button>
+    </div>
+
+    <!-- Add Member -->
+    <div class="glass-container">
+        <div class="flex items-center gap-2 mb-3"><span>👤</span><span class="font-semibold">Add New Border</span></div>
+        <input type="text" id="newMemberName" class="input-glass" placeholder="Member full name">
+        <input type="number" id="newMemberDeposit" class="input-glass" placeholder="Initial deposit (৳)">
+        <button onclick="window.AppConsole.addMember()" class="btn-primary">Register Border</button>
+    </div>
+
+    <!-- Deposit Ledger -->
+    <div class="glass-container">
+        <div class="flex items-center gap-2 mb-3"><span>💳</span><span class="font-semibold">Deposit Ledger Entry</span></div>
+        <select id="memberSelect" class="input-glass"><option value="">Select border...</option></select>
+        <input type="number" id="depositAmount" class="input-glass" placeholder="Collection amount (৳)">
+        <button onclick="window.AppConsole.addDeposit()" class="btn-primary">Record Payment</button>
+    </div>
+
+    <!-- Bazar Log -->
+    <div class="glass-container">
+        <div class="flex items-center gap-2 mb-3"><span>🛒</span><span class="font-semibold">Bazar Expense Log</span></div>
+        <input type="date" id="bazarDate" class="input-glass">
+        <input type="text" id="purchaser" class="input-glass" placeholder="Purchaser name">
+        <input type="number" id="bazarAmount" class="input-glass" placeholder="Total cost (৳)">
+        <button onclick="window.AppConsole.addBazar()" class="btn-primary">Commit Expense</button>
+    </div>
+
+    <!-- Security -->
+    <div class="glass-container">
+        <div class="flex items-center gap-2 mb-3"><span>🔐</span><span class="font-semibold">Change Password</span></div>
+        <input type="password" id="oldPassword" class="input-glass" placeholder="Current password">
+        <input type="password" id="newPassword" class="input-glass" placeholder="New password">
+        <button onclick="window.AppConsole.changePassword()" class="btn-primary">Update Password</button>
+    </div>
+</div>
+
+<script>
+    // Enterprise Console Logic (same as before, just wrapped in AppConsole)
+    class EnterpriseConsole {
+        constructor() {
+            this.db = window.db;
+            this.auth = window.auth;
+            this.currentUser = null;
+            this.init();
+        }
+        init() {
+            window.FirebaseSDK.onAuthStateChanged(this.auth, async (user) => {
+                if (!user) { window.location.href = 'login.html'; return; }
+                this.currentUser = user;
+                document.getElementById('userEmail').textContent = user.email;
+                await this.loadAllData();
+            });
+        }
+        async loadAllData() {
+            await this.loadMemberDropdown();
+            await this.refreshStats();
+            await this.loadManagerName();
+        }
+        async loadMemberDropdown() {
+            const snap = await window.FirebaseSDK.getDocs(window.FirebaseSDK.collection(this.db, 'members'));
+            const select = document.getElementById('memberSelect');
+            let options = '<option value="">Select border...</option>';
+            snap.forEach(doc => { const d = doc.data(); options += `<option value="${doc.id}">${d.name} (৳${d.totalDeposit || 0})</option>`; });
+            select.innerHTML = options;
+        }
+        async loadManagerName() {
+            const snap = await window.FirebaseSDK.getDoc(window.FirebaseSDK.doc(this.db, 'settings', 'manager'));
+            if (snap.exists()) document.getElementById('managerNameInput').value = snap.data().name || '';
+        }
+        async refreshStats() {
+            const { getDocs, collection, doc, setDoc } = window.FirebaseSDK;
+            const membersSnap = await getDocs(collection(this.db, 'members'));
+            let totalMeals = 0; membersSnap.forEach(d => totalMeals += (d.data().totalMeals || 0));
+            document.getElementById('totalMeals').textContent = totalMeals;
+
+            const bazarSnap = await getDocs(collection(this.db, 'bazar'));
+            let totalBazar = 0; bazarSnap.forEach(d => totalBazar += (d.data().amount || 0));
+            document.getElementById('totalBazar').textContent = '৳' + totalBazar;
+
+            const rate = totalMeals > 0 ? (totalBazar / totalMeals) : 0;
+            document.getElementById('mealRate').textContent = '৳' + rate.toFixed(2);
+            await setDoc(doc(this.db, 'settings', 'mealRate'), { rate }, { merge: true });
+        }
+        async addMember() {
+            const name = document.getElementById('newMemberName').value.trim();
+            const deposit = parseFloat(document.getElementById('newMemberDeposit').value) || 0;
+            if (!name) return alert('Enter name');
+            await window.FirebaseSDK.addDoc(window.FirebaseSDK.collection(this.db, 'members'), {
+                name, totalDeposit: deposit, totalMeals: 0, createdAt: window.FirebaseSDK.serverTimestamp()
+            });
+            alert('Border registered');
+            document.getElementById('newMemberName').value = '';
+            document.getElementById('newMemberDeposit').value = '';
+            await this.loadAllData();
+        }
+        async addDeposit() {
+            const memberId = document.getElementById('memberSelect').value;
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+            if (!memberId || isNaN(amount) || amount <= 0) return alert('Select border and amount');
+            const ref = window.FirebaseSDK.doc(this.db, 'members', memberId);
+            const snap = await window.FirebaseSDK.getDoc(ref);
+            if (snap.exists()) {
+                await window.FirebaseSDK.updateDoc(ref, { totalDeposit: snap.data().totalDeposit + amount });
+                alert('Deposit added');
+                document.getElementById('depositAmount').value = '';
+                await this.loadAllData();
+            }
+        }
+        async addBazar() {
+            const date = document.getElementById('bazarDate').value;
+            const purchaser = document.getElementById('purchaser').value.trim();
+            const amount = parseFloat(document.getElementById('bazarAmount').value);
+            if (!date || !purchaser || isNaN(amount) || amount <= 0) return alert('Fill all fields');
+            await window.FirebaseSDK.addDoc(window.FirebaseSDK.collection(this.db, 'bazar'), {
+                date, purchaser, amount, timestamp: window.FirebaseSDK.serverTimestamp()
+            });
+            alert('Bazar logged');
+            document.getElementById('bazarDate').value = '';
+            document.getElementById('purchaser').value = '';
+            document.getElementById('bazarAmount').value = '';
+            await this.loadAllData();
+        }
+        async updateManagerName() {
+            const newName = document.getElementById('managerNameInput').value.trim();
+            if (!newName) return alert('Enter name');
+            await window.FirebaseSDK.setDoc(window.FirebaseSDK.doc(this.db, 'settings', 'manager'), { name: newName }, { merge: true });
+            alert('Manager designation updated');
+        }
+        async changePassword() {
+            const oldPass = document.getElementById('oldPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            if (!oldPass || !newPass) return alert('Enter both passwords');
+            if (newPass.length < 6) return alert('Min 6 characters');
+            const credential = window.FirebaseSDK.EmailAuthProvider.credential(this.currentUser.email, oldPass);
+            await window.FirebaseSDK.reauthenticateWithCredential(this.currentUser, credential);
+            await window.FirebaseSDK.updatePassword(this.currentUser, newPass);
+            alert('Password updated');
+            document.getElementById('oldPassword').value = '';
+            document.getElementById('newPassword').value = '';
+        }
+        handleLogout() {
+            window.FirebaseSDK.signOut(this.auth).then(() => window.location.href = 'login.html');
+        }
+    }
+    window.AppConsole = new EnterpriseConsole();
+</script>
+</body>
+</html>
