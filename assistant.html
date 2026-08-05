@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistant Meal Console – Ma Achiya Villa</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --font-primary: 'Inter', sans-serif;
+            --font-bengali: 'Noto Sans Bengali', sans-serif;
+            --glass-bg: rgba(20,20,40,0.75);
+            --glass-border: rgba(255,255,255,0.1);
+        }
+        body {
+            font-family: var(--font-primary);
+            background: radial-gradient(circle at top, #140d2b, #0a0a12);
+            min-height: 100vh; margin: 0; padding: 20px 12px; color: #fff;
+        }
+        body::after {
+            content: ''; position: fixed; inset: 0;
+            background: radial-gradient(circle at 20% 60%, rgba(139,92,246,0.1) 0%, transparent 40%);
+            pointer-events: none; z-index: 0;
+        }
+        .glass-box {
+            background: var(--glass-bg); backdrop-filter: blur(35px);
+            border: 1px solid var(--glass-border); border-radius: 20px;
+            padding: 20px; margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative; z-index: 10;
+        }
+        .btn-action {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            border: none; padding: 12px 16px; border-radius: 12px;
+            color: white; font-weight: 600; cursor: pointer; font-size: 13px;
+            box-shadow: 0 4px 15px rgba(139,92,246,0.3); transition: 0.2s;
+        }
+        .btn-action:active { transform: translateY(2px); }
+        .btn-secondary {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .input-date {
+            background: rgba(255,255,255,0.07); border: 1px solid var(--glass-border);
+            border-radius: 12px; padding: 10px 14px; color: #fff; outline: none;
+            font-family: var(--font-primary); font-size: 14px;
+        }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 14px 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        th { background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.5); font-size: 11px; text-transform: uppercase; font-weight: 600; }
+        td:first-child, th:first-child { text-align: left; font-family: var(--font-bengali); }
+        
+        /* Modern Checkbox */
+        .meal-checkbox {
+            appearance: none; width: 22px; height: 22px;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px; cursor: pointer; transition: 0.2s;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        .meal-checkbox:checked {
+            background: #8b5cf6; border-color: #a78bfa;
+        }
+        .meal-checkbox:checked::after {
+            content: ''; color: white; font-size: 14px; font-weight: bold;
+        }
+        
+        .input-box {
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+            border-radius: 12px; padding: 12px; color: #fff; margin-bottom: 10px; outline: none;
+        }
+        .input-box:focus { border-color: #8b5cf6; }
+    </style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div id="loadingScreen" class="fixed inset-0 flex items-center justify-center bg-[#0a0a12] z-50 text-white flex-col">
+    <div class="w-10 h-10 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+    <p class="text-sm text-gray-400">Loading Console...</p>
+</div>
+
+<div class="max-w-4xl mx-auto relative z-10" id="mainApp" style="display: none;">
+    
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6 px-1">
+        <div>
+            <h1 class="text-xl font-bold text-white">Assistant Console</h1>
+            <p id="userEmail" class="text-xs text-purple-300/70 mt-0.5">Connecting...</p>
+        </div>
+        <button onclick="handleLogout()" class="px-4 py-2 text-xs font-semibold text-red-300 bg-red-500/10 border border-red-500/20 rounded-xl hover:bg-red-500/20">Logout</button>
+    </div>
+
+    <!-- Controls -->
+    <div class="glass-box flex flex-wrap justify-between items-center gap-4">
+        <div class="flex items-center gap-3">
+            <span class="text-xs font-bold uppercase text-gray-400">Date:</span>
+            <input type="date" id="selectedDate" class="input-date" onchange="changeDate()">
+        </div>
+        <div class="flex gap-2">
+            <button onclick="copyYesterdayMeals()" class="btn-action btn-secondary"> Copy Yesterday</button>
+            <button onclick="saveMeals()" id="btnSave" class="btn-action"> Save Roster</button>
+        </div>
+    </div>
+
+    <!-- Meal Table -->
+    <div class="glass-box overflow-x-auto p-0">
+        <table>
+            <thead>
+                <tr>
+                    <th>Border Name</th>
+                    <th>Break<br><span class="text-[9px] text-gray-500">(0.5)</span></th>
+                    <th>Lunch<br><span class="text-[9px] text-gray-500">(1.0)</span></th>
+                    <th>Dinner<br><span class="text-[9px] text-gray-500">(1.0)</span></th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody id="mealTableBody">
+                <!-- Rows will be injected here via JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Change Password -->
+    <div class="glass-box mt-6">
+        <h2 class="text-sm font-bold mb-4 flex items-center gap-2 text-gray-300"> Change Assistant Password</h2>
+        <input type="password" id="oldPasswordAssist" class="input-box" placeholder="Current password">
+        <input type="password" id="newPasswordAssist" class="input-box" placeholder="New password">
+        <button onclick="changePassword()" class="btn-action w-full mt-1">Update Password</button>
+    </div>
+</div>
+
+<!-- Firebase System Module -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+    import { getFirestore, collection, doc, getDoc, setDoc, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCp839knqRqJvkVOxOS2-MvD3KnnSL-Mio",
+        authDomain: "my-mess-1c3a2.firebaseapp.com",
+        projectId: "my-mess-1c3a2",
+        storageBucket: "my-mess-1c3a2.firebasestorage.app",
+        messagingSenderId: "148513277951",
+        appId: "1:148513277951:web:411615103ce47405efc9ca",
+        measurementId: "G-XCNMLEETXH"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    
+    let currentUser = null;
+    let members = [];
+    let currentMealsData = {};
+    
+    // Set today's date in input field
+    let selectedDateStr = new Date().toISOString().split('T')[0];
+    document.getElementById('selectedDate').value = selectedDateStr;
+
+    // 1. Auth Check
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+            window.location.replace('login.html?role=assistant');
+            return;
+        }
+        currentUser = user;
+        document.getElementById('userEmail').textContent = user.email;
+        
+        await loadInitialData();
+        document.getElementById('loadingScreen').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+    });
+
+    // 2. Data Loading
+    async function loadInitialData() {
+        const snap = await getDocs(collection(db, 'members'));
+        members = [];
+        snap.forEach(d => members.push({ id: d.id, ...d.data() }));
+        
+        // Sort members alphabetically for consistent UI
+        members.sort((a,b) => (a.name || '').localeCompare(b.name || ''));
+        
+        await loadMealsForDate(selectedDateStr);
+    }
+
+    async function loadMealsForDate(dateStr) {
+        const snap = await getDoc(doc(db, 'meals', dateStr));
+        currentMealsData = snap.exists() ? (snap.data().members || {}) : {};
+        renderTable();
+    }
+
+    // 3. Render Table
+    function renderTable() {
+        const tbody = document.getElementById('mealTableBody');
+        tbody.innerHTML = '';
+        
+        if (members.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-10 text-gray-400">No members found. Ask admin to add members.</td></tr>';
+            return;
+        }
+        
+        let html = '';
+        members.forEach(m => {
+            let mData = currentMealsData[m.id] || { breakfast: 0, lunch: 0, dinner: 0 };
+            let totalToday = (mData.breakfast ? 0.5 : 0) + (mData.lunch ? 1 : 0) + (mData.dinner ? 1 : 0);
+            
+            html += `
+                <tr>
+                    <td class="font-medium text-white text-[15px]">${m.name}</td>
+                    <td><input type="checkbox" class="meal-checkbox" ${mData.breakfast ? 'checked' : ''} onchange="updateMealVal('${m.id}', 'breakfast', this.checked)"></td>
+                    <td><input type="checkbox" class="meal-checkbox" ${mData.lunch ? 'checked' : ''} onchange="updateMealVal('${m.id}', 'lunch', this.checked)"></td>
+                    <td><input type="checkbox" class="meal-checkbox" ${mData.dinner ? 'checked' : ''} onchange="updateMealVal('${m.id}', 'dinner', this.checked)"></td>
+                    <td class="font-bold text-purple-400" id="total_${m.id}">${totalToday.toFixed(1)}</td>
+                </tr>`;
+        });
+        tbody.innerHTML = html;
+    }
+
+    // 4. Action Functions attached to Window
+    window.updateMealVal = (memberId, mealType, isChecked) => {
+        if (!currentMealsData[memberId]) currentMealsData[memberId] = { breakfast: 0, lunch: 0, dinner: 0 };
+        currentMealsData[memberId][mealType] = isChecked ? 1 : 0;
+        
+        let mData = currentMealsData[memberId];
+        let totalToday = (mData.breakfast ? 0.5 : 0) + (mData.lunch ? 1 : 0) + (mData.dinner ? 1 : 0);
+        document.getElementById(`total_${memberId}`).textContent = totalToday.toFixed(1);
+    };
+
+    window.changeDate = async () => {
+        selectedDateStr = document.getElementById('selectedDate').value;
+        document.getElementById('mealTableBody').innerHTML = '<tr><td colspan="5" class="text-center py-10 text-gray-400">Loading...</td></tr>';
+        await loadMealsForDate(selectedDateStr);
+    };
+
+    window.copyYesterdayMeals = async () => {
+        let d = new Date(selectedDateStr);
+        d.setDate(d.getDate() - 1);
+        let yestStr = d.toISOString().split('T')[0];
+        
+        const snap = await getDoc(doc(db, 'meals', yestStr));
+        if (snap.exists()) {
+            currentMealsData = snap.data().members || {};
+            renderTable();
+            alert(' Data copied from yesterday! Click "Save Roster" to apply.');
+        } else {
+            alert('No meal record found for yesterday.');
+        }
+    };
+
+    window.saveMeals = async () => {
+        const btn = document.getElementById('btnSave');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Saving...';
+        btn.disabled = true;
+
+        try {
+            // Calculate total meals for this specific day
+            let totalDayMeals = 0;
+            members.forEach(m => {
+                let mData = currentMealsData[m.id] || { breakfast: 0, lunch: 0, dinner: 0 };
+                totalDayMeals += (mData.breakfast ? 0.5 : 0) + (mData.lunch ? 1 : 0) + (mData.dinner ? 1 : 0);
+            });
+            
+            // Save today's roster
+            await setDoc(doc(db, 'meals', selectedDateStr), { 
+                members: currentMealsData, 
+                totalMeals: totalDayMeals 
+            }, { merge: true });
+
+            // Recalculate ALL-TIME meals for every member
+            const allSnap = await getDocs(collection(db, 'meals'));
+            let memberTotals = {};
+            members.forEach(m => memberTotals[m.id] = 0);
+            
+            allSnap.forEach(docSnap => {
+                const data = docSnap.data();
+                if (data.members) {
+                    Object.entries(data.members).forEach(([mId, meals]) => {
+                        if (memberTotals[mId] !== undefined) {
+                            memberTotals[mId] += (meals.breakfast ? 0.5 : 0) + (meals.lunch ? 1 : 0) + (meals.dinner ? 1 : 0);
+                        }
+                    });
+                }
+            });
+            
+            // Update the members collection with new totals
+            for (let m of members) {
+                if (memberTotals[m.id] !== undefined) {
+                    await updateDoc(doc(db, 'members', m.id), { totalMeals: memberTotals[m.id] });
+                }
+            }
+            
+            btn.innerHTML = ' Saved Successfully';
+            setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 2000);
+            
+        } catch(e) {
+            alert("Error saving data: " + e.message);
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    };
+
+    window.changePassword = async () => {
+        const oldPass = document.getElementById('oldPasswordAssist').value;
+        const newPass = document.getElementById('newPasswordAssist').value;
+        
+        if (!oldPass || !newPass) return alert('Please fill both fields.');
+        if (newPass.length < 6) return alert('Password must be at least 6 characters.');
+
+        try {
+            const credential = EmailAuthProvider.credential(currentUser.email, oldPass);
+            await reauthenticateWithCredential(currentUser, credential);
+            await updatePassword(currentUser, newPass);
+            
+            alert('Password updated successfully!');
+            document.getElementById('oldPasswordAssist').value = '';
+            document.getElementById('newPasswordAssist').value = '';
+        } catch (err) {
+            alert('Error: Incorrect current password or system error.');
+        }
+    };
+
+    window.handleLogout = async () => {
+        await signOut(auth);
+        window.location.replace('login.html?role=assistant');
+    };
+</script>
+</body>
+</html>

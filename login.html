@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Login – Ma Achiya Villa</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --font-primary: 'Inter', sans-serif;
+        }
+        body {
+            font-family: var(--font-primary);
+            background: radial-gradient(circle at 50% 0%, #1a103c 0%, #0d0a1a 65%, #050508 100%);
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            padding: 20px; color: #fff; margin: 0; position: relative;
+        }
+        body::after {
+            content: ''; position: fixed; inset: 0;
+            background: radial-gradient(circle at 20% 60%, rgba(139,92,246,0.15) 0%, transparent 40%),
+                        radial-gradient(circle at 75% 25%, rgba(59,130,246,0.12) 0%, transparent 40%);
+            filter: blur(60px); pointer-events: none; z-index: 0;
+        }
+        .glass-panel {
+            background: rgba(20, 18, 35, 0.75); backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 28px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4); position: relative; z-index: 1;
+            width: 100%; max-width: 400px; padding: 30px 24px;
+        }
+        
+        .logo-circle {
+            width: 70px; height: 70px; border-radius: 50%; 
+            background: rgba(22, 22, 48, 0.85);
+            border: 2.5px solid #34d399; 
+            box-shadow: 0 0 25px rgba(52, 211, 153, 0.4); 
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px; overflow: hidden;
+        }
+        .logo-text { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; width: 100%; line-height: 1.15; }
+        .logo-bn { font-size: 11px; font-weight: 800; color: #fff; letter-spacing: 0.5px; text-transform: uppercase; }
+        .logo-en { font-size: 8.5px; font-weight: 700; color: rgba(255,255,255,0.5); letter-spacing: 1.2px; text-transform: uppercase; }
+        
+        .tab-btn {
+            padding: 9px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer;
+            background: transparent; color: rgba(255,255,255,0.6); border: none; transition: 0.3s;
+        }
+        .tab-btn.active { background: #8b5cf6; color: #fff; }
+        
+        .input-box {
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 14px; padding: 14px 16px; color: #fff; margin-bottom: 14px; outline: none; transition: 0.3s;
+        }
+        .input-box:focus { border-color: #a78bfa; background: rgba(255,255,255,0.08); }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9); border: none; padding: 14px;
+            border-radius: 14px; color: white; font-weight: 700; cursor: pointer; width: 100%;
+            box-shadow: 0 6px 20px rgba(139,92,246,0.4); transition: 0.3s;
+        }
+        .btn-submit:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    </style>
+</head>
+<body>
+
+    <div class="glass-panel">
+        <div class="logo-circle">
+            <div class="logo-text">
+                <span class="logo-bn">ACHIYA</span>
+                <span class="logo-en">VILLA</span>
+            </div>
+        </div>
+        
+        <h2 class="text-xl font-bold text-center mb-1"> Manager Portal</h2>
+        <p class="text-xs text-center mb-6 text-purple-300/70">Secure Access System</p>
+
+        <div class="grid grid-cols-2 gap-2 mb-5 p-1 bg-white/5 rounded-xl">
+            <button class="tab-btn active" id="tabAdmin" onclick="setRole('admin')"> Main Manager</button>
+            <button class="tab-btn" id="tabAssistant" onclick="setRole('assistant')"> Assistant</button>
+        </div>
+
+        <form id="loginForm">
+            <input type="email" id="email" class="input-box" placeholder=" Email Address" required>
+            <input type="password" id="password" class="input-box" placeholder=" Password" required>
+            <button type="submit" id="submitBtn" class="btn-submit mt-2">Login to Console </button>
+            
+            <div id="errorMsg" class="text-red-400 text-sm text-center mt-3 hidden"></div>
+        </form>
+        
+        <div class="text-center mt-6">
+            <a href="index.html" class="text-xs text-purple-300 hover:underline"> Back to Home Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Firebase Authentication Module -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCp839knqRqJvkVOxOS2-MvD3KnnSL-Mio",
+            authDomain: "my-mess-1c3a2.firebaseapp.com",
+            projectId: "my-mess-1c3a2",
+            storageBucket: "my-mess-1c3a2.firebasestorage.app",
+            messagingSenderId: "148513277951",
+            appId: "1:148513277951:web:411615103ce47405efc9ca",
+            measurementId: "G-XCNMLEETXH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        let selectedRole = urlParams.get('role') === 'assistant' ? 'assistant' : 'admin';
+
+        window.setRole = (role) => {
+            selectedRole = role;
+            document.getElementById('tabAdmin').className = role === 'admin' ? 'tab-btn active' : 'tab-btn';
+            document.getElementById('tabAssistant').className = role === 'assistant' ? 'tab-btn active' : 'tab-btn';
+        };
+        
+        window.setRole(selectedRole);
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errorEl = document.getElementById('errorMsg');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            errorEl.classList.add('hidden');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Verifying Credentials...';
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                
+                if (selectedRole === 'admin') {
+                    window.location.replace('admin.html');
+                } else {
+                    window.location.replace('assistant.html');
+                }
+            } catch (error) {
+                console.error("Login Failed:", error);
+                errorEl.textContent = " Invalid email or password. Please try again.";
+                errorEl.classList.remove('hidden');
+                document.getElementById('password').value = '';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Login to Console ';
+            }
+        });
+    </script>
+</body>
+</html>
