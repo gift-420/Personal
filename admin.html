@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="dark">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ma Achiya Villa - Admin Panel</title>
+
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Noto+Sans+Bengali:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+
+
+<script type="module">
+
+import { initializeApp } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+
+import { 
+getFirestore 
+}
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+
+import {
+getAuth
+}
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyA8wqh_981-ZkvjEDVq9TIRd8W085aLV9c",
+
+authDomain:"my-mess-1a367.firebaseapp.com",
+
+projectId:"my-mess-1a367",
+
+storageBucket:"my-mess-1a367.firebasestorage.app",
+
+messagingSenderId:"295199809694",
+
+appId:"1:295199809694:web:a78530334d571608c05b8f"
+
+};
+
+
+
+const app = initializeApp(firebaseConfig);
+
+
+window.db = getFirestore(app);
+
+
+window.auth = getAuth(app);
+
+
+
+</script>
+
+
+
+<style>
+
+
+:root{
+
+--bg:#06060e;
+
+--glass:
+rgba(255,255,255,.08);
+
+--border:
+rgba(255,255,255,.15);
+
+--text:white;
+
+--green:#34d399;
+
+}
+
+
+
+*{
+
+box-sizing:border-box;
+
+}
+
+
+
+body{
+
+margin:0;
+
+min-height:100vh;
+
+padding:20px;
+
+font-family:
+Inter,
+"Noto Sans Bengali",
+sans-serif;
+
+color:var(--text);
+
+background:
+
+radial-gradient(
+circle at top,
+#312e81,
+#06060e 55%
+);
+
+}
+
+
+
+.glass{
+
+background:
+var(--glass);
+
+backdrop-filter:
+blur(40px);
+
+-webkit-backdrop-filter:
+blur(40px);
+
+border:
+1px solid var(--border);
+
+border-radius:28px;
+
+box-shadow:
+
+0 20px 50px
+rgba(0,0,0,.4);
+
+}
+
+
+
+.card{
+
+padding:20px;
+
+transition:.3s;
+
+}
+
+
+
+.card:hover{
+
+transform:
+translateY(-4px);
+
+}
+
+
+
+.logo{
+
+width:65px;
+
+height:65px;
+
+border-radius:50%;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+border:
+2px solid var(--green);
+
+box-shadow:
+
+0 0 30px
+rgba(52,211,153,.5);
+
+font-weight:800;
+
+text-align:center;
+
+}
+
+
+
+.btn{
+
+padding:12px 18px;
+
+border-radius:18px;
+
+background:
+rgba(255,255,255,.1);
+
+border:
+1px solid rgba(255,255,255,.2);
+
+cursor:pointer;
+
+}
+
+
+
+.btn:hover{
+
+background:
+rgba(255,255,255,.2);
+
+}
+
+
+
+.stat{
+
+text-align:center;
+
+}
+
+
+
+.stat h2{
+
+font-size:26px;
+
+font-weight:800;
+
+}
+
+
+
+.small{
+
+opacity:.6;
+
+font-size:12px;
+
+}
+
+
+
+</style>
+
+</head>
+
+
+
+<body>
+
+
+
+<div class="max-w-3xl mx-auto">
+
+
+
+<!-- HEADER -->
+
+<div class="glass p-5 flex justify-between items-center mb-6">
+
+
+<div class="logo">
+
+মা<br>
+VILLA
+
+</div>
+
+
+
+<div class="text-center">
+
+
+<h1 class="font-bold text-xl">
+
+Admin Panel
+
+</h1>
+
+
+<p class="small">
+
+Ma Achiya Villa Management
+
+</p>
+
+
+</div>
+
+
+
+<button class="btn">
+
+☰
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ADMIN DASHBOARD -->
+
+
+<div class="grid grid-cols-3 gap-3 mb-6">
+
+
+
+<div class="glass card stat">
+
+<div>
+
+👥
+
+</div>
+
+
+<p class="small">
+
+Members
+
+</p>
+
+
+<h2 id="memberCount">
+
+0
+
+</h2>
+
+
+</div>
+
+
+
+
+
+<div class="glass card stat">
+
+
+<div>
+
+🍽️
+
+</div>
+
+
+<p class="small">
+
+Meals
+
+</p>
+
+
+<h2 id="mealCount">
+
+0
+
+</h2>
+
+
+</div>
+
+
+
+
+
+<div class="glass card stat">
+
+
+<div>
+
+🛒
+
+</div>
+
+
+<p class="small">
+
+Bazar
+
+</p>
+
+
+<h2 id="bazarTotal">
+
+৳0
+
+</h2>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- QUICK ACTION -->
+
+
+<div class="glass p-5 mb-6">
+
+
+<h2 class="font-bold text-lg mb-4">
+
+⚡ Quick Actions
+
+</h2>
+
+
+
+<div class="grid grid-cols-2 gap-3">
+
+
+<button class="btn">
+
+➕ Add Member
+
+</button>
+
+
+<button class="btn">
+
+🛒 Add Bazar
+
+</button>
+
+
+<button class="btn">
+
+🍽️ Meal Entry
+
+</button>
+
+
+<button class="btn">
+
+⚙️ Settings
+
+</button>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+<script>
+
+
+// Firebase Ready Check
+
+
+function firebaseReady(){
+
+if(window.db){
+
+console.log(
+"Firebase Connected"
+);
+
+}
+
+else{
+
+setTimeout(
+firebaseReady,
+500
+);
+
+}
+
+}
+
+
+
+window.onload=()=>{
+
+firebaseReady();
+
+};
+
+
+
+</script>
+
+
+
+</body>
+
+</html>
+<!-- ================= MEMBER MANAGEMENT ================= -->
+
+<div class="glass p-5 mb-6">
+
+<h2 class="font-bold text-lg mb-4">
+👥 Member Management
+</h2>
+
+
+<div class="grid gap-3">
+
+
+<input 
+id="memberName"
+class="btn"
+placeholder="Member Name">
+
+
+<input 
+id="memberDeposit"
+type="number"
+class="btn"
+placeholder="Initial Deposit">
+
+
+<button 
+onclick="addMember()"
+class="btn">
+
+➕ Add Member
+
+</button>
+
+
+</div>
+
+</div>
+
+
+
+
+
+
+<!-- MEMBER LIST -->
+
+<div class="glass p-5 mb-6">
+
+
+<h2 class="font-bold text-lg mb-4">
+
+📋 Members List
+
+</h2>
+
+
+<div id="adminMemberList"
+class="space-y-3">
+
+
+Loading...
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<script type="module">
+
+
+import {
+
+collection,
+addDoc,
+getDocs,
+deleteDoc,
+doc,
+updateDoc
+
+}
+
+from 
+"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+
+
+
+const memberList =
+document.getElementById(
+"adminMemberList"
+);
+
+
+
+
+
+
+// ADD MEMBER
+
+
+window.addMember = async function(){
+
+
+let name =
+document.getElementById(
+"memberName"
+).value.trim();
+
+
+
+let deposit =
+Number(
+document.getElementById(
+"memberDeposit"
+).value || 0
+);
+
+
+
+if(!name){
+
+alert(
+"Enter Member Name"
+);
+
+return;
+
+}
+
+
+
+try{
+
+
+await addDoc(
+
+collection(
+window.db,
+"members"
+),
+
+{
+
+
+name:name,
+
+
+totalMeals:0,
+
+
+totalDeposit:deposit,
+
+
+createdAt:
+new Date()
+
+}
+
+);
+
+
+
+alert(
+"Member Added"
+);
+
+
+
+document.getElementById(
+"memberName"
+).value="";
+
+
+document.getElementById(
+"memberDeposit"
+).value="";
+
+
+
+loadMembers();
+
+
+
+}
+
+catch(e){
+
+
+console.log(e);
+
+
+alert(
+"Save Error"
+);
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+// LOAD MEMBERS
+
+
+async function loadMembers(){
+
+
+
+let html="";
+
+
+
+const snap =
+await getDocs(
+
+collection(
+window.db,
+"members"
+
+)
+
+);
+
+
+
+let count=0;
+
+
+
+snap.forEach(item=>{
+
+
+count++;
+
+
+let m =
+item.data();
+
+
+
+html+=`
+
+
+<div class="glass p-4 flex justify-between items-center">
+
+
+<div>
+
+
+<h3 class="font-bold">
+
+${m.name || "No Name"}
+
+</h3>
+
+
+<p class="small">
+
+Deposit:
+৳${m.totalDeposit || 0}
+
+<br>
+
+Meals:
+${m.totalMeals || 0}
+
+</p>
+
+
+</div>
+
+
+
+
+<div class="flex gap-2">
+
+
+<button
+
+class="btn"
+
+onclick="addDeposit('${item.id}')">
+
+💰
+
+</button>
+
+
+
+<button
+
+class="btn"
+
+onclick="deleteMember('${item.id}')">
+
+🗑️
+
+</button>
+
+
+</div>
+
+
+</div>
+
+
+`;
+
+
+
+});
+
+
+
+
+
+memberList.innerHTML =
+html || "No Members";
+
+
+
+document.getElementById(
+"memberCount"
+).innerHTML=count;
+
+
+
+}
+
+
+
+
+
+
+
+
+// ADD DEPOSIT
+
+
+window.addDeposit =
+async function(id){
+
+
+let amount =
+prompt(
+"Deposit Amount"
+);
+
+
+
+if(!amount)
+return;
+
+
+
+let ref =
+doc(
+window.db,
+"members",
+id
+);
+
+
+
+const snap =
+await getDocs(
+collection(
+window.db,
+"members"
+)
+);
+
+
+
+let old=0;
+
+
+
+snap.forEach(x=>{
+
+if(x.id===id){
+
+old =
+Number(
+x.data().totalDeposit || 0
+);
+
+}
+
+});
+
+
+
+await updateDoc(
+
+ref,
+
+{
+
+totalDeposit:
+old + Number(amount)
+
+}
+
+);
+
+
+
+loadMembers();
+
+
+}
+
+
+
+
+
+
+
+
+// DELETE MEMBER
+
+
+window.deleteMember =
+async function(id){
+
+
+let ok =
+confirm(
+"Delete Member?"
+);
+
+
+
+if(!ok)
+return;
+
+
+
+await deleteDoc(
+
+doc(
+window.db,
+"members",
+id
+
+)
+
+);
+
+
+
+loadMembers();
+
+
+}
+
+
+
+
+
+
+// INITIAL LOAD
+
+
+setTimeout(
+
+loadMembers,
+
+1500
+
+);
+
+
+
+</script>
+<!-- ================= BAZAR MANAGEMENT ================= -->
+
+<div class="glass p-5 mb-6">
+
+
+<h2 class="font-bold text-lg mb-4">
+🛒 Bazar Entry
+</h2>
+
+
+<div class="grid gap-3">
+
+
+<input 
+id="bazarDate"
+type="date"
+class="btn">
+
+
+<input 
+id="bazarPerson"
+class="btn"
+placeholder="Purchaser Name">
+
+
+
+<input 
+id="bazarAmount"
+type="number"
+class="btn"
+placeholder="Amount">
+
+
+
+<button 
+onclick="addBazar()"
+class="btn">
+
+➕ Save Bazar
+
+</button>
+
+
+
+</div>
+
+</div>
+
+
+
+
+
+
+<div class="glass p-5 mb-6">
+
+
+<h2 class="font-bold text-lg mb-4">
+📋 Bazar History
+</h2>
+
+
+<div id="adminBazarList"
+class="space-y-3">
+
+Loading...
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- ================= SETTINGS ================= -->
+
+
+<div class="glass p-5 mb-6">
+
+
+<h2 class="font-bold text-lg mb-4">
+⚙️ Settings
+</h2>
+
+
+<div class="grid gap-3">
+
+
+
+<input
+id="managerInput"
+class="btn"
+placeholder="Manager Name">
+
+
+
+<button
+onclick="saveManager()"
+class="btn">
+
+Save Manager
+
+</button>
+
+
+
+
+
+<input
+id="mealRateInput"
+type="number"
+class="btn"
+placeholder="Meal Rate">
+
+
+
+<button
+onclick="saveMealRate()"
+class="btn">
+
+Save Meal Rate
+
+</button>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<script type="module">
+
+
+import {
+
+collection,
+addDoc,
+getDocs,
+doc,
+setDoc
+
+}
+
+from
+"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+
+
+
+
+const bazarList =
+document.getElementById(
+"adminBazarList"
+);
+
+
+
+
+
+
+
+// ADD BAZAR
+
+
+window.addBazar =
+async function(){
+
+
+
+let date =
+document.getElementById(
+"bazarDate"
+).value;
+
+
+
+let person =
+document.getElementById(
+"bazarPerson"
+).value;
+
+
+
+let amount =
+Number(
+document.getElementById(
+"bazarAmount"
+).value || 0
+);
+
+
+
+if(!date || !person || !amount){
+
+alert(
+"Fill all fields"
+);
+
+return;
+
+}
+
+
+
+
+await addDoc(
+
+collection(
+window.db,
+"bazar"
+),
+
+{
+
+
+date:date,
+
+purchaser:person,
+
+amount:amount,
+
+
+createdAt:
+new Date()
+
+
+}
+
+);
+
+
+
+alert(
+"Bazar Saved"
+);
+
+
+
+loadBazar();
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// LOAD BAZAR
+
+
+async function loadBazar(){
+
+
+
+let html="";
+
+
+
+const snap =
+await getDocs(
+
+collection(
+window.db,
+"bazar"
+
+)
+
+);
+
+
+
+snap.forEach(item=>{
+
+
+let b =
+item.data();
+
+
+
+html+=`
+
+<div class="glass p-3">
+
+
+<b>
+
+${b.date}
+
+</b>
+
+
+<br>
+
+
+${b.purchaser}
+
+
+<span style="float:right">
+
+৳${b.amount}
+
+</span>
+
+
+</div>
+
+
+`;
+
+
+
+});
+
+
+
+bazarList.innerHTML =
+html || "No Bazar";
+
+
+
+}
+
+
+
+
+
+
+
+
+// SAVE MANAGER
+
+
+window.saveManager =
+async function(){
+
+
+let name =
+document.getElementById(
+"managerInput"
+).value;
+
+
+
+await setDoc(
+
+doc(
+window.db,
+"settings",
+"manager"
+
+),
+
+{
+
+name:name
+
+}
+
+);
+
+
+
+alert(
+"Manager Updated"
+);
+
+
+}
+
+
+
+
+
+
+
+// SAVE MEAL RATE
+
+
+window.saveMealRate =
+async function(){
+
+
+let rate =
+Number(
+
+document.getElementById(
+"mealRateInput"
+).value
+
+);
+
+
+
+await setDoc(
+
+doc(
+window.db,
+"settings",
+"mealRate"
+
+),
+
+{
+
+rate:rate
+
+}
+
+);
+
+
+
+alert(
+"Meal Rate Updated"
+);
+
+
+
+}
+
+
+
+
+
+
+
+setTimeout(
+
+loadBazar,
+
+1500
+
+);
+
+
+
+</script>
+<!-- ================= DAILY MEAL ENTRY ================= -->
+
+<div class="glass p-5 mb-6">
+
+<h2 class="font-bold text-lg mb-4">
+🍽️ Daily Meal Entry
+</h2>
+
+
+<div class="mb-4">
+
+<input 
+id="mealDate"
+type="date"
+class="btn w-full">
+
+</div>
+
+
+
+<div id="mealMemberList"
+class="space-y-3">
+
+Loading Members...
+
+</div>
+
+
+
+<button
+onclick="saveMealSheet()"
+class="btn w-full mt-4">
+
+💾 Save Today's Meal
+
+</button>
+
+
+</div>
+
+
+
+
+
+<script type="module">
+
+
+import {
+
+collection,
+getDocs,
+doc,
+setDoc
+
+}
+
+from
+"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+
+
+
+
+let mealMembers=[];
+
+
+
+
+
+
+
+async function loadMealMembers(){
+
+
+
+let html="";
+
+
+
+const snap =
+await getDocs(
+
+collection(
+window.db,
+"members"
+
+)
+
+);
+
+
+
+mealMembers=[];
+
+
+
+snap.forEach(item=>{
+
+
+let m =
+item.data();
+
+
+
+mealMembers.push({
+
+id:item.id,
+
+name:m.name
+
+});
+
+
+
+html+=`
+
+<div class="glass p-4">
+
+
+<div class="font-bold mb-3">
+
+${m.name}
+
+</div>
+
+
+
+<div class="flex gap-4">
+
+
+<label>
+
+<input 
+type="checkbox"
+id="${item.id}_b">
+
+Breakfast
+
+</label>
+
+
+
+<label>
+
+<input 
+type="checkbox"
+id="${item.id}_l">
+
+Lunch
+
+</label>
+
+
+
+
+<label>
+
+<input 
+type="checkbox"
+id="${item.id}_d">
+
+Dinner
+
+</label>
+
+
+
+</div>
+
+
+
+</div>
+
+
+`;
+
+
+
+});
+
+
+
+document.getElementById(
+"mealMemberList"
+).innerHTML =
+html || "No Members";
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// SAVE MEAL
+
+
+window.saveMealSheet =
+async function(){
+
+
+
+let date =
+document.getElementById(
+"mealDate"
+).value;
+
+
+
+if(!date){
+
+alert(
+"Select Date"
+);
+
+return;
+
+}
+
+
+
+let members={};
+
+
+
+
+
+mealMembers.forEach(m=>{
+
+
+members[m.id]={
+
+
+breakfast:
+document.getElementById(
+m.id+"_b"
+).checked,
+
+
+
+lunch:
+document.getElementById(
+m.id+"_l"
+).checked,
+
+
+
+dinner:
+document.getElementById(
+m.id+"_d"
+).checked
+
+
+};
+
+
+
+});
+
+
+
+
+
+
+
+await setDoc(
+
+doc(
+window.db,
+"meals",
+date
+
+),
+
+{
+
+
+members:members,
+
+
+updatedAt:
+new Date()
+
+
+}
+
+);
+
+
+
+
+alert(
+"Meal Saved"
+);
+
+
+
+}
+
+
+
+
+
+
+
+// LOAD DEFAULT DATE
+
+
+document.getElementById(
+"mealDate"
+).value =
+new Date()
+.toISOString()
+.split("T")[0];
+
+
+
+
+setTimeout(
+loadMealMembers,
+1500
+);
+
+
+
+</script>
