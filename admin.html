@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manager Console  Ma Achiya Villa</title>
+    <title>Manager Console – Ma Achiya Villa</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --font-primary: 'Inter', sans-serif;
-            --font-bengali: 'Noto Sans Bengali', sans-serif;
             --glass-bg: rgba(18, 18, 40, 0.65);
             --glass-border: rgba(255, 255, 255, 0.1);
         }
@@ -69,12 +68,19 @@
     </style>
 </head>
 <body>
+
+<!-- Loading Screen -->
+<div id="loadingScreen" class="fixed inset-0 flex items-center justify-center bg-[#06060e] z-50 text-white flex-col">
+    <div class="w-10 h-10 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+    <p class="text-sm text-gray-400 tracking-wider">Verifying Console Access...</p>
+</div>
+
 <div class="max-w-md mx-auto relative z-10" id="mainApp" style="display: none;">
     <!-- Header -->
     <div class="flex items-center justify-between mb-5">
         <div class="flex items-center gap-3">
             <div class="logo-circle">
-                <span class="text-[9px] font-bold font-bengali"> </span>
+                <span class="text-[9px] font-bold">ACHIYA</span>
                 <span class="text-[7px] font-bold text-gray-400">VILLA</span>
             </div>
             <div>
@@ -83,8 +89,8 @@
             </div>
         </div>
         <div class="flex flex-col gap-2">
-            <a href="index.html" class="px-3 py-1.5 text-xs font-semibold text-blue-400 bg-blue-500/10 border border-blue-500/20 rounded-xl text-center hover:bg-blue-500/20"> Home</a>
-            <button onclick="handleLogout()" class="px-3 py-1.5 text-xs font-semibold text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl hover:bg-red-500/20"> Logout</button>
+            <a href="index.html" class="px-3 py-1.5 text-xs font-semibold text-blue-400 bg-blue-500/10 border border-blue-500/20 rounded-xl text-center hover:bg-blue-500/20">🏠 Home</a>
+            <button onclick="handleLogout()" class="px-3 py-1.5 text-xs font-semibold text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl hover:bg-red-500/20">↪️ Logout</button>
         </div>
     </div>
 
@@ -92,7 +98,7 @@
     <div class="grid grid-cols-3 gap-2 mb-5">
         <div class="stat-card">
             <div class="text-[10px] text-gray-400 uppercase font-semibold">Meal Rate</div>
-            <div class="text-lg font-bold text-purple-400" id="mealRate">0.00</div>
+            <div class="text-lg font-bold text-purple-400" id="mealRate">৳0.00</div>
         </div>
         <div class="stat-card">
             <div class="text-[10px] text-gray-400 uppercase font-semibold">Total Meals</div>
@@ -100,55 +106,49 @@
         </div>
         <div class="stat-card">
             <div class="text-[10px] text-gray-400 uppercase font-semibold">Total Bazar</div>
-            <div class="text-lg font-bold text-emerald-400" id="totalBazar">0</div>
+            <div class="text-lg font-bold text-emerald-400" id="totalBazar">৳0</div>
         </div>
     </div>
 
     <!-- 1. Manager Designation -->
     <div class="glass-container">
-        <div class="flex items-center gap-2 mb-3 text-sm font-semibold text-gray-300"> Update Manager Name</div>
+        <div class="flex items-center gap-2 mb-3 text-sm font-semibold text-gray-300">✏️ Update Manager Name</div>
         <input type="text" id="managerNameInput" class="input-glass" placeholder="Enter manager name">
-        <button id="btnManagerName" class="btn-push" onclick="updateManagerName()"> Save Name</button>
+        <button id="btnManagerName" class="btn-push" onclick="updateManagerName()">💾 Save Name</button>
     </div>
 
     <!-- 2. Add New Border -->
     <div class="glass-container">
-        <div class="flex items-center gap-2 mb-3 text-sm font-semibold text-gray-300"> Add New Border</div>
+        <div class="flex items-center gap-2 mb-3 text-sm font-semibold text-gray-300">👤 Add New Border</div>
         <input type="text" id="newMemberName" class="input-glass" placeholder="Member full name">
-        <input type="number" id="newMemberDeposit" class="input-glass" placeholder="Initial deposit ()">
-        <button id="btnAddMember" class="btn-push" onclick="addMember()"> Register Border</button>
+        <input type="number" id="newMemberDeposit" class="input-glass" placeholder="Initial deposit (৳)">
+        <button id="btnAddMember" class="btn-push" onclick="addMember()">➕ Register Border</button>
     </div>
 
     <!-- 3. Deposit Ledger -->
     <div class="glass-container">
-        <div class="flex items-center gap-2 mb-3 text-sm font-semibold text-gray-300"> Deposit Ledger Entry</div>
+        <div class="flex items-center gap-2 mb-3 text-sm font-semibold text-gray-300">💳 Deposit Ledger Entry</div>
         <select id="memberSelect" class="input-glass"><option value="">Select border...</option></select>
-        <input type="number" id="depositAmount" class="input-glass" placeholder="Amount ()">
-        <button id="btnDeposit" class="btn-push" onclick="addDeposit()"> Record Payment</button>
+        <input type="number" id="depositAmount" class="input-glass" placeholder="Amount (৳)">
+        <button id="btnDeposit" class="btn-push" onclick="addDeposit()">💰 Record Payment</button>
     </div>
 
     <!-- 4. Bazar Expense Log -->
     <div class="glass-container">
-        <div class="flex items-center gap-2 mb-3 text-sm font-semibold text-gray-300"> Bazar Expense Log</div>
+        <div class="flex items-center gap-2 mb-3 text-sm font-semibold text-gray-300">🛒 Bazar Expense Log</div>
         <input type="date" id="bazarDate" class="input-glass">
         <input type="text" id="purchaser" class="input-glass" placeholder="Purchaser name">
-        <input type="number" id="bazarAmount" class="input-glass" placeholder="Total cost ()">
-        <button id="btnBazar" class="btn-push" onclick="addBazar()"> Commit Expense</button>
+        <input type="number" id="bazarAmount" class="input-glass" placeholder="Total cost (৳)">
+        <button id="btnBazar" class="btn-push" onclick="addBazar()">📋 Commit Expense</button>
     </div>
 
     <!-- 5. Security -->
     <div class="glass-container">
-        <div class="flex items-center gap-2 mb-3 text-sm font-semibold text-gray-300"> Change Password</div>
+        <div class="flex items-center gap-2 mb-3 text-sm font-semibold text-gray-300">🔐 Change Password</div>
         <input type="password" id="oldPassword" class="input-glass" placeholder="Current password">
         <input type="password" id="newPassword" class="input-glass" placeholder="New password">
-        <button id="btnPassword" class="btn-push" onclick="changePassword()"> Update Password</button>
+        <button id="btnPassword" class="btn-push" onclick="changePassword()">🔑 Update Password</button>
     </div>
-</div>
-
-<!-- Loading Screen -->
-<div id="loadingScreen" class="fixed inset-0 flex items-center justify-center bg-[#06060e] z-50 text-white flex-col">
-    <div class="w-10 h-10 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mb-3"></div>
-    <p class="text-sm text-gray-400 tracking-wider">Verifying Access...</p>
 </div>
 
 <!-- Firebase System Module -->
@@ -207,7 +207,7 @@
         membersSnap.forEach(document => {
             const d = document.data();
             totalMeals += (parseFloat(d.totalMeals) || 0);
-            options += `<option value="${document.id}">${d.name} (Deposit: ${d.totalDeposit || 0})</option>`;
+            options += `<option value="${document.id}">${d.name} (Deposit: ৳${d.totalDeposit || 0})</option>`;
         });
         
         document.getElementById('memberSelect').innerHTML = options;
@@ -217,11 +217,11 @@
         const bazarSnap = await getDocs(collection(db, 'bazar'));
         let totalBazar = 0;
         bazarSnap.forEach(d => totalBazar += (parseFloat(d.data().amount) || 0));
-        document.getElementById('totalBazar').textContent = '' + totalBazar;
+        document.getElementById('totalBazar').textContent = '৳' + totalBazar;
 
         // Calculate Rate
         const rate = totalMeals > 0 ? (totalBazar / totalMeals) : 0;
-        document.getElementById('mealRate').textContent = '' + rate.toFixed(2);
+        document.getElementById('mealRate').textContent = '৳' + rate.toFixed(2);
         
         // Save rate globally for index page
         await setDoc(doc(db, 'settings', 'mealRate'), { rate: rate }, { merge: true });
@@ -232,7 +232,7 @@
         const btn = document.getElementById(buttonId);
         const originalText = btn.innerHTML;
         btn.classList.add('btn-success');
-        btn.innerHTML = ' Saved Successfully';
+        btn.innerHTML = '✅ Saved Successfully';
         setTimeout(() => {
             btn.classList.remove('btn-success');
             btn.innerHTML = originalText;
@@ -240,7 +240,6 @@
     }
 
     // 3. Action Functions (Attached to window for HTML access)
-    
     window.updateManagerName = async () => {
         const newName = document.getElementById('managerNameInput').value.trim();
         if (!newName) return alert('Please enter a name');
@@ -265,7 +264,8 @@
             document.getElementById('newMemberName').value = '';
             document.getElementById('newMemberDeposit').value = '';
             showSuccess('btnAddMember');
-            await refreshStatsAndDropdown(); // Reload dropdown
+            await refreshStatsAndDropdown();
+            alert('✅ Border registered');
         } catch(e) { alert("Error: " + e.message); }
     };
 
@@ -284,7 +284,8 @@
             
             document.getElementById('depositAmount').value = '';
             showSuccess('btnDeposit');
-            await refreshStatsAndDropdown(); // Reload balances
+            await refreshStatsAndDropdown();
+            alert('✅ Payment recorded');
         } catch(e) { alert("Error: " + e.message); }
     };
 
@@ -305,7 +306,8 @@
             document.getElementById('purchaser').value = '';
             document.getElementById('bazarAmount').value = '';
             showSuccess('btnBazar');
-            await refreshStatsAndDropdown(); // Reload total bazar cost
+            await refreshStatsAndDropdown();
+            alert('✅ Expense logged');
         } catch(e) { alert("Error: " + e.message); }
     };
 
@@ -323,7 +325,7 @@
             document.getElementById('oldPassword').value = '';
             document.getElementById('newPassword').value = '';
             showSuccess('btnPassword');
-            alert('Password changed successfully! You will remain logged in.');
+            alert('✅ Password changed successfully!');
         } catch(e) { 
             alert("Error: Incorrect current password or system error.");
             console.error(e);
@@ -336,4 +338,4 @@
     };
 </script>
 </body>
-</html>
+        </html>
