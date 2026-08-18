@@ -313,10 +313,19 @@
 
         init() {
             window.FirebaseSDK.onAuthStateChanged(this.auth, async (user) => {
-                if (!user || user.email !== 'spi@gmail.com') {
+                if (!user) {
+                    console.log("No user logged in, redirecting to login...");
                     window.location.href = 'login.html';
                     return;
                 }
+                
+                if (user.email !== 'spi@gmail.com') {
+                    console.log("Unauthorized email:", user.email);
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                console.log("Authorized admin logged in:", user.email);
                 localStorage.setItem('adminLoggedIn', 'true');
                 this.currentUser = user;
                 document.getElementById('userEmail').textContent = user.email;
