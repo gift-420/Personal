@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="Ma Achiya Villa - Premium Mess Management Dashboard">
+    <meta name="theme-color" content="#0a0a0f">
+    <title>Ma Achiya Villa — Dashboard</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // ---- Firebase Config ----
+        const firebaseConfig = {
+            apiKey: "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
+            authDomain: "my-mess-17fbc.firebaseapp.com",
+            projectId: "my-mess-17fbc",
+            storageBucket: "my-mess-17fbc.firebasestorage.app",
+            messagingSenderId: "848426874799",
+            appId: "1:848426874799:web:0722af59e7504da847e15a",
+            measurementId: "G-RWHJKGV5LS"
+        };
+        // ---- Firebase Config ----
+
+        const app = initializeApp(firebaseConfig);
+        window.db = getFirestore(app);
+    </script>
+
+    <style>
+        :root {
+            --font-primary: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-bengali: 'Noto Sans Bengali', sans-serif;
+            --font-emoji: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+            --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+            --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --radius-sm: 10px; --radius-md: 16px; --radius-lg: 22px; --radius-xl: 30px; --radius-full: 9999px;
+            --transition: 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        /* Premium Dark Theme */
+        [data-theme="dark"] {
+            --bg-primary: #05050c;
+            --bg-gradient: radial-gradient(ellipse 90% 70% at 50% -30%, #1c1148 0%, #0d0d20 40%, #05050c 70%);
+            --glass-bg: rgba(16, 16, 34, 0.42);
+            --glass-bg-light: rgba(20, 20, 42, 0.32);
+            --glass-bg-hover: rgba(28, 28, 54, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.07);
+            --glass-border-strong: rgba(255, 255, 255, 0.13);
+            --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+            --glass-shadow-lg: 0 26px 65px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.65);
+            --text-tertiary: rgba(255, 255, 255, 0.4);
+            --accent-purple: #a78bfa;
+            --accent-purple-light: #c4b5fd;
+            --accent-blue: #60a5fa;
+            --accent-blue-light: #93c5fd;
+            --accent-green: #34d399;
+            --accent-green-light: #6ee7b7;
+            --accent-red: #f87171;
+            --logo-border: #34d399;
+            --logo-glow: 0 0 25px rgba(52, 211, 153, 0.5);
+            --divider: rgba(255, 255, 255, 0.04);
+            --table-hover: rgba(255, 255, 255, 0.015);
+            --scrollbar-thumb: rgba(255, 255, 255, 0.08);
+            --scrollbar-track: rgba(255, 255, 255, 0.02);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: var(--font-primary);
+            background: var(--bg-primary);
+            background-image: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+            transition: background var(--transition);
+            position: relative;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* Animated Background Orbs */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 60%, var(--accent-purple) 0%, transparent 35%),
+                        radial-gradient(circle at 75% 25%, var(--accent-blue) 0%, transparent 35%);
+            opacity: 0.15;
+            filter: blur(80px);
+            animation: orbs 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes orbs {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -40px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        /* Liquid Glass Effects */
+        .glass, .glass-card {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: all var(--transition);
+        }
+        .glass::after, .glass-card::after {
+            content: '';
+            position: absolute; inset: 0;
+            opacity: 0.025; mix-blend-mode: overlay; pointer-events: none; z-index: 1;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+        .glass > *, .glass-card > * { position: relative; z-index: 2; }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(42px) saturate(200%) contrast(105%);
+            -webkit-backdrop-filter: blur(42px) saturate(200%) contrast(105%);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .glass-card {
+            background: var(--glass-bg-light);
+            backdrop-filter: blur(28px) saturate(180%) contrast(105%);
+            -webkit-backdrop-filter: blur(28px) saturate(180%) contrast(105%);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .glass-card:hover {
+            background: var(--glass-bg-hover);
+            border-color: var(--glass-border-strong);
+            box-shadow: var(--glass-shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        /* Logo Design */
+        .logo-circle {
+            width: 68px; height: 68px; border-radius: 50%;
+            background: var(--glass-bg); backdrop-filter: blur(30px);
+            border: 2px solid var(--logo-border);
+            box-shadow: var(--logo-glow), inset 0 1px 0 rgba(255,255,255,0.22);
+            display: flex; align-items: center; justify-content: center;
+            animation: logoPulse 3s ease-in-out infinite;
+            overflow: hidden; flex-shrink: 0;
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { box-shadow: var(--logo-glow), inset 0 1px 0 rgba(255,255,255,0.22); }
+            50% { box-shadow: 0 0 40px rgba(52, 211, 153, 0.6), 0 0 80px rgba(52, 211, 153, 0.25), inset 0 1px 0 rgba(255,255,255,0.3); }
+        }
+
+        .logo-text { display: flex; flex-direction: column; align-items: center; text-align: center; font-family: var(--font-bengali); }
+        .logo-text .logo-bn { font-size: 11px; font-weight: 800; letter-spacing: 0.3px; }
+        .logo-text .logo-en { font-size: 8px; font-weight: 700; color: var(--text-tertiary); letter-spacing: 1px; font-family: var(--font-primary); text-transform: uppercase; }
+
+        /* Premium Manager Pill */
+        .manager-pill {
+            background: var(--glass-bg-light);
+            backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-full);
+            padding: 10px 22px;
+            display: flex; flex-direction: column; align-items: center;
+            box-shadow: var(--glass-shadow);
+            position: relative; overflow: hidden; white-space: nowrap;
+        }
+        .manager-pill::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), var(--accent-purple-light), transparent);
+            opacity: 0.5;
+        }
+        .manager-pill .month-text { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
+        .manager-pill .manager-label { font-size: 10px; font-weight: 500; color: var(--text-tertiary); letter-spacing: 0.6px; text-transform: uppercase; }
+        .manager-pill .manager-name { font-size: 13px; font-weight: 700; background: linear-gradient(135deg, var(--accent-blue-light), var(--accent-purple-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* Stat Cards */
+        .stat-card { padding: 16px 10px; text-align: center; cursor: default; }
+        .stat-icon { font-size: 24px; margin-bottom: 6px; display: block; font-family: var(--font-emoji); }
+        .stat-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-tertiary); margin-bottom: 3px; }
+        .stat-value { font-size: 24px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; white-space: nowrap; transition: font-size 0.2s ease-in-out; }
+
+        /* Menu Button */
+        .menu-btn {
+            width: 46px; height: 46px; background: var(--glass-bg-light);
+            border: 1px solid var(--glass-border); border-radius: 16px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; transition: all var(--transition);
+        }
+        .menu-btn:hover { background: var(--glass-bg-hover); border-color: var(--glass-border-strong); box-shadow: var(--glass-shadow); }
+        .menu-btn span { width: 18px; height: 2px; background: var(--text-primary); border-radius: 3px; transition: all var(--transition); }
+        .menu-btn:hover span { background: var(--accent-purple-light); }
+
+        .dropdown-menu { background: var(--glass-bg); backdrop-filter: blur(40px); border: 1px solid var(--glass-border-strong); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow-lg); padding: 6px; min-width: 200px; animation: dropdownIn 0.3s var(--ease-bounce); }
+        @keyframes dropdownIn { from { opacity: 0; transform: translateY(-8px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: var(--radius-md); color: var(--text-primary); text-decoration: none; font-size: 13px; font-weight: 500; transition: all 0.2s; }
+        .dropdown-item:hover { background: var(--glass-bg-hover); color: var(--accent-purple-light); }
+
+        /* Data Tables for other sections */
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-tertiary); padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--divider); white-space: nowrap; }
+        .data-table td { padding: 12px 14px; font-size: 13px; color: var(--text-secondary); border-bottom: 1px solid var(--divider); }
+        .data-table tbody tr:hover { background: var(--table-hover); }
+        .data-table tbody tr:last-child td { border-bottom: none; }
+        .data-table td:first-child, .data-table th:first-child { font-family: var(--font-bengali); font-weight: 600; color: var(--text-primary); }
+
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--divider); border-top: 3px solid var(--accent-purple); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--glass-border-strong); }
+
+        @media (max-width: 768px) {
+            body { padding: 14px 10px; }
+            .logo-circle { width: 52px; height: 52px; }
+            .logo-text .logo-bn { font-size: 9px; }
+            .logo-text .logo-en { font-size: 7px; }
+            .manager-pill { padding: 8px 14px; white-space: normal; }
+            .manager-pill .month-text { font-size: 11px; }
+            .manager-pill .manager-name { font-size: 11px; }
+            .stat-card { padding: 12px 6px; }
+            .stat-icon { font-size: 20px; }
+            .stat-value { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="max-w-2xl mx-auto relative z-10">
+
+    <!-- Header (Restored Premium Design) -->
+    <div class="flex items-center justify-between mb-6 gap-3">
+        <div class="logo-circle">
+            <div class="logo-text">
+                <span class="logo-bn">মা আছিয়া</span>
+                <span class="logo-en">VILLA</span>
+            </div>
+        </div>
+
+        <div class="flex-1 flex justify-center">
+            <div class="manager-pill">
+                <span class="month-text" id="currentMonthYear">Month Year</span>
+                <span class="manager-label">
+                    👤 Manager — <strong class="manager-name" id="managerName">Loading…</strong>
+                </span>
+            </div>
+        </div>
+
+        <div class="relative">
+            <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+            <div id="menuDropdown" class="dropdown-menu hidden absolute right-0 mt-3 z-50">
+                <a href="login.html" class="dropdown-item">
+                    <span style="font-family:var(--font-emoji);">🔑</span> Staff Login
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-3 gap-2 sm:gap-3 mb-6">
+        <div class="glass-card stat-card">
+            <span class="stat-icon">💰</span>
+            <div class="stat-label">Meal Rate</div>
+            <div class="stat-value" style="color: var(--accent-purple-light);" id="currentMealRate">—</div>
+        </div>
+        <div class="glass-card stat-card">
+            <span class="stat-icon">🍽️</span>
+            <div class="stat-label">Total Meals</div>
+            <div class="stat-value" style="color: var(--accent-blue-light);" id="totalMeals">—</div>
+        </div>
+        <div class="glass-card stat-card">
+            <span class="stat-icon">🛒</span>
+            <div class="stat-label">Total Bazar</div>
+            <div class="stat-value" style="color: var(--accent-green-light);" id="totalBazar">—</div>
+        </div>
+    </div>
+
+    <!-- Members Balance (Premium List Design) -->
+    <div class="glass p-4 sm:p-5 mb-5">
+        <h2 class="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2">
+            <span style="font-family:var(--font-emoji);">👥</span> Members Balance
+        </h2>
+        <div id="membersList" class="flex flex-col gap-2.5">
+            <div class="py-8"><div class="spinner"></div></div>
+        </div>
+    </div>
+
+    <!-- Bazar History -->
+    <div class="glass p-4 sm:p-5 mb-5">
+        <h2 class="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2">
+            <span style="font-family:var(--font-emoji);">🧾</span> Bazar History
+        </h2>
+        <div class="overflow-x-auto">
+            <table class="data-table">
+                <thead><tr><th>Date</th><th>Purchaser</th><th class="text-right">Total Cost</th></tr></thead>
+                <tbody id="bazarList">
+                    <tr><td colspan="3"><div class="py-6"><div class="spinner"></div></div></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Master Meal Sheet -->
+    <div class="glass p-4 sm:p-5 mb-5">
+        <h2 class="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2">
+            <span style="font-family:var(--font-emoji);">📋</span> Master Meal Sheet
+            <span class="text-[0.7rem] font-normal text-gray-400 ml-auto" id="mealSheetDate"></span>
+        </h2>
+        <div class="overflow-x-auto">
+            <table class="data-table text-center">
+                <thead><tr><th class="text-left">Border</th><th class="text-center">B.Fast</th><th class="text-center">Lunch</th><th class="text-center">Dinner</th></tr></thead>
+                <tbody id="mealSheetBody">
+                    <tr><td colspan="4"><div class="py-6"><div class="spinner"></div></div></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    (function() {
+        const menuDropdown = document.getElementById('menuDropdown');
+        const monthYearEl = document.getElementById('currentMonthYear');
+        let isMenuOpen = false;
+
+        window.toggleMenu = () => {
+            isMenuOpen = !isMenuOpen;
+            menuDropdown.classList.toggle('hidden', !isMenuOpen);
+        };
+        document.addEventListener('click', e => {
+            if (isMenuOpen && !e.target.closest('.menu-btn') && !e.target.closest('#menuDropdown')) {
+                isMenuOpen = false;
+                menuDropdown.classList.add('hidden');
+            }
+        });
+
+        monthYearEl.textContent = new Date().toLocaleDateString('en-US', { month:'long', year:'numeric' });
+
+        // Auto-Shrink Text Function
+        function autoFitText() {
+            document.querySelectorAll('.stat-value').forEach(el => {
+                const parent = el.parentElement;
+                let fontSize = 24; // Default max font size
+                el.style.fontSize = fontSize + 'px';
+                
+                while (el.scrollWidth > (parent.clientWidth - 10) && fontSize > 10) {
+                    fontSize--;
+                    el.style.fontSize = fontSize + 'px';
+                }
+            });
+        }
+
+        async function loadManagerName() {
+            if (!window.db) return;
+            try {
+                const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+                const snap = await getDoc(doc(window.db, 'settings', 'manager'));
+                document.getElementById('managerName').textContent = snap.exists() ? snap.data().name : 'Shahan';
+            } catch(e) {}
+        }
+
+        async function loadAllData() {
+            if (!window.db) { setTimeout(loadAllData, 500); return; }
+            try {
+                const { doc, getDoc, collection, getDocs } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+                
+                const rateSnap = await getDoc(doc(window.db, 'settings', 'mealRate'));
+                const mealRate = rateSnap.exists() ? rateSnap.data().rate : 0;
+                document.getElementById('currentMealRate').textContent = '৳' + mealRate.toFixed(2); 
+
+                const membersSnap = await getDocs(collection(window.db, 'members'));
+                let totalMealsCount = 0, memberRows = '';
+                const membersArray = [];
+                
+                if (membersSnap.empty) {
+                    memberRows = '<div class="text-center py-6 text-gray-500 text-sm">No members found</div>';
+                } else {
+                    membersSnap.forEach(docSnap => {
+                        const m = docSnap.data();
+                        membersArray.push({ id: docSnap.id, ...m });
+                        const deposit = m.totalDeposit || 0;
+                        const meals = m.totalMeals || 0;
+                        const balance = deposit - (meals * mealRate);
+                        totalMealsCount += meals;
+                        
+                        const isPositive = balance >= 0;
+                        const balanceStr = isPositive ? `+৳${balance.toFixed(0)}` : `-৳${Math.abs(balance).toFixed(0)}`;
+                        const statusStr = isPositive ? 'In Advance' : 'Overdue';
+                        const colorClass = isPositive ? 'text-[#34d399]' : 'text-[#f87171]'; 
+
+                        // Premium List Card Design
+                        memberRows += `
+                        <div class="p-4 rounded-[18px] bg-[var(--glass-bg-light)] border border-[var(--glass-border)] hover:border-[var(--glass-border-strong)] hover:bg-[var(--glass-bg-hover)] shadow-[var(--glass-shadow)] transition-all duration-300 flex justify-between items-center">
+                            <div class="overflow-hidden">
+                                <div class="text-[16px] sm:text-[17px] font-bold text-white mb-1 whitespace-nowrap overflow-hidden text-ellipsis font-bengali">${escapeHTML(m.name || 'Unnamed')}</div>
+                                <div class="text-[12px] text-gray-400">
+                                    Deposit: <span class="text-[#34d399] font-medium">৳${deposit.toFixed(0)}</span> <span class="opacity-50 mx-1">•</span> 
+                                    Meals: <span class="text-[#60a5fa] font-medium">${meals}</span>
+                                </div>
+                            </div>
+                            <div class="text-right flex-shrink-0 ml-2">
+                                <div class="stat-value font-bold ${colorClass} mb-0.5" style="font-size: 20px;">${balanceStr}</div>
+                                <div class="text-[10px] ${colorClass} opacity-80 uppercase tracking-widest font-semibold">${statusStr}</div>
+                            </div>
+                        </div>`;
+                    });
+                }
+                document.getElementById('membersList').innerHTML = memberRows;
+                document.getElementById('totalMeals').textContent = totalMealsCount;
+
+                const bazarSnap = await getDocs(collection(window.db, 'bazar'));
+                let totalBazarAmount = 0, bazarRows = '';
+                const bazarArray = [];
+                bazarSnap.forEach(d => bazarArray.push(d.data()));
+                bazarArray.sort((a,b) => b.date && a.date ? b.date.localeCompare(a.date) : 0);
+                
+                bazarArray.forEach(b => {
+                    totalBazarAmount += (b.amount || 0);
+                    bazarRows += `<tr><td>${b.date||'—'}</td><td>${b.purchaser||'—'}</td><td class="text-right font-semibold">৳${(b.amount||0).toFixed(0)}</td></tr>`;
+                });
+                document.getElementById('bazarList').innerHTML = bazarRows || '<tr><td colspan="3" class="text-center py-4">No records</td></tr>';
+                document.getElementById('totalBazar').textContent = '৳' + totalBazarAmount.toFixed(0);
+
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('mealSheetDate').textContent = `(${today})`;
+                const mealSnap = await getDoc(doc(window.db, 'meals', today));
+                let mealRows = '';
+                
+                if (mealSnap.exists() && mealSnap.data().members) {
+                    const mealData = mealSnap.data().members;
+                    membersArray.forEach(member => {
+                        const m = mealData[member.id] || {};
+                        mealRows += `<tr><td class="text-left font-semibold">${member.name}</td>
+                            <td>${m.breakfast ? '✅' : '—'}</td>
+                            <td>${m.lunch ? '✅' : '—'}</td>
+                            <td>${m.dinner ? '✅' : '—'}</td></tr>`;
+                    });
+                } else {
+                    mealRows = '<tr><td colspan="4" class="text-center py-6 text-gray-500">No meal record for today</td></tr>';
+                }
+                document.getElementById('mealSheetBody').innerHTML = mealRows;
+
+                // Auto-fit stat text
+                setTimeout(autoFitText, 100);
+
+            } catch(e) { console.error(e); }
+        }
+
+        function escapeHTML(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function init() {
+            if (window.db) { loadManagerName(); loadAllData(); } 
+            else setTimeout(init, 400);
+        }
+        
+        window.addEventListener('load', init);
+        window.addEventListener('resize', autoFitText);
+        setInterval(() => { if (window.db) loadAllData(); }, 35000);
+    })();
+</script>
+</body>
+</html>
