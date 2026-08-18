@@ -548,8 +548,6 @@
 
 <!-- =========================================================
      FIREBASE + APP CODE
-     Everything is kept inside ONE module.
-     This fixes the module timing problem.
 ========================================================= -->
 
 <script type="module">
@@ -572,6 +570,8 @@
 
     import {
         getAuth,
+        setPersistence,
+        browserLocalPersistence,
         onAuthStateChanged,
         signOut,
         updatePassword,
@@ -596,14 +596,17 @@
 
 
     // =========================================================
-    // INITIALIZE FIREBASE
+    // INITIALIZE FIREBASE & PERSISTENCE
     // =========================================================
 
     const app = initializeApp(firebaseConfig);
-
     const db = getFirestore(app);
-
     const auth = getAuth(app);
+
+    // Ensure session stays active across reloads/browser close
+    setPersistence(auth, browserLocalPersistence).catch((error) => {
+        console.error("Persistence error:", error);
+    });
 
 
     // =========================================================
@@ -611,9 +614,7 @@
     // =========================================================
 
     window.db = db;
-
     window.auth = auth;
-
     window.FirebaseSDK = {
         collection,
         addDoc,
@@ -623,9 +624,7 @@
         getDocs,
         setDoc,
         serverTimestamp,
-
         onAuthStateChanged,
-
         signOut,
         updatePassword,
         EmailAuthProvider,
@@ -640,94 +639,58 @@
     class EnterpriseConsole {
 
         constructor() {
-
             this.db = db;
-
             this.auth = auth;
-
             this.currentUser = null;
-
             this.init();
         }
 
 
         // =====================================================
-        // AUTH CHECK
+        // AUTH CHECK WITH STRICT SECURITY & LOCALSTORAGE LOCK
         // =====================================================
 
         init() {
+            // Strict check: if local storage flag is missing, force redirect immediately
+            if (localStorage.getItem("adminLoggedIn") !== "true") {
+                window.location.href = "login.html";
+                return;
+            }
 
             onAuthStateChanged(this.auth, async (user) => {
-
                 console.log("Auth state changed:", user);
 
-
-                // No user
+                // No user found
                 if (!user) {
-
-                    console.log(
-                        "No user logged in, redirecting to login..."
-                    );
-
+                    localStorage.removeItem("adminLoggedIn");
                     window.location.href = "login.html";
-
                     return;
                 }
-
 
                 // Only admin email allowed
                 if (user.email !== "spi@gmail.com") {
-
-                    console.log(
-                        "Unauthorized email:",
-                        user.email
-                    );
-
+                    console.log("Unauthorized email:", user.email);
                     await signOut(this.auth);
-
+                    localStorage.removeItem("adminLoggedIn");
                     window.location.href = "login.html";
-
                     return;
                 }
 
-
-                // Authorized admin
-                console.log(
-                    "Authorized admin logged in:",
-                    user.email
-                );
-
-                localStorage.setItem(
-                    "adminLoggedIn",
-                    "true"
-                );
-
+                // Authorized admin session active
+                console.log("Authorized admin logged in:", user.email);
+                localStorage.setItem("adminLoggedIn", "true");
                 this.currentUser = user;
 
-                const emailElement =
-                    document.getElementById("userEmail");
-
+                const emailElement = document.getElementById("userEmail");
                 if (emailElement) {
                     emailElement.textContent = user.email;
                 }
 
-
                 try {
-
                     await this.loadAllData();
-
                 } catch (error) {
-
-                    console.error(
-                        "Error loading admin data:",
-                        error
-                    );
-
-                    alert(
-                        "ডাটা লোড করতে সমস্যা হয়েছে। Console দেখুন।"
-                    );
+                    console.error("Error loading admin data:", error);
                 }
-
             });
         }
 
@@ -737,31 +700,19 @@
         // =====================================================
 
         autoFitStats() {
+            document.querySelectorAll(".stat-value").forEach((el) => {
+                const parent = el.parentElement;
+                let fontSize = 16;
+                el.style.fontSize = fontSize + "px";
 
-            document
-                .querySelectorAll(".stat-value")
-                .forEach((el) => {
-
-                    const parent = el.parentElement;
-
-                    let fontSize = 16;
-
-                    el.style.fontSize =
-                        fontSize + "px";
-
-                    while (
-                        el.scrollWidth >
-                        (parent.clientWidth - 8) &&
-                        fontSize > 10
-                    ) {
-
-                        fontSize--;
-
-                        el.style.fontSize =
-                            fontSize + "px";
-                    }
-
-                });
+                while (
+                    el.scrollWidth > (parent.clientWidth - 8) &&
+                    fontSize > 10
+                ) {
+                    fontSize--;
+                    el.style.fontSize = fontSize + "px";
+                }
+            });
         }
 
 
@@ -770,13 +721,9 @@
         // =====================================================
 
         async loadAllData() {
-
             await this.loadMemberDropdown();
-
             await this.refreshStats();
-
             await this.loadManagerName();
-
         }
 
 
@@ -785,40 +732,19 @@
         // =====================================================
 
         async loadMemberDropdown() {
-
-            const membersCollection =
-                collection(
-                    this.db,
-                    "members"
-                );
-
-            const snap =
-                await getDocs(
-                    membersCollection
-                );
-
-            const select =
-                document.getElementById(
-                    "memberSelect"
-                );
-
-            let options =
-                '<option value="">Select border...</option>';
-
+            const membersCollection = collection(this.db, "members");
+            const snap = await getDocs(membersCollection);
+            const select = document.getElementById("memberSelect");
+            let options = '<option value="">Select border...</option>';
 
             snap.forEach((memberDoc) => {
-
-                const data =
-                    memberDoc.data();
-
+                const data = memberDoc.data();
                 options += `
                     <option value="${memberDoc.id}">
-                        ${data.name || "Unnamed"}
-                        (৳${data.totalDeposit || 0})
+                        ${data.name || "Unnamed"} (৳${data.totalDeposit || 0})
                     </option>
                 `;
             });
-
 
             select.innerHTML = options;
         }
@@ -829,27 +755,12 @@
         // =====================================================
 
         async loadManagerName() {
-
-            const managerRef =
-                doc(
-                    this.db,
-                    "settings",
-                    "manager"
-                );
-
-            const snap =
-                await getDoc(managerRef);
-
+            const managerRef = doc(this.db, "settings", "manager");
+            const snap = await getDoc(managerRef);
 
             if (snap.exists()) {
-
-                const data =
-                    snap.data();
-
-                document.getElementById(
-                    "managerNameInput"
-                ).value =
-                    data.name || "";
+                const data = snap.data();
+                document.getElementById("managerNameInput").value = data.name || "";
             }
         }
 
@@ -859,93 +770,36 @@
         // =====================================================
 
         async refreshStats() {
-
-            const membersSnap =
-                await getDocs(
-                    collection(
-                        this.db,
-                        "members"
-                    )
-                );
-
+            const membersSnap = await getDocs(collection(this.db, "members"));
             let totalMeals = 0;
 
-
             membersSnap.forEach((memberDoc) => {
-
-                const data =
-                    memberDoc.data();
-
-                totalMeals +=
-                    Number(data.totalMeals || 0);
+                const data = memberDoc.data();
+                totalMeals += Number(data.totalMeals || 0);
             });
 
+            document.getElementById("totalMeals").textContent = totalMeals;
 
-            document.getElementById(
-                "totalMeals"
-            ).textContent =
-                totalMeals;
-
-
-            const bazarSnap =
-                await getDocs(
-                    collection(
-                        this.db,
-                        "bazar"
-                    )
-                );
-
+            const bazarSnap = await getDocs(collection(this.db, "bazar"));
             let totalBazar = 0;
 
-
             bazarSnap.forEach((bazarDoc) => {
-
-                const data =
-                    bazarDoc.data();
-
-                totalBazar +=
-                    Number(data.amount || 0);
+                const data = bazarDoc.data();
+                totalBazar += Number(data.amount || 0);
             });
 
+            document.getElementById("totalBazar").textContent = "৳" + totalBazar;
 
-            document.getElementById(
-                "totalBazar"
-            ).textContent =
-                "৳" + totalBazar;
+            const rate = totalMeals > 0 ? totalBazar / totalMeals : 0;
+            document.getElementById("mealRate").textContent = "৳" + rate.toFixed(2);
 
-
-            const rate =
-                totalMeals > 0
-                    ? totalBazar / totalMeals
-                    : 0;
-
-
-            document.getElementById(
-                "mealRate"
-            ).textContent =
-                "৳" + rate.toFixed(2);
-
-
-            // Save meal rate
             await setDoc(
-                doc(
-                    this.db,
-                    "settings",
-                    "mealRate"
-                ),
-                {
-                    rate: rate
-                },
-                {
-                    merge: true
-                }
+                doc(this.db, "settings", "mealRate"),
+                { rate: rate },
+                { merge: true }
             );
 
-
-            setTimeout(
-                () => this.autoFitStats(),
-                50
-            );
+            setTimeout(() => this.autoFitStats(), 50);
         }
 
 
@@ -954,26 +808,12 @@
         // =====================================================
 
         showSuccess(buttonId) {
-
-            const btn =
-                document.getElementById(
-                    buttonId
-                );
-
+            const btn = document.getElementById(buttonId);
             if (!btn) return;
 
-
-            btn.classList.add(
-                "btn-success"
-            );
-
-
+            btn.classList.add("btn-success");
             setTimeout(() => {
-
-                btn.classList.remove(
-                    "btn-success"
-                );
-
+                btn.classList.remove("btn-success");
             }, 1500);
         }
 
@@ -983,85 +823,32 @@
         // =====================================================
 
         async addMember() {
-
             try {
-
-                const name =
-                    document
-                        .getElementById(
-                            "newMemberName"
-                        )
-                        .value
-                        .trim();
-
-
-                const deposit =
-                    parseFloat(
-                        document.getElementById(
-                            "newMemberDeposit"
-                        ).value
-                    ) || 0;
-
+                const name = document.getElementById("newMemberName").value.trim();
+                const deposit = parseFloat(document.getElementById("newMemberDeposit").value) || 0;
 
                 if (!name) {
-
-                    alert(
-                        "Enter member name"
-                    );
-
+                    alert("Enter member name");
                     return;
                 }
 
+                await addDoc(collection(this.db, "members"), {
+                    name: name,
+                    totalDeposit: deposit,
+                    totalMeals: 0,
+                    createdAt: serverTimestamp()
+                });
 
-                await addDoc(
-                    collection(
-                        this.db,
-                        "members"
-                    ),
-                    {
-                        name: name,
-                        totalDeposit: deposit,
-                        totalMeals: 0,
-                        createdAt:
-                            serverTimestamp()
-                    }
-                );
+                document.getElementById("newMemberName").value = "";
+                document.getElementById("newMemberDeposit").value = "";
 
-
-                document.getElementById(
-                    "newMemberName"
-                ).value = "";
-
-
-                document.getElementById(
-                    "newMemberDeposit"
-                ).value = "";
-
-
-                this.showSuccess(
-                    "btnAddMember"
-                );
-
-
+                this.showSuccess("btnAddMember");
                 await this.loadAllData();
-
-
-                alert(
-                    "✅ Border registered"
-                );
-
+                alert("✅ Border registered");
 
             } catch (error) {
-
-                console.error(
-                    "Add member error:",
-                    error
-                );
-
-                alert(
-                    "Member add করতে সমস্যা হয়েছে: " +
-                    error.message
-                );
+                console.error("Add member error:", error);
+                alert("Member add করতে সমস্যা হয়েছে: " + error.message);
             }
         }
 
@@ -1071,105 +858,37 @@
         // =====================================================
 
         async addDeposit() {
-
             try {
+                const memberId = document.getElementById("memberSelect").value;
+                const amount = parseFloat(document.getElementById("depositAmount").value);
 
-                const memberId =
-                    document.getElementById(
-                        "memberSelect"
-                    ).value;
-
-
-                const amount =
-                    parseFloat(
-                        document.getElementById(
-                            "depositAmount"
-                        ).value
-                    );
-
-
-                if (
-                    !memberId ||
-                    isNaN(amount) ||
-                    amount <= 0
-                ) {
-
-                    alert(
-                        "Select border and amount"
-                    );
-
+                if (!memberId || isNaN(amount) || amount <= 0) {
+                    alert("Select border and amount");
                     return;
                 }
 
-
-                const memberRef =
-                    doc(
-                        this.db,
-                        "members",
-                        memberId
-                    );
-
-
-                const snap =
-                    await getDoc(
-                        memberRef
-                    );
-
+                const memberRef = doc(this.db, "members", memberId);
+                const snap = await getDoc(memberRef);
 
                 if (!snap.exists()) {
-
-                    alert(
-                        "Member not found"
-                    );
-
+                    alert("Member not found");
                     return;
                 }
 
+                const currentDeposit = Number(snap.data().totalDeposit || 0);
 
-                const currentDeposit =
-                    Number(
-                        snap.data().totalDeposit || 0
-                    );
+                await updateDoc(memberRef, {
+                    totalDeposit: currentDeposit + amount
+                });
 
-
-                await updateDoc(
-                    memberRef,
-                    {
-                        totalDeposit:
-                            currentDeposit + amount
-                    }
-                );
-
-
-                document.getElementById(
-                    "depositAmount"
-                ).value = "";
-
-
-                this.showSuccess(
-                    "btnDeposit"
-                );
-
-
+                document.getElementById("depositAmount").value = "";
+                this.showSuccess("btnDeposit");
                 await this.loadAllData();
-
-
-                alert(
-                    "✅ Payment recorded"
-                );
-
+                alert("✅ Payment recorded");
 
             } catch (error) {
-
-                console.error(
-                    "Deposit error:",
-                    error
-                );
-
-                alert(
-                    "Payment update করতে সমস্যা হয়েছে: " +
-                    error.message
-                );
+                console.error("Deposit error:", error);
+                alert("Payment update করতে সমস্যা হয়েছে: " + error.message);
             }
         }
 
@@ -1179,101 +898,34 @@
         // =====================================================
 
         async addBazar() {
-
             try {
+                const date = document.getElementById("bazarDate").value;
+                const purchaser = document.getElementById("purchaser").value.trim();
+                const amount = parseFloat(document.getElementById("bazarAmount").value);
 
-                const date =
-                    document.getElementById(
-                        "bazarDate"
-                    ).value;
-
-
-                const purchaser =
-                    document
-                        .getElementById(
-                            "purchaser"
-                        )
-                        .value
-                        .trim();
-
-
-                const amount =
-                    parseFloat(
-                        document.getElementById(
-                            "bazarAmount"
-                        ).value
-                    );
-
-
-                if (
-                    !date ||
-                    !purchaser ||
-                    isNaN(amount) ||
-                    amount <= 0
-                ) {
-
-                    alert(
-                        "Fill all fields"
-                    );
-
+                if (!date || !purchaser || isNaN(amount) || amount <= 0) {
+                    alert("Fill all fields");
                     return;
                 }
 
+                await addDoc(collection(this.db, "bazar"), {
+                    date: date,
+                    purchaser: purchaser,
+                    amount: amount,
+                    timestamp: serverTimestamp()
+                });
 
-                await addDoc(
-                    collection(
-                        this.db,
-                        "bazar"
-                    ),
-                    {
-                        date: date,
-                        purchaser: purchaser,
-                        amount: amount,
-                        timestamp:
-                            serverTimestamp()
-                    }
-                );
+                document.getElementById("bazarDate").value = "";
+                document.getElementById("purchaser").value = "";
+                document.getElementById("bazarAmount").value = "";
 
-
-                document.getElementById(
-                    "bazarDate"
-                ).value = "";
-
-
-                document.getElementById(
-                    "purchaser"
-                ).value = "";
-
-
-                document.getElementById(
-                    "bazarAmount"
-                ).value = "";
-
-
-                this.showSuccess(
-                    "btnBazar"
-                );
-
-
+                this.showSuccess("btnBazar");
                 await this.loadAllData();
-
-
-                alert(
-                    "✅ Expense logged"
-                );
-
+                alert("✅ Expense logged");
 
             } catch (error) {
-
-                console.error(
-                    "Bazar error:",
-                    error
-                );
-
-                alert(
-                    "Bazar update করতে সমস্যা হয়েছে: " +
-                    error.message
-                );
+                console.error("Bazar error:", error);
+                alert("Bazar update করতে সমস্যা হয়েছে: " + error.message);
             }
         }
 
@@ -1283,64 +935,26 @@
         // =====================================================
 
         async updateManagerName() {
-
             try {
-
-                const newName =
-                    document
-                        .getElementById(
-                            "managerNameInput"
-                        )
-                        .value
-                        .trim();
-
+                const newName = document.getElementById("managerNameInput").value.trim();
 
                 if (!newName) {
-
-                    alert(
-                        "Enter name"
-                    );
-
+                    alert("Enter name");
                     return;
                 }
 
-
                 await setDoc(
-                    doc(
-                        this.db,
-                        "settings",
-                        "manager"
-                    ),
-                    {
-                        name: newName
-                    },
-                    {
-                        merge: true
-                    }
+                    doc(this.db, "settings", "manager"),
+                    { name: newName },
+                    { merge: true }
                 );
 
-
-                this.showSuccess(
-                    "btnManagerName"
-                );
-
-
-                alert(
-                    "✅ Manager name updated"
-                );
-
+                this.showSuccess("btnManagerName");
+                alert("✅ Manager name updated");
 
             } catch (error) {
-
-                console.error(
-                    "Manager name error:",
-                    error
-                );
-
-                alert(
-                    "Manager name update করতে সমস্যা হয়েছে: " +
-                    error.message
-                );
+                console.error("Manager name error:", error);
+                alert("Manager name update করতে সমস্যা হয়েছে: " + error.message);
             }
         }
 
@@ -1350,113 +964,51 @@
         // =====================================================
 
         async changePassword() {
-
             try {
-
-                const oldPass =
-                    document.getElementById(
-                        "oldPassword"
-                    ).value;
-
-
-                const newPass =
-                    document.getElementById(
-                        "newPassword"
-                    ).value;
-
+                const oldPass = document.getElementById("oldPassword").value;
+                const newPass = document.getElementById("newPassword").value;
 
                 if (!oldPass || !newPass) {
-
-                    alert(
-                        "Enter both passwords"
-                    );
-
+                    alert("Enter both passwords");
                     return;
                 }
-
 
                 if (newPass.length < 6) {
-
-                    alert(
-                        "Min 6 characters"
-                    );
-
+                    alert("Min 6 characters");
                     return;
                 }
-
 
                 if (!this.currentUser) {
-
-                    alert(
-                        "User session not found"
-                    );
-
+                    alert("User session not found");
                     return;
                 }
 
-
-                const credential =
-                    EmailAuthProvider.credential(
-                        this.currentUser.email,
-                        oldPass
-                    );
-
-
-                await reauthenticateWithCredential(
-                    this.currentUser,
-                    credential
+                const credential = EmailAuthProvider.credential(
+                    this.currentUser.email,
+                    oldPass
                 );
 
+                await reauthenticateWithCredential(this.currentUser, credential);
+                await updatePassword(this.currentUser, newPass);
 
-                await updatePassword(
-                    this.currentUser,
-                    newPass
-                );
+                document.getElementById("oldPassword").value = "";
+                document.getElementById("newPassword").value = "";
 
-
-                document.getElementById(
-                    "oldPassword"
-                ).value = "";
-
-
-                document.getElementById(
-                    "newPassword"
-                ).value = "";
-
-
-                this.showSuccess(
-                    "btnPassword"
-                );
-
-
-                alert(
-                    "✅ Password changed"
-                );
-
+                this.showSuccess("btnPassword");
+                alert("✅ Password changed");
 
             } catch (error) {
+                console.error("Password change error:", error);
 
-                console.error(
-                    "Password change error:",
-                    error
-                );
-
-
-                if (
-                    error.code ===
-                    "auth/wrong-password"
-                ) {
-
-                    alert(
-                        "Current password is incorrect."
-                    );
-
+                if (error.code === "auth/wrong-password") {
+                    alert("Current password is incorrect.");
                 } else {
-
-                    alert(
-                        "Password change failed: " +
-                        error.message
-                    );
+                    let errorMessage = error.message;
+                    // Provide a cleaner fallback if error messages are verbose
+                    if (errorMessage.includes("auth/")) {
+                        errorMessage = "Invalid credential or network error.";
+                    }
+                    alert("Password change failed: " + errorMessage);
                 }
             }
         }
@@ -1467,34 +1019,13 @@
         // =====================================================
 
         async handleLogout() {
-
             try {
-
-                await signOut(
-                    this.auth
-                );
-
-
-                localStorage.removeItem(
-                    "adminLoggedIn"
-                );
-
-
-                window.location.href =
-                    "login.html";
-
-
+                await signOut(this.auth);
+                localStorage.removeItem("adminLoggedIn");
+                window.location.href = "login.html";
             } catch (error) {
-
-                console.error(
-                    "Logout error:",
-                    error
-                );
-
-                alert(
-                    "Logout failed: " +
-                    error.message
-                );
+                console.error("Logout error:", error);
+                alert("Logout failed: " + error.message);
             }
         }
 
@@ -1502,29 +1033,21 @@
 
 
     // =========================================================
-    // CREATE APP AFTER FIREBASE IS READY
+    // CREATE APP INSTANCE
     // =========================================================
 
-    window.AppConsole =
-        new EnterpriseConsole();
+    window.AppConsole = new EnterpriseConsole();
 
 
     // =========================================================
     // RESIZE EVENT
     // =========================================================
 
-    window.addEventListener(
-        "resize",
-        () => {
-
-            if (window.AppConsole) {
-
-                window.AppConsole.autoFitStats();
-
-            }
-
+    window.addEventListener("resize", () => {
+        if (window.AppConsole) {
+            window.AppConsole.autoFitStats();
         }
-    );
+    });
 
 </script>
 
