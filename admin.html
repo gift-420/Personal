@@ -14,42 +14,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, updateDoc, doc, getDoc, getDocs, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        // ---- Firebase Config ----
-        const firebaseConfig = {
-            apiKey: "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
-            authDomain: "my-mess-17fbc.firebaseapp.com",
-            projectId: "my-mess-17fbc",
-            storageBucket: "my-mess-17fbc.firebasestorage.app",
-            messagingSenderId: "848426874799",
-            appId: "1:848426874799:web:0722af59e7504da847e15a",
-            measurementId: "G-RWHJKGV5LS"
-        };
-        // ---- Firebase Config ----
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        window.db = db;
-        window.auth = auth;
-        window.FirebaseSDK = {
-            collection, addDoc, updateDoc, doc, getDoc, getDocs, setDoc, serverTimestamp,
-            signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential
-        };
-    </script>
-
     <style>
         :root {
             --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
             --font-bengali: 'Noto Sans Bengali', sans-serif;
             --font-emoji: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
             --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-            --radius-lg: 22px; --radius-xl: 30px; --radius-full: 9999px;
+            --radius-lg: 22px;
+            --radius-xl: 30px;
+            --radius-full: 9999px;
             --transition: 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
@@ -62,7 +35,6 @@
             --glass-border: rgba(255, 255, 255, 0.07);
             --glass-border-strong: rgba(255, 255, 255, 0.13);
             --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.07);
-            --glass-shadow-lg: 0 26px 65px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.65);
             --text-tertiary: rgba(255, 255, 255, 0.4);
@@ -76,9 +48,16 @@
             --divider: rgba(255, 255, 255, 0.04);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
 
         body {
             font-family: var(--font-primary);
@@ -92,13 +71,13 @@
             line-height: 1.5;
         }
 
-        /* Animated Orbs Background */
         body::after {
             content: '';
             position: fixed;
             inset: 0;
-            background: radial-gradient(circle at 20% 60%, var(--accent-purple) 0%, transparent 35%),
-                        radial-gradient(circle at 75% 25%, var(--accent-blue) 0%, transparent 35%);
+            background:
+                radial-gradient(circle at 20% 60%, var(--accent-purple) 0%, transparent 35%),
+                radial-gradient(circle at 75% 25%, var(--accent-blue) 0%, transparent 35%);
             opacity: 0.15;
             filter: blur(80px);
             animation: orbs 20s ease-in-out infinite;
@@ -107,24 +86,42 @@
         }
 
         @keyframes orbs {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -40px) scale(1.05); }
-            66% { transform: translate(-20px, 20px) scale(0.95); }
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(30px, -40px) scale(1.05);
+            }
+            66% {
+                transform: translate(-20px, 20px) scale(0.95);
+            }
         }
 
-        .glass, .stat-card {
+        .glass,
+        .stat-card {
             position: relative;
             overflow: hidden;
             z-index: 1;
             transition: all var(--transition);
         }
-        .glass::after, .stat-card::after {
+
+        .glass::after,
+        .stat-card::after {
             content: '';
-            position: absolute; inset: 0;
-            opacity: 0.025; mix-blend-mode: overlay; pointer-events: none; z-index: 1;
+            position: absolute;
+            inset: 0;
+            opacity: 0.025;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+            z-index: 1;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
         }
-        .glass > *, .stat-card > * { position: relative; z-index: 2; }
+
+        .glass > *,
+        .stat-card > * {
+            position: relative;
+            z-index: 2;
+        }
 
         .glass {
             background: var(--glass-bg);
@@ -136,23 +133,54 @@
         }
 
         .logo-circle {
-            width: 56px; height: 56px; border-radius: 50%;
-            background: var(--glass-bg); backdrop-filter: blur(30px);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
             border: 2px solid var(--logo-border);
             box-shadow: var(--logo-glow), inset 0 1px 0 rgba(255,255,255,0.22);
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
         }
 
-        .logo-text { display: flex; flex-direction: column; align-items: center; text-align: center; font-family: var(--font-bengali); }
-        .logo-text .logo-bn { font-size: 10px; font-weight: 800; }
-        .logo-text .logo-en { font-size: 7px; font-weight: 700; color: var(--text-tertiary); letter-spacing: 0.5px; font-family: var(--font-primary); }
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            font-family: var(--font-bengali);
+        }
+
+        .logo-text .logo-bn {
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .logo-text .logo-en {
+            font-size: 7px;
+            font-weight: 700;
+            color: var(--text-tertiary);
+            letter-spacing: 0.5px;
+            font-family: var(--font-primary);
+        }
 
         .section-heading {
-            display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
-            font-size: 14px; font-weight: 600; color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
         }
-        .section-icon { font-family: var(--font-emoji); font-size: 18px; }
+
+        .section-icon {
+            font-family: var(--font-emoji);
+            font-size: 18px;
+        }
 
         .input-glass {
             width: 100%;
@@ -167,22 +195,60 @@
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
             transition: all 0.3s;
         }
+
         .input-glass:focus {
             border-color: var(--accent-purple);
             background: rgba(255, 255, 255, 0.09);
-            box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.12), inset 0 1px 0 rgba(255,255,255,0.1);
+            box-shadow:
+                0 0 0 4px rgba(167, 139, 250, 0.12),
+                inset 0 1px 0 rgba(255,255,255,0.1);
         }
-        select.input-glass option { background: #1a103c; color: #fff; }
+
+        select.input-glass option {
+            background: #1a103c;
+            color: #fff;
+        }
 
         .btn-push {
             background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-            border: none; padding: 12px 18px; border-radius: 30px;
-            color: #fff; font-weight: 700; font-size: 14px; cursor: pointer;
-            width: 100%; box-shadow: 0 5px 0 #4c1d95, 0 10px 22px rgba(139, 92, 246, 0.4), inset 0 1px 0 rgba(255,255,255,0.25);
-            transition: all 0.1s ease; display: flex; align-items: center; justify-content: center; gap: 6px;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 30px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow:
+                0 5px 0 #4c1d95,
+                0 10px 22px rgba(139, 92, 246, 0.4),
+                inset 0 1px 0 rgba(255,255,255,0.25);
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
-        .btn-push:active { box-shadow: 0 2px 0 #4c1d95, 0 5px 14px rgba(139, 92, 246, 0.35), inset 0 1px 0 rgba(255,255,255,0.25); transform: translateY(4px); }
-        .btn-success { background: linear-gradient(135deg, #34d399, #059669) !important; box-shadow: 0 5px 0 #047857, 0 10px 22px rgba(52, 211, 153, 0.4) !important; }
+
+        .btn-push:active {
+            box-shadow:
+                0 2px 0 #4c1d95,
+                0 5px 14px rgba(139, 92, 246, 0.35),
+                inset 0 1px 0 rgba(255,255,255,0.25);
+            transform: translateY(4px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #34d399, #059669) !important;
+            box-shadow:
+                0 5px 0 #047857,
+                0 10px 22px rgba(52, 211, 153, 0.4) !important;
+        }
+
+        .btn-push:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
 
         .stat-card {
             background: var(--glass-bg-light);
@@ -194,22 +260,64 @@
             text-align: center;
             box-shadow: var(--glass-shadow);
         }
-        .stat-value { white-space: nowrap; transition: font-size 0.2s; }
 
-        .btn-home, .btn-logout {
-            padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
-            cursor: pointer; text-decoration: none; border: 1px solid; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;
+        .stat-value {
+            white-space: nowrap;
+            transition: font-size 0.2s;
         }
-        .btn-home { background: rgba(96, 165, 250, 0.1); border-color: rgba(96, 165, 250, 0.3); color: #60a5fa; margin-right: 6px; }
-        .btn-logout { background: rgba(248, 113, 113, 0.1); border-color: rgba(248, 113, 113, 0.3); color: #f87171; }
-        .btn-home:hover { background: rgba(96, 165, 250, 0.2); }
-        .btn-logout:hover { background: rgba(248, 113, 113, 0.2); }
 
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
+        .btn-home,
+        .btn-logout {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            border: 1px solid;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+
+        .btn-home {
+            background: rgba(96, 165, 250, 0.1);
+            border-color: rgba(96, 165, 250, 0.3);
+            color: #60a5fa;
+            margin-right: 6px;
+        }
+
+        .btn-logout {
+            background: rgba(248, 113, 113, 0.1);
+            border-color: rgba(248, 113, 113, 0.3);
+            color: #f87171;
+        }
+
+        .btn-home:hover {
+            background: rgba(96, 165, 250, 0.2);
+        }
+
+        .btn-logout:hover {
+            background: rgba(248, 113, 113, 0.2);
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.02);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.08);
+            border-radius: 10px;
+        }
     </style>
 </head>
+
 <body>
 
 <div class="max-w-md mx-auto relative z-10">
@@ -223,255 +331,1202 @@
                     <span class="logo-en">VILLA</span>
                 </div>
             </div>
+
             <div>
                 <h1 class="text-base font-bold">Manager Console</h1>
                 <p id="userEmail" class="text-xs text-gray-400 truncate max-w-[160px]"></p>
             </div>
         </div>
+
         <div class="flex items-center gap-1">
-            <a href="index.html" class="btn-home"><span>🏠</span> Home</a>
-            <button class="btn-logout" onclick="window.AppConsole.handleLogout()">🚪 Logout</button>
+            <a href="index.html" class="btn-home">
+                <span>🏠</span> Home
+            </a>
+
+            <button class="btn-logout" onclick="window.AppConsole.handleLogout()">
+                🚪 Logout
+            </button>
         </div>
     </div>
 
     <!-- Stats -->
     <div class="grid grid-cols-3 gap-2 mb-5">
+
         <div class="stat-card">
-            <div class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Meal Rate</div>
-            <div class="text-base font-bold stat-value" style="color:var(--accent-purple);" id="mealRate">৳0.00</div>
+            <div class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">
+                Meal Rate
+            </div>
+
+            <div
+                class="text-base font-bold stat-value"
+                style="color:var(--accent-purple);"
+                id="mealRate"
+            >
+                ৳0.00
+            </div>
         </div>
+
         <div class="stat-card">
-            <div class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Total Meals</div>
-            <div class="text-base font-bold stat-value" style="color:var(--accent-blue);" id="totalMeals">0</div>
+            <div class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">
+                Total Meals
+            </div>
+
+            <div
+                class="text-base font-bold stat-value"
+                style="color:var(--accent-blue);"
+                id="totalMeals"
+            >
+                0
+            </div>
         </div>
+
         <div class="stat-card">
-            <div class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Total Bazar</div>
-            <div class="text-base font-bold stat-value" style="color:var(--accent-green);" id="totalBazar">৳0</div>
+            <div class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">
+                Total Bazar
+            </div>
+
+            <div
+                class="text-base font-bold stat-value"
+                style="color:var(--accent-green);"
+                id="totalBazar"
+            >
+                ৳0
+            </div>
         </div>
+
     </div>
 
     <!-- Manager Designation -->
     <div class="glass p-4 mb-4">
-        <div class="section-heading"><span class="section-icon">✏️</span> Manager Designation</div>
-        <input type="text" id="managerNameInput" class="input-glass" placeholder="Enter manager name">
-        <button id="btnManagerName" class="btn-push" onclick="window.AppConsole.updateManagerName()">
+        <div class="section-heading">
+            <span class="section-icon">✏️</span>
+            Manager Designation
+        </div>
+
+        <input
+            type="text"
+            id="managerNameInput"
+            class="input-glass"
+            placeholder="Enter manager name"
+        >
+
+        <button
+            id="btnManagerName"
+            class="btn-push"
+            onclick="window.AppConsole.updateManagerName()"
+        >
             <span>💾</span> Save Name
         </button>
     </div>
 
     <!-- Add New Border -->
     <div class="glass p-4 mb-4">
-        <div class="section-heading"><span class="section-icon">➕</span> Add New Border</div>
-        <input type="text" id="newMemberName" class="input-glass" placeholder="Member full name">
-        <input type="number" id="newMemberDeposit" class="input-glass" placeholder="Initial deposit (৳)">
-        <button id="btnAddMember" class="btn-push" onclick="window.AppConsole.addMember()">
+        <div class="section-heading">
+            <span class="section-icon">➕</span>
+            Add New Border
+        </div>
+
+        <input
+            type="text"
+            id="newMemberName"
+            class="input-glass"
+            placeholder="Member full name"
+        >
+
+        <input
+            type="number"
+            id="newMemberDeposit"
+            class="input-glass"
+            placeholder="Initial deposit (৳)"
+        >
+
+        <button
+            id="btnAddMember"
+            class="btn-push"
+            onclick="window.AppConsole.addMember()"
+        >
             <span>✅</span> Register Border
         </button>
     </div>
 
     <!-- Deposit Ledger -->
     <div class="glass p-4 mb-4">
-        <div class="section-heading"><span class="section-icon">💳</span> Deposit Ledger Entry</div>
-        <select id="memberSelect" class="input-glass"><option value="">Select border...</option></select>
-        <input type="number" id="depositAmount" class="input-glass" placeholder="Amount (৳)">
-        <button id="btnDeposit" class="btn-push" onclick="window.AppConsole.addDeposit()">
+        <div class="section-heading">
+            <span class="section-icon">💳</span>
+            Deposit Ledger Entry
+        </div>
+
+        <select id="memberSelect" class="input-glass">
+            <option value="">Select border...</option>
+        </select>
+
+        <input
+            type="number"
+            id="depositAmount"
+            class="input-glass"
+            placeholder="Amount (৳)"
+        >
+
+        <button
+            id="btnDeposit"
+            class="btn-push"
+            onclick="window.AppConsole.addDeposit()"
+        >
             <span>💰</span> Record Payment
         </button>
     </div>
 
     <!-- Bazar Expense Log -->
     <div class="glass p-4 mb-4">
-        <div class="section-heading"><span class="section-icon">🛍️</span> Bazar Expense Log</div>
-        <input type="date" id="bazarDate" class="input-glass" style="color-scheme: dark;">
-        <input type="text" id="purchaser" class="input-glass" placeholder="Purchaser name">
-        <input type="number" id="bazarAmount" class="input-glass" placeholder="Total cost (৳)">
-        <button id="btnBazar" class="btn-push" onclick="window.AppConsole.addBazar()">
+        <div class="section-heading">
+            <span class="section-icon">🛍️</span>
+            Bazar Expense Log
+        </div>
+
+        <input
+            type="date"
+            id="bazarDate"
+            class="input-glass"
+            style="color-scheme: dark;"
+        >
+
+        <input
+            type="text"
+            id="purchaser"
+            class="input-glass"
+            placeholder="Purchaser name"
+        >
+
+        <input
+            type="number"
+            id="bazarAmount"
+            class="input-glass"
+            placeholder="Total cost (৳)"
+        >
+
+        <button
+            id="btnBazar"
+            class="btn-push"
+            onclick="window.AppConsole.addBazar()"
+        >
             <span>🧾</span> Commit Expense
         </button>
     </div>
 
     <!-- Security -->
     <div class="glass p-4 mb-4">
-        <div class="section-heading"><span class="section-icon">🔒</span> Change Password</div>
-        <input type="password" id="oldPassword" class="input-glass" placeholder="Current password">
-        <input type="password" id="newPassword" class="input-glass" placeholder="New password">
-        <button id="btnPassword" class="btn-push" onclick="window.AppConsole.changePassword()">
+        <div class="section-heading">
+            <span class="section-icon">🔒</span>
+            Change Password
+        </div>
+
+        <input
+            type="password"
+            id="oldPassword"
+            class="input-glass"
+            placeholder="Current password"
+        >
+
+        <input
+            type="password"
+            id="newPassword"
+            class="input-glass"
+            placeholder="New password"
+        >
+
+        <button
+            id="btnPassword"
+            class="btn-push"
+            onclick="window.AppConsole.changePassword()"
+        >
             <span>🔑</span> Update Password
         </button>
     </div>
 
 </div>
 
-<script>
+
+<!-- =========================================================
+     FIREBASE + APP CODE
+     Everything is kept inside ONE module.
+     This fixes the module timing problem.
+========================================================= -->
+
+<script type="module">
+
+    import {
+        initializeApp
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+    import {
+        getFirestore,
+        collection,
+        addDoc,
+        updateDoc,
+        doc,
+        getDoc,
+        getDocs,
+        setDoc,
+        serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    import {
+        getAuth,
+        onAuthStateChanged,
+        signOut,
+        updatePassword,
+        EmailAuthProvider,
+        reauthenticateWithCredential
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+
+    // =========================================================
+    // FIREBASE CONFIG
+    // =========================================================
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
+        authDomain: "my-mess-17fbc.firebaseapp.com",
+        projectId: "my-mess-17fbc",
+        storageBucket: "my-mess-17fbc.firebasestorage.app",
+        messagingSenderId: "848426874799",
+        appId: "1:848426874799:web:0722af59e7504da847e15a",
+        measurementId: "G-RWHJKGV5LS"
+    };
+
+
+    // =========================================================
+    // INITIALIZE FIREBASE
+    // =========================================================
+
+    const app = initializeApp(firebaseConfig);
+
+    const db = getFirestore(app);
+
+    const auth = getAuth(app);
+
+
+    // =========================================================
+    // MAKE FIREBASE AVAILABLE TO APP
+    // =========================================================
+
+    window.db = db;
+
+    window.auth = auth;
+
+    window.FirebaseSDK = {
+        collection,
+        addDoc,
+        updateDoc,
+        doc,
+        getDoc,
+        getDocs,
+        setDoc,
+        serverTimestamp,
+
+        onAuthStateChanged,
+
+        signOut,
+        updatePassword,
+        EmailAuthProvider,
+        reauthenticateWithCredential
+    };
+
+
+    // =========================================================
+    // MANAGER CONSOLE
+    // =========================================================
+
     class EnterpriseConsole {
+
         constructor() {
-            this.db = window.db;
-            this.auth = window.auth;
+
+            this.db = db;
+
+            this.auth = auth;
+
             this.currentUser = null;
+
             this.init();
         }
 
+
+        // =====================================================
+        // AUTH CHECK
+        // =====================================================
+
         init() {
-            window.FirebaseSDK.onAuthStateChanged(this.auth, async (user) => {
+
+            onAuthStateChanged(this.auth, async (user) => {
+
+                console.log("Auth state changed:", user);
+
+
+                // No user
                 if (!user) {
-                    console.log("No user logged in, redirecting to login...");
-                    window.location.href = 'login.html';
-                    return;
-                }
-                
-                if (user.email !== 'spi@gmail.com') {
-                    console.log("Unauthorized email:", user.email);
-                    window.location.href = 'login.html';
+
+                    console.log(
+                        "No user logged in, redirecting to login..."
+                    );
+
+                    window.location.href = "login.html";
+
                     return;
                 }
 
-                console.log("Authorized admin logged in:", user.email);
-                localStorage.setItem('adminLoggedIn', 'true');
+
+                // Only admin email allowed
+                if (user.email !== "spi@gmail.com") {
+
+                    console.log(
+                        "Unauthorized email:",
+                        user.email
+                    );
+
+                    await signOut(this.auth);
+
+                    window.location.href = "login.html";
+
+                    return;
+                }
+
+
+                // Authorized admin
+                console.log(
+                    "Authorized admin logged in:",
+                    user.email
+                );
+
+                localStorage.setItem(
+                    "adminLoggedIn",
+                    "true"
+                );
+
                 this.currentUser = user;
-                document.getElementById('userEmail').textContent = user.email;
-                await this.loadAllData();
+
+                const emailElement =
+                    document.getElementById("userEmail");
+
+                if (emailElement) {
+                    emailElement.textContent = user.email;
+                }
+
+
+                try {
+
+                    await this.loadAllData();
+
+                } catch (error) {
+
+                    console.error(
+                        "Error loading admin data:",
+                        error
+                    );
+
+                    alert(
+                        "ডাটা লোড করতে সমস্যা হয়েছে। Console দেখুন।"
+                    );
+                }
+
             });
         }
+
+
+        // =====================================================
+        // AUTO FIT STATS
+        // =====================================================
 
         autoFitStats() {
-            document.querySelectorAll('.stat-value').forEach(el => {
-                const parent = el.parentElement;
-                let fontSize = 16;
-                el.style.fontSize = fontSize + 'px';
-                while (el.scrollWidth > (parent.clientWidth - 8) && fontSize > 10) {
-                    fontSize--;
-                    el.style.fontSize = fontSize + 'px';
-                }
-            });
+
+            document
+                .querySelectorAll(".stat-value")
+                .forEach((el) => {
+
+                    const parent = el.parentElement;
+
+                    let fontSize = 16;
+
+                    el.style.fontSize =
+                        fontSize + "px";
+
+                    while (
+                        el.scrollWidth >
+                        (parent.clientWidth - 8) &&
+                        fontSize > 10
+                    ) {
+
+                        fontSize--;
+
+                        el.style.fontSize =
+                            fontSize + "px";
+                    }
+
+                });
         }
+
+
+        // =====================================================
+        // LOAD EVERYTHING
+        // =====================================================
 
         async loadAllData() {
+
             await this.loadMemberDropdown();
+
             await this.refreshStats();
+
             await this.loadManagerName();
+
         }
 
+
+        // =====================================================
+        // LOAD MEMBERS
+        // =====================================================
+
         async loadMemberDropdown() {
-            const snap = await window.FirebaseSDK.getDocs(window.FirebaseSDK.collection(this.db, 'members'));
-            const select = document.getElementById('memberSelect');
-            let options = '<option value="">Select border...</option>';
-            snap.forEach(doc => {
-                const d = doc.data();
-                options += `<option value="${doc.id}">${d.name} (৳${d.totalDeposit || 0})</option>`;
+
+            const membersCollection =
+                collection(
+                    this.db,
+                    "members"
+                );
+
+            const snap =
+                await getDocs(
+                    membersCollection
+                );
+
+            const select =
+                document.getElementById(
+                    "memberSelect"
+                );
+
+            let options =
+                '<option value="">Select border...</option>';
+
+
+            snap.forEach((memberDoc) => {
+
+                const data =
+                    memberDoc.data();
+
+                options += `
+                    <option value="${memberDoc.id}">
+                        ${data.name || "Unnamed"}
+                        (৳${data.totalDeposit || 0})
+                    </option>
+                `;
             });
+
+
             select.innerHTML = options;
         }
 
+
+        // =====================================================
+        // LOAD MANAGER NAME
+        // =====================================================
+
         async loadManagerName() {
-            const snap = await window.FirebaseSDK.getDoc(window.FirebaseSDK.doc(this.db, 'settings', 'manager'));
+
+            const managerRef =
+                doc(
+                    this.db,
+                    "settings",
+                    "manager"
+                );
+
+            const snap =
+                await getDoc(managerRef);
+
+
             if (snap.exists()) {
-                document.getElementById('managerNameInput').value = snap.data().name || '';
+
+                const data =
+                    snap.data();
+
+                document.getElementById(
+                    "managerNameInput"
+                ).value =
+                    data.name || "";
             }
         }
 
+
+        // =====================================================
+        // REFRESH STATS
+        // =====================================================
+
         async refreshStats() {
-            const { getDocs, collection, doc, setDoc } = window.FirebaseSDK;
-            const membersSnap = await getDocs(collection(this.db, 'members'));
+
+            const membersSnap =
+                await getDocs(
+                    collection(
+                        this.db,
+                        "members"
+                    )
+                );
+
             let totalMeals = 0;
-            membersSnap.forEach(d => totalMeals += (d.data().totalMeals || 0));
-            document.getElementById('totalMeals').textContent = totalMeals;
 
-            const bazarSnap = await getDocs(collection(this.db, 'bazar'));
+
+            membersSnap.forEach((memberDoc) => {
+
+                const data =
+                    memberDoc.data();
+
+                totalMeals +=
+                    Number(data.totalMeals || 0);
+            });
+
+
+            document.getElementById(
+                "totalMeals"
+            ).textContent =
+                totalMeals;
+
+
+            const bazarSnap =
+                await getDocs(
+                    collection(
+                        this.db,
+                        "bazar"
+                    )
+                );
+
             let totalBazar = 0;
-            bazarSnap.forEach(d => totalBazar += (d.data().amount || 0));
-            document.getElementById('totalBazar').textContent = '৳' + totalBazar;
 
-            const rate = totalMeals > 0 ? (totalBazar / totalMeals) : 0;
-            document.getElementById('mealRate').textContent = '৳' + rate.toFixed(2);
-            await setDoc(doc(this.db, 'settings', 'mealRate'), { rate }, { merge: true });
-            
-            setTimeout(this.autoFitStats, 50);
+
+            bazarSnap.forEach((bazarDoc) => {
+
+                const data =
+                    bazarDoc.data();
+
+                totalBazar +=
+                    Number(data.amount || 0);
+            });
+
+
+            document.getElementById(
+                "totalBazar"
+            ).textContent =
+                "৳" + totalBazar;
+
+
+            const rate =
+                totalMeals > 0
+                    ? totalBazar / totalMeals
+                    : 0;
+
+
+            document.getElementById(
+                "mealRate"
+            ).textContent =
+                "৳" + rate.toFixed(2);
+
+
+            // Save meal rate
+            await setDoc(
+                doc(
+                    this.db,
+                    "settings",
+                    "mealRate"
+                ),
+                {
+                    rate: rate
+                },
+                {
+                    merge: true
+                }
+            );
+
+
+            setTimeout(
+                () => this.autoFitStats(),
+                50
+            );
         }
+
+
+        // =====================================================
+        // SUCCESS BUTTON
+        // =====================================================
 
         showSuccess(buttonId) {
-            const btn = document.getElementById(buttonId);
-            btn.classList.add('btn-success');
-            setTimeout(() => btn.classList.remove('btn-success'), 1500);
+
+            const btn =
+                document.getElementById(
+                    buttonId
+                );
+
+            if (!btn) return;
+
+
+            btn.classList.add(
+                "btn-success"
+            );
+
+
+            setTimeout(() => {
+
+                btn.classList.remove(
+                    "btn-success"
+                );
+
+            }, 1500);
         }
+
+
+        // =====================================================
+        // ADD MEMBER
+        // =====================================================
 
         async addMember() {
-            const name = document.getElementById('newMemberName').value.trim();
-            const deposit = parseFloat(document.getElementById('newMemberDeposit').value) || 0;
-            if (!name) return alert('Enter member name');
-            await window.FirebaseSDK.addDoc(window.FirebaseSDK.collection(this.db, 'members'), {
-                name, totalDeposit: deposit, totalMeals: 0,
-                createdAt: window.FirebaseSDK.serverTimestamp()
-            });
-            document.getElementById('newMemberName').value = '';
-            document.getElementById('newMemberDeposit').value = '';
-            this.showSuccess('btnAddMember');
-            await this.loadAllData();
-            alert('✅ Border registered');
+
+            try {
+
+                const name =
+                    document
+                        .getElementById(
+                            "newMemberName"
+                        )
+                        .value
+                        .trim();
+
+
+                const deposit =
+                    parseFloat(
+                        document.getElementById(
+                            "newMemberDeposit"
+                        ).value
+                    ) || 0;
+
+
+                if (!name) {
+
+                    alert(
+                        "Enter member name"
+                    );
+
+                    return;
+                }
+
+
+                await addDoc(
+                    collection(
+                        this.db,
+                        "members"
+                    ),
+                    {
+                        name: name,
+                        totalDeposit: deposit,
+                        totalMeals: 0,
+                        createdAt:
+                            serverTimestamp()
+                    }
+                );
+
+
+                document.getElementById(
+                    "newMemberName"
+                ).value = "";
+
+
+                document.getElementById(
+                    "newMemberDeposit"
+                ).value = "";
+
+
+                this.showSuccess(
+                    "btnAddMember"
+                );
+
+
+                await this.loadAllData();
+
+
+                alert(
+                    "✅ Border registered"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Add member error:",
+                    error
+                );
+
+                alert(
+                    "Member add করতে সমস্যা হয়েছে: " +
+                    error.message
+                );
+            }
         }
+
+
+        // =====================================================
+        // ADD DEPOSIT
+        // =====================================================
 
         async addDeposit() {
-            const memberId = document.getElementById('memberSelect').value;
-            const amount = parseFloat(document.getElementById('depositAmount').value);
-            if (!memberId || isNaN(amount) || amount <= 0) return alert('Select border and amount');
-            const ref = window.FirebaseSDK.doc(this.db, 'members', memberId);
-            const snap = await window.FirebaseSDK.getDoc(ref);
-            if (!snap.exists()) return alert('Member not found');
-            await window.FirebaseSDK.updateDoc(ref, { totalDeposit: (snap.data().totalDeposit || 0) + amount });
-            document.getElementById('depositAmount').value = '';
-            this.showSuccess('btnDeposit');
-            await this.loadAllData();
-            alert('✅ Payment recorded');
+
+            try {
+
+                const memberId =
+                    document.getElementById(
+                        "memberSelect"
+                    ).value;
+
+
+                const amount =
+                    parseFloat(
+                        document.getElementById(
+                            "depositAmount"
+                        ).value
+                    );
+
+
+                if (
+                    !memberId ||
+                    isNaN(amount) ||
+                    amount <= 0
+                ) {
+
+                    alert(
+                        "Select border and amount"
+                    );
+
+                    return;
+                }
+
+
+                const memberRef =
+                    doc(
+                        this.db,
+                        "members",
+                        memberId
+                    );
+
+
+                const snap =
+                    await getDoc(
+                        memberRef
+                    );
+
+
+                if (!snap.exists()) {
+
+                    alert(
+                        "Member not found"
+                    );
+
+                    return;
+                }
+
+
+                const currentDeposit =
+                    Number(
+                        snap.data().totalDeposit || 0
+                    );
+
+
+                await updateDoc(
+                    memberRef,
+                    {
+                        totalDeposit:
+                            currentDeposit + amount
+                    }
+                );
+
+
+                document.getElementById(
+                    "depositAmount"
+                ).value = "";
+
+
+                this.showSuccess(
+                    "btnDeposit"
+                );
+
+
+                await this.loadAllData();
+
+
+                alert(
+                    "✅ Payment recorded"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Deposit error:",
+                    error
+                );
+
+                alert(
+                    "Payment update করতে সমস্যা হয়েছে: " +
+                    error.message
+                );
+            }
         }
+
+
+        // =====================================================
+        // ADD BAZAR
+        // =====================================================
 
         async addBazar() {
-            const date = document.getElementById('bazarDate').value;
-            const purchaser = document.getElementById('purchaser').value.trim();
-            const amount = parseFloat(document.getElementById('bazarAmount').value);
-            if (!date || !purchaser || isNaN(amount) || amount <= 0) return alert('Fill all fields');
-            await window.FirebaseSDK.addDoc(window.FirebaseSDK.collection(this.db, 'bazar'), {
-                date, purchaser, amount,
-                timestamp: window.FirebaseSDK.serverTimestamp()
-            });
-            document.getElementById('bazarDate').value = '';
-            document.getElementById('purchaser').value = '';
-            document.getElementById('bazarAmount').value = '';
-            this.showSuccess('btnBazar');
-            await this.loadAllData();
-            alert('✅ Expense logged');
+
+            try {
+
+                const date =
+                    document.getElementById(
+                        "bazarDate"
+                    ).value;
+
+
+                const purchaser =
+                    document
+                        .getElementById(
+                            "purchaser"
+                        )
+                        .value
+                        .trim();
+
+
+                const amount =
+                    parseFloat(
+                        document.getElementById(
+                            "bazarAmount"
+                        ).value
+                    );
+
+
+                if (
+                    !date ||
+                    !purchaser ||
+                    isNaN(amount) ||
+                    amount <= 0
+                ) {
+
+                    alert(
+                        "Fill all fields"
+                    );
+
+                    return;
+                }
+
+
+                await addDoc(
+                    collection(
+                        this.db,
+                        "bazar"
+                    ),
+                    {
+                        date: date,
+                        purchaser: purchaser,
+                        amount: amount,
+                        timestamp:
+                            serverTimestamp()
+                    }
+                );
+
+
+                document.getElementById(
+                    "bazarDate"
+                ).value = "";
+
+
+                document.getElementById(
+                    "purchaser"
+                ).value = "";
+
+
+                document.getElementById(
+                    "bazarAmount"
+                ).value = "";
+
+
+                this.showSuccess(
+                    "btnBazar"
+                );
+
+
+                await this.loadAllData();
+
+
+                alert(
+                    "✅ Expense logged"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Bazar error:",
+                    error
+                );
+
+                alert(
+                    "Bazar update করতে সমস্যা হয়েছে: " +
+                    error.message
+                );
+            }
         }
+
+
+        // =====================================================
+        // UPDATE MANAGER NAME
+        // =====================================================
 
         async updateManagerName() {
-            const newName = document.getElementById('managerNameInput').value.trim();
-            if (!newName) return alert('Enter name');
-            await window.FirebaseSDK.setDoc(window.FirebaseSDK.doc(this.db, 'settings', 'manager'), { name: newName }, { merge: true });
-            this.showSuccess('btnManagerName');
-            alert('✅ Manager name updated');
+
+            try {
+
+                const newName =
+                    document
+                        .getElementById(
+                            "managerNameInput"
+                        )
+                        .value
+                        .trim();
+
+
+                if (!newName) {
+
+                    alert(
+                        "Enter name"
+                    );
+
+                    return;
+                }
+
+
+                await setDoc(
+                    doc(
+                        this.db,
+                        "settings",
+                        "manager"
+                    ),
+                    {
+                        name: newName
+                    },
+                    {
+                        merge: true
+                    }
+                );
+
+
+                this.showSuccess(
+                    "btnManagerName"
+                );
+
+
+                alert(
+                    "✅ Manager name updated"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Manager name error:",
+                    error
+                );
+
+                alert(
+                    "Manager name update করতে সমস্যা হয়েছে: " +
+                    error.message
+                );
+            }
         }
+
+
+        // =====================================================
+        // CHANGE PASSWORD
+        // =====================================================
 
         async changePassword() {
-            const oldPass = document.getElementById('oldPassword').value;
-            const newPass = document.getElementById('newPassword').value;
-            if (!oldPass || !newPass) return alert('Enter both passwords');
-            if (newPass.length < 6) return alert('Min 6 characters');
-            const credential = window.FirebaseSDK.EmailAuthProvider.credential(this.currentUser.email, oldPass);
-            await window.FirebaseSDK.reauthenticateWithCredential(this.currentUser, credential);
-            await window.FirebaseSDK.updatePassword(this.currentUser, newPass);
-            document.getElementById('oldPassword').value = '';
-            document.getElementById('newPassword').value = '';
-            this.showSuccess('btnPassword');
-            alert('✅ Password changed');
+
+            try {
+
+                const oldPass =
+                    document.getElementById(
+                        "oldPassword"
+                    ).value;
+
+
+                const newPass =
+                    document.getElementById(
+                        "newPassword"
+                    ).value;
+
+
+                if (!oldPass || !newPass) {
+
+                    alert(
+                        "Enter both passwords"
+                    );
+
+                    return;
+                }
+
+
+                if (newPass.length < 6) {
+
+                    alert(
+                        "Min 6 characters"
+                    );
+
+                    return;
+                }
+
+
+                if (!this.currentUser) {
+
+                    alert(
+                        "User session not found"
+                    );
+
+                    return;
+                }
+
+
+                const credential =
+                    EmailAuthProvider.credential(
+                        this.currentUser.email,
+                        oldPass
+                    );
+
+
+                await reauthenticateWithCredential(
+                    this.currentUser,
+                    credential
+                );
+
+
+                await updatePassword(
+                    this.currentUser,
+                    newPass
+                );
+
+
+                document.getElementById(
+                    "oldPassword"
+                ).value = "";
+
+
+                document.getElementById(
+                    "newPassword"
+                ).value = "";
+
+
+                this.showSuccess(
+                    "btnPassword"
+                );
+
+
+                alert(
+                    "✅ Password changed"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Password change error:",
+                    error
+                );
+
+
+                if (
+                    error.code ===
+                    "auth/wrong-password"
+                ) {
+
+                    alert(
+                        "Current password is incorrect."
+                    );
+
+                } else {
+
+                    alert(
+                        "Password change failed: " +
+                        error.message
+                    );
+                }
+            }
         }
 
-        handleLogout() {
-            window.FirebaseSDK.signOut(this.auth).then(() => {
-                localStorage.removeItem('adminLoggedIn');
-                window.location.href = 'login.html';
-            });
+
+        // =====================================================
+        // LOGOUT
+        // =====================================================
+
+        async handleLogout() {
+
+            try {
+
+                await signOut(
+                    this.auth
+                );
+
+
+                localStorage.removeItem(
+                    "adminLoggedIn"
+                );
+
+
+                window.location.href =
+                    "login.html";
+
+
+            } catch (error) {
+
+                console.error(
+                    "Logout error:",
+                    error
+                );
+
+                alert(
+                    "Logout failed: " +
+                    error.message
+                );
+            }
         }
+
     }
 
-    window.AppConsole = new EnterpriseConsole();
-    window.addEventListener('resize', () => window.AppConsole.autoFitStats());
+
+    // =========================================================
+    // CREATE APP AFTER FIREBASE IS READY
+    // =========================================================
+
+    window.AppConsole =
+        new EnterpriseConsole();
+
+
+    // =========================================================
+    // RESIZE EVENT
+    // =========================================================
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            if (window.AppConsole) {
+
+                window.AppConsole.autoFitStats();
+
+            }
+
+        }
+    );
+
 </script>
+
 </body>
 </html>
