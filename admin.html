@@ -5,18 +5,24 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-      content="width=device-width,initial-scale=1">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-<meta name="theme-color"
-      content="#05050b">
+<meta name="theme-color" content="#06060d">
 
-<title>Admin Panel — Ma Achiya Villa</title>
+<title>Admin — Ma Achiya Villa</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap"
-      rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+>
 
 <style>
 
@@ -24,15 +30,25 @@
 
     --bg:#05050b;
 
+    --glass:rgba(18,18,38,.58);
+    --glass2:rgba(24,24,48,.45);
+
+    --border:rgba(255,255,255,.08);
+    --border2:rgba(255,255,255,.14);
+
+    --white:#fff;
+    --muted:rgba(255,255,255,.58);
+
     --purple:#a78bfa;
     --blue:#60a5fa;
     --green:#34d399;
     --red:#f87171;
 
-    --muted:rgba(255,255,255,.55);
+    --shadow:
+        0 20px 55px rgba(0,0,0,.45),
+        inset 0 1px 0 rgba(255,255,255,.05);
 
-    --border:rgba(255,255,255,.09);
-
+    --radius:22px;
 }
 
 *{
@@ -50,67 +66,93 @@ body{
 
     min-height:100vh;
 
-    padding:14px;
-
-    color:white;
-
-    font-family:
-        Inter,
-        "Noto Sans Bengali",
-        sans-serif;
-
     background:
-
         radial-gradient(
             circle at 50% -20%,
-            rgba(124,58,237,.35),
+            rgba(124,58,237,.25),
             transparent 45%
         ),
-
         radial-gradient(
-            circle at 100% 60%,
-            rgba(37,99,235,.15),
+            circle at 90% 20%,
+            rgba(37,99,235,.14),
             transparent 35%
         ),
+        var(--bg);
 
-        #05050b;
+    color:var(--white);
+
+    font-family:Inter,system-ui,sans-serif;
+
+    padding:16px;
+
+    overflow-x:hidden;
 }
 
+body::before{
 
-/* =====================
-   GLASS
-===================== */
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    pointer-events:none;
+
+    background:
+        radial-gradient(
+            circle at 15% 70%,
+            rgba(167,139,250,.08),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 80% 80%,
+            rgba(52,211,153,.06),
+            transparent 30%
+        );
+
+    z-index:-1;
+}
+
+.font-bn{
+    font-family:'Noto Sans Bengali',sans-serif;
+}
 
 .glass{
 
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.065),
-            rgba(255,255,255,.018)
-        );
+    background:var(--glass);
 
     border:1px solid var(--border);
 
-    border-radius:24px;
+    border-radius:var(--radius);
 
-    backdrop-filter:
-        blur(28px)
-        saturate(160%);
+    box-shadow:var(--shadow);
 
-    -webkit-backdrop-filter:
-        blur(28px)
-        saturate(160%);
-
-    box-shadow:
-        0 20px 60px rgba(0,0,0,.4),
-        inset 0 1px 0 rgba(255,255,255,.08);
+    backdrop-filter:blur(25px) saturate(150%);
+    -webkit-backdrop-filter:blur(25px) saturate(150%);
 }
 
+.glass-card{
 
-/* =====================
-   LOGO
-===================== */
+    background:var(--glass2);
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    transition:
+        border-color .2s ease,
+        background .2s ease,
+        transform .2s ease;
+}
+
+.glass-card:hover{
+
+    border-color:var(--border2);
+
+    background:rgba(30,30,58,.52);
+
+    transform:translateY(-1px);
+}
 
 .logo{
 
@@ -120,160 +162,90 @@ body{
     border-radius:50%;
 
     display:flex;
-
     align-items:center;
     justify-content:center;
 
-    border:2px solid var(--purple);
+    border:2px solid var(--green);
+
+    background:rgba(20,20,40,.6);
 
     box-shadow:
-        0 0 30px rgba(167,139,250,.35),
-        inset 0 1px 0 rgba(255,255,255,.2);
-
-    background:rgba(255,255,255,.04);
+        0 0 25px rgba(52,211,153,.28),
+        inset 0 1px 0 rgba(255,255,255,.15);
 }
 
-.bn{
+.logo-inner{
 
-    font-family:
-        "Noto Sans Bengali",
-        sans-serif;
+    text-align:center;
+    line-height:1;
+}
+
+.logo-bn{
+
+    font-family:'Noto Sans Bengali',sans-serif;
 
     font-size:10px;
 
     font-weight:900;
-
-    text-align:center;
 }
 
-.en{
-
-    display:block;
+.logo-en{
 
     font-size:7px;
-
-    text-align:center;
-
-    letter-spacing:1.5px;
-
-    color:var(--muted);
-}
-
-
-/* =====================
-   ADMIN BADGE
-===================== */
-
-.admin-badge{
-
-    padding:8px 15px;
-
-    border-radius:999px;
-
-    border:1px solid
-        rgba(167,139,250,.25);
-
-    background:
-        rgba(167,139,250,.09);
-
-    text-align:center;
-}
-
-.admin-label{
-
-    font-size:9px;
-
-    text-transform:uppercase;
 
     letter-spacing:1px;
 
     color:var(--muted);
+
+    margin-top:3px;
 }
 
-.admin-name{
+.top-title{
 
-    color:#c4b5fd;
+    font-size:17px;
 
-    font-size:12px;
-
-    font-weight:900;
+    font-weight:800;
 }
 
+.top-sub{
 
-/* =====================
-   MENU
-===================== */
+    font-size:10px;
 
-.menu{
+    color:var(--muted);
 
-    width:46px;
-    height:46px;
+    margin-top:2px;
+}
 
-    border-radius:15px;
+.icon-btn{
+
+    width:44px;
+    height:44px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:14px;
+
+    background:rgba(255,255,255,.045);
 
     border:1px solid var(--border);
 
-    background:
-        rgba(255,255,255,.045);
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    gap:5px;
-
     cursor:pointer;
+
+    transition:.2s;
 }
 
-.menu span{
+.icon-btn:hover{
 
-    width:18px;
-    height:2px;
+    background:rgba(255,255,255,.08);
 
-    background:#fff;
-
-    border-radius:10px;
+    border-color:var(--border2);
 }
-
-
-/* =====================
-   CARD
-===================== */
-
-.card{
-
-    padding:18px;
-
-    margin-bottom:14px;
-}
-
-.title{
-
-    font-size:18px;
-
-    font-weight:900;
-
-    margin-bottom:15px;
-
-    display:flex;
-
-    gap:9px;
-
-    align-items:center;
-}
-
-
-/* =====================
-   STATS
-===================== */
 
 .stat{
 
-    padding:16px 8px;
+    padding:18px;
 
     text-align:center;
 }
@@ -281,257 +253,457 @@ body{
 .stat-icon{
 
     font-size:22px;
-
-    margin-bottom:4px;
+    margin-bottom:7px;
 }
 
 .stat-label{
 
-    color:var(--muted);
-
     font-size:9px;
+
+    color:var(--muted);
 
     text-transform:uppercase;
 
-    letter-spacing:1px;
+    letter-spacing:1.2px;
 }
 
 .stat-value{
 
-    font-size:21px;
+    margin-top:4px;
 
-    font-weight:900;
+    font-size:23px;
 
-    margin-top:2px;
+    font-weight:800;
 }
 
+.section-title{
 
-/* =====================
-   BUTTON
-===================== */
-
-.btn{
-
-    border:1px solid var(--border);
-
-    background:
-        rgba(255,255,255,.045);
-
-    color:white;
-
-    border-radius:15px;
-
-    padding:11px 15px;
-
-    cursor:pointer;
+    font-size:18px;
 
     font-weight:800;
 
-    transition:.2s;
-}
-
-.btn:hover{
-
-    background:
-        rgba(255,255,255,.09);
-
-    transform:translateY(-1px);
-}
-
-.green{
-
-    color:#6ee7b7;
-
-    border-color:
-        rgba(52,211,153,.25);
-
-    background:
-        rgba(52,211,153,.08);
-}
-
-.red{
-
-    color:#fca5a5;
-
-    border-color:
-        rgba(248,113,113,.25);
-
-    background:
-        rgba(248,113,113,.08);
-}
-
-.blue{
-
-    color:#93c5fd;
-
-    border-color:
-        rgba(96,165,250,.25);
-
-    background:
-        rgba(96,165,250,.08);
-}
-
-
-/* =====================
-   SEARCH
-===================== */
-
-.search{
-
-    width:100%;
-
-    padding:13px 15px;
-
-    border-radius:16px;
-
-    border:1px solid var(--border);
-
-    background:
-        rgba(0,0,0,.2);
-
-    outline:none;
-
-    color:white;
-
-    font-size:13px;
-
-    margin-bottom:12px;
-}
-
-.search:focus{
-
-    border-color:
-        rgba(167,139,250,.45);
-
-    box-shadow:
-        0 0 0 3px
-        rgba(167,139,250,.08);
-}
-
-
-/* =====================
-   USER ROW
-===================== */
-
-.user-row{
-
     display:flex;
-
-    justify-content:space-between;
 
     align-items:center;
 
-    gap:10px;
-
-    padding:15px;
-
-    border-radius:18px;
-
-    background:
-        rgba(255,255,255,.035);
-
-    border:1px solid
-        rgba(255,255,255,.06);
-
-    margin-bottom:8px;
+    gap:8px;
 }
 
-.user-name{
-
-    font-weight:900;
-
-    font-size:14px;
-}
-
-.user-email{
+.section-sub{
 
     color:var(--muted);
 
     font-size:10px;
 
     margin-top:3px;
+}
 
-    word-break:break-all;
+.input{
+
+    width:100%;
+
+    background:rgba(255,255,255,.045);
+
+    border:1px solid var(--border);
+
+    color:#fff;
+
+    outline:none;
+
+    border-radius:13px;
+
+    padding:12px 14px;
+
+    font-size:13px;
+
+    transition:.2s;
+}
+
+.input:focus{
+
+    border-color:rgba(167,139,250,.45);
+
+    background:rgba(255,255,255,.065);
+
+    box-shadow:0 0 0 3px rgba(167,139,250,.07);
+}
+
+.input::placeholder{
+
+    color:rgba(255,255,255,.35);
+}
+
+.btn{
+
+    border:none;
+
+    outline:none;
+
+    cursor:pointer;
+
+    border-radius:13px;
+
+    padding:11px 15px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    transition:.2s;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:7px;
+}
+
+.btn-primary{
+
+    color:#fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #4f46e5
+        );
+
+    box-shadow:
+        0 8px 25px rgba(79,70,229,.22);
+}
+
+.btn-primary:hover{
+
+    transform:translateY(-1px);
+
+    box-shadow:
+        0 10px 30px rgba(79,70,229,.32);
+}
+
+.btn-green{
+
+    background:rgba(52,211,153,.1);
+
+    border:1px solid rgba(52,211,153,.2);
+
+    color:#6ee7b7;
+}
+
+.btn-red{
+
+    background:rgba(248,113,113,.08);
+
+    border:1px solid rgba(248,113,113,.18);
+
+    color:#fca5a5;
+}
+
+.btn-blue{
+
+    background:rgba(96,165,250,.08);
+
+    border:1px solid rgba(96,165,250,.18);
+
+    color:#93c5fd;
+}
+
+.search{
+
+    position:relative;
+}
+
+.search-icon{
+
+    position:absolute;
+
+    left:13px;
+    top:50%;
+
+    transform:translateY(-50%);
+
+    color:rgba(255,255,255,.35);
+
+    font-size:14px;
+}
+
+.search .input{
+
+    padding-left:38px;
+}
+
+.member{
+
+    padding:14px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:10px;
+}
+
+.member-left{
+
+    min-width:0;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+}
+
+.avatar{
+
+    width:40px;
+    height:40px;
+
+    border-radius:13px;
+
+    flex-shrink:0;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-weight:800;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(167,139,250,.2),
+            rgba(96,165,250,.12)
+        );
+
+    border:1px solid var(--border);
+
+    color:#ddd6fe;
+}
+
+.member-name{
+
+    font-family:'Noto Sans Bengali',sans-serif;
+
+    font-size:14px;
+
+    font-weight:800;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+}
+
+.member-meta{
+
+    margin-top:3px;
+
+    font-size:10px;
+
+    color:var(--muted);
+}
+
+.member-balance{
+
+    text-align:right;
+
+    flex-shrink:0;
+}
+
+.balance{
+
+    font-size:16px;
+
+    font-weight:800;
 }
 
 .status{
 
-    font-size:9px;
+    font-size:8px;
 
     text-transform:uppercase;
 
     letter-spacing:1px;
 
-    font-weight:900;
+    margin-top:2px;
+}
+
+.green{
+    color:#6ee7b7;
+}
+
+.red{
+    color:#fca5a5;
+}
+
+.blue{
+    color:#93c5fd;
+}
+
+.purple{
+    color:#c4b5fd;
+}
+
+.modal-bg{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:100;
+
+    background:rgba(0,0,0,.68);
+
+    backdrop-filter:blur(8px);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:18px;
+}
+
+.modal{
+
+    width:100%;
+
+    max-width:440px;
+
+    max-height:90vh;
+
+    overflow-y:auto;
+
+    padding:20px;
+
+    border-radius:24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(28,28,55,.96),
+            rgba(11,11,23,.97)
+        );
+
+    border:1px solid var(--border2);
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.65);
+}
+
+.modal-title{
+
+    font-size:18px;
+
+    font-weight:800;
+}
+
+.modal-sub{
+
+    font-size:10px;
+
+    color:var(--muted);
 
     margin-top:3px;
 }
 
+.divider{
 
-/* =====================
-   DROPDOWN
-===================== */
+    height:1px;
 
-.dropdown{
+    background:var(--border);
 
-    position:absolute;
-
-    right:0;
-
-    top:56px;
-
-    min-width:210px;
-
-    padding:7px;
-
-    border-radius:20px;
-
-    background:
-        rgba(18,18,34,.94);
-
-    border:1px solid var(--border);
-
-    backdrop-filter:blur(30px);
-
-    box-shadow:
-        0 25px 70px rgba(0,0,0,.55);
-
-    z-index:100;
+    margin:15px 0;
 }
 
-.dropdown button{
+.toast{
 
-    width:100%;
+    position:fixed;
 
-    border:0;
+    right:18px;
 
-    background:transparent;
+    bottom:18px;
 
-    color:#fff;
+    z-index:200;
 
-    padding:12px 14px;
+    min-width:240px;
 
-    border-radius:14px;
+    max-width:calc(100vw - 36px);
 
-    text-align:left;
+    padding:13px 16px;
 
-    cursor:pointer;
+    border-radius:15px;
+
+    background:rgba(22,22,42,.94);
+
+    border:1px solid var(--border2);
+
+    box-shadow:0 15px 40px rgba(0,0,0,.45);
+
+    font-size:12px;
+
+    transform:translateY(20px);
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.25s;
 }
 
-.dropdown button:hover{
+.toast.show{
 
-    background:
-        rgba(255,255,255,.06);
+    transform:translateY(0);
+
+    opacity:1;
+}
+
+.loading{
+
+    padding:35px;
+
+    text-align:center;
+
+    color:var(--muted);
+
+    font-size:12px;
+}
+
+.spinner{
+
+    width:28px;
+    height:28px;
+
+    border-radius:50%;
+
+    border:3px solid rgba(255,255,255,.08);
+
+    border-top-color:var(--purple);
+
+    animation:spin .7s linear infinite;
+
+    margin:0 auto 10px;
+}
+
+@keyframes spin{
+
+    to{
+        transform:rotate(360deg);
+    }
+
 }
 
 .hidden{
-    display:none!important;
+    display:none !important;
 }
-
-
-/* =====================
-   MOBILE
-===================== */
 
 @media(max-width:600px){
 
@@ -539,26 +711,33 @@ body{
         padding:10px;
     }
 
-    .logo{
+    .top-title{
+        font-size:15px;
+    }
 
+    .logo{
         width:50px;
         height:50px;
-
     }
 
-    .admin-badge{
-
-        padding:7px 10px;
-    }
-
-    .admin-name{
-
-        font-size:10px;
+    .stat{
+        padding:14px 7px;
     }
 
     .stat-value{
-
         font-size:18px;
+    }
+
+    .member{
+        padding:12px;
+    }
+
+    .member-name{
+        font-size:13px;
+    }
+
+    .balance{
+        font-size:14px;
     }
 
 }
@@ -570,262 +749,584 @@ body{
 
 <body>
 
-<div class="max-w-2xl mx-auto">
+<div class="max-w-3xl mx-auto">
 
+    <!-- HEADER -->
 
-<!-- HEADER -->
+    <header class="flex items-center justify-between gap-3 mb-5">
 
-<header class="flex items-center justify-between gap-3 mb-5">
+        <div class="logo">
 
-    <div class="logo">
+            <div class="logo-inner">
 
-        <div>
+                <div class="logo-bn">
+                    মা আছিয়া
+                </div>
 
-            <div class="bn">
-                মা আছিয়া
+                <div class="logo-en">
+                    VILLA
+                </div>
+
             </div>
 
-            <span class="en">
-                VILLA
-            </span>
+        </div>
+
+
+        <div class="flex-1 min-w-0">
+
+            <div class="top-title">
+                Admin Control Center
+            </div>
+
+            <div class="top-sub">
+                Ma Achiya Villa • Management
+            </div>
 
         </div>
 
-    </div>
-
-
-    <div class="admin-badge">
-
-        <div class="admin-label">
-            Main Admin
-        </div>
-
-        <div id="adminName"
-             class="admin-name">
-            Loading...
-        </div>
-
-    </div>
-
-
-    <div class="relative">
-
-        <button class="menu"
-                onclick="toggleMenu()">
-
-            <span></span>
-            <span></span>
-            <span></span>
-
-        </button>
-
-
-        <div id="dropdown"
-             class="dropdown hidden">
-
-            <button onclick="location.href='index.html'">
-                🏠 Dashboard
-            </button>
-
-            <button onclick="location.href='assistant.html'">
-                👨‍💼 Assistant Panel
-            </button>
-
-            <button onclick="logout()"
-                    style="color:#fca5a5">
-                🚪 Logout
-            </button>
-
-        </div>
-
-    </div>
-
-</header>
-
-
-<!-- STATS -->
-
-<div class="grid grid-cols-3 gap-2 mb-4">
-
-    <div class="glass stat">
-
-        <div class="stat-icon">
-            👥
-        </div>
-
-        <div class="stat-label">
-            Members
-        </div>
-
-        <div id="memberCount"
-             class="stat-value"
-             style="color:var(--blue)">
-            —
-        </div>
-
-    </div>
-
-
-    <div class="glass stat">
-
-        <div class="stat-icon">
-            👨‍💼
-        </div>
-
-        <div class="stat-label">
-            Assistants
-        </div>
-
-        <div id="assistantCount"
-             class="stat-value"
-             style="color:var(--purple)">
-            —
-        </div>
-
-    </div>
-
-
-    <div class="glass stat">
-
-        <div class="stat-icon">
-            🟢
-        </div>
-
-        <div class="stat-label">
-            Active
-        </div>
-
-        <div id="activeCount"
-             class="stat-value"
-             style="color:var(--green)">
-            —
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ASSISTANT MANAGEMENT -->
-
-<section class="glass card">
-
-    <div class="title">
-
-        <span>👨‍💼</span>
-
-        Assistant Access
-
-    </div>
-
-
-    <p class="text-xs text-gray-500 mb-4">
-
-        Manage assistant access and remove
-        old browser sessions.
-
-    </p>
-
-
-    <input
-        id="assistantSearch"
-        class="search"
-        type="search"
-        placeholder="Search assistant..."
-        autocomplete="off"
-    >
-
-
-    <div id="assistantList">
-
-        <div class="text-center py-5">
-            Loading...
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- MEMBERS -->
-
-<section class="glass card">
-
-    <div class="title">
-
-        <span>👥</span>
-
-        Members
-
-    </div>
-
-
-    <input
-        id="memberSearch"
-        class="search"
-        type="search"
-        placeholder="Search member..."
-        autocomplete="off"
-    >
-
-
-    <div id="membersList">
-
-        <div class="text-center py-5">
-            Loading...
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- SECURITY -->
-
-<section class="glass card">
-
-    <div class="title">
-
-        <span>🔐</span>
-
-        Security
-
-    </div>
-
-
-    <div class="p-4 rounded-[18px]"
-         style="
-         background:rgba(167,139,250,.06);
-         border:1px solid rgba(167,139,250,.12);
-         ">
-
-        <div class="font-bold text-sm mb-1">
-            Session Security
-        </div>
-
-        <div class="text-xs text-gray-500 mb-3">
-
-            If an assistant password is changed,
-            increment their session version.
-            Their existing browsers will be
-            automatically rejected.
-
-        </div>
 
         <button
-            class="btn red"
-            onclick="location.href='login.html'">
+            class="icon-btn"
+            onclick="logout()"
+            title="Logout"
+        >
+            🚪
+        </button>
 
-            🔐 Security / Login
+    </header>
 
+
+    <!-- ADMIN INFO -->
+
+    <section class="glass p-4 mb-4">
+
+        <div class="flex items-center justify-between gap-3">
+
+            <div>
+
+                <div class="text-[10px] text-gray-500 uppercase tracking-widest">
+                    Administrator
+                </div>
+
+                <div
+                    id="adminName"
+                    class="font-bold mt-1"
+                >
+                    Loading...
+                </div>
+
+                <div
+                    id="adminEmail"
+                    class="text-[10px] text-gray-500 mt-1"
+                >
+                    —
+                </div>
+
+            </div>
+
+            <div
+                class="px-3 py-2 rounded-full text-[9px] font-bold uppercase tracking-widest"
+                style="
+                    background:rgba(167,139,250,.1);
+                    color:#c4b5fd;
+                    border:1px solid rgba(167,139,250,.18);
+                "
+            >
+                👑 Admin
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- STATS -->
+
+    <section class="grid grid-cols-3 gap-2 mb-5">
+
+        <div class="glass glass-card stat">
+
+            <div class="stat-icon">
+                👥
+            </div>
+
+            <div class="stat-label">
+                Members
+            </div>
+
+            <div
+                id="memberCount"
+                class="stat-value purple"
+            >
+                —
+            </div>
+
+        </div>
+
+
+        <div class="glass glass-card stat">
+
+            <div class="stat-icon">
+                💰
+            </div>
+
+            <div class="stat-label">
+                Meal Rate
+            </div>
+
+            <div
+                id="mealRate"
+                class="stat-value blue"
+            >
+                —
+            </div>
+
+        </div>
+
+
+        <div class="glass glass-card stat">
+
+            <div class="stat-icon">
+                🛒
+            </div>
+
+            <div class="stat-label">
+                Bazar
+            </div>
+
+            <div
+                id="bazarTotal"
+                class="stat-value green"
+            >
+                —
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- QUICK SETTINGS -->
+
+    <section class="glass p-4 mb-5">
+
+        <div class="mb-4">
+
+            <div class="section-title">
+                ⚙️ Quick Settings
+            </div>
+
+            <div class="section-sub">
+                Update your mess settings
+            </div>
+
+        </div>
+
+
+        <div class="grid sm:grid-cols-2 gap-3">
+
+            <div>
+
+                <label class="text-[10px] text-gray-500 block mb-1.5">
+                    Meal Rate
+                </label>
+
+                <div class="flex gap-2">
+
+                    <input
+                        id="rateInput"
+                        class="input"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        placeholder="Meal rate"
+                    >
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="saveMealRate()"
+                    >
+                        Save
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <label class="text-[10px] text-gray-500 block mb-1.5">
+                    Manager Name
+                </label>
+
+                <div class="flex gap-2">
+
+                    <input
+                        id="managerInput"
+                        class="input"
+                        type="text"
+                        placeholder="Manager name"
+                    >
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="saveManager()"
+                    >
+                        Save
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- MEMBERS -->
+
+    <section class="glass p-4 mb-5">
+
+        <div class="flex items-center justify-between gap-3 mb-4">
+
+            <div>
+
+                <div class="section-title">
+                    👥 Members
+                </div>
+
+                <div class="section-sub">
+                    Add, edit or remove members
+                </div>
+
+            </div>
+
+
+            <button
+                class="btn btn-primary"
+                onclick="openAddMember()"
+            >
+                ＋ Add
+            </button>
+
+        </div>
+
+
+        <!-- SEARCH -->
+
+        <div class="search mb-3">
+
+            <span class="search-icon">
+                🔎
+            </span>
+
+            <input
+                id="memberSearch"
+                class="input"
+                type="search"
+                placeholder="Search member..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <div
+            id="membersList"
+            class="flex flex-col gap-2"
+        >
+
+            <div class="loading">
+
+                <div class="spinner"></div>
+
+                Loading members...
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- SESSION CONTROL -->
+
+    <section class="glass p-4 mb-5">
+
+        <div class="flex items-center justify-between gap-3">
+
+            <div>
+
+                <div class="section-title">
+                    🔐 Security
+                </div>
+
+                <div class="section-sub">
+                    Invalidate old sessions on all devices
+                </div>
+
+            </div>
+
+            <button
+                class="btn btn-red"
+                onclick="invalidateSessions()"
+            >
+                Reset Sessions
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ASSISTANT -->
+
+    <section class="glass p-4 mb-5">
+
+        <div class="flex items-center justify-between gap-3">
+
+            <div>
+
+                <div class="section-title">
+                    🤝 Assistant Access
+                </div>
+
+                <div class="section-sub">
+                    Manage assistant administrator access
+                </div>
+
+            </div>
+
+            <button
+                class="btn btn-blue"
+                onclick="openAssistant()"
+            >
+                Manage
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <div class="text-center text-[9px] text-gray-600 pb-5">
+
+        Ma Achiya Villa • Admin Panel
+
+    </div>
+
+</div>
+
+
+<!-- MEMBER MODAL -->
+
+<div
+    id="memberModal"
+    class="modal-bg hidden"
+>
+
+    <div class="modal">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <div
+                    id="memberModalTitle"
+                    class="modal-title"
+                >
+                    Add Member
+                </div>
+
+                <div class="modal-sub">
+                    Member information
+                </div>
+
+            </div>
+
+            <button
+                class="icon-btn"
+                onclick="closeMemberModal()"
+            >
+                ✕
+            </button>
+
+        </div>
+
+
+        <div class="divider"></div>
+
+
+        <input
+            id="memberId"
+            type="hidden"
+        >
+
+
+        <div class="mb-3">
+
+            <label class="text-[10px] text-gray-500 block mb-1.5">
+                Member Name
+            </label>
+
+            <input
+                id="memberName"
+                class="input"
+                placeholder="Enter member name"
+            >
+
+        </div>
+
+
+        <div class="grid grid-cols-2 gap-3 mb-4">
+
+            <div>
+
+                <label class="text-[10px] text-gray-500 block mb-1.5">
+                    Deposit
+                </label>
+
+                <input
+                    id="memberDeposit"
+                    class="input"
+                    type="number"
+                    min="0"
+                    step="1"
+                    placeholder="0"
+                >
+
+            </div>
+
+
+            <div>
+
+                <label class="text-[10px] text-gray-500 block mb-1.5">
+                    Total Meals
+                </label>
+
+                <input
+                    id="memberMeals"
+                    class="input"
+                    type="number"
+                    min="0"
+                    step=".5"
+                    placeholder="0"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="flex gap-2">
+
+            <button
+                class="btn btn-primary flex-1"
+                onclick="saveMember()"
+            >
+                💾 Save Member
+            </button>
+
+            <button
+                class="btn btn-red"
+                id="deleteMemberBtn"
+                onclick="deleteCurrentMember()"
+            >
+                🗑️
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ASSISTANT MODAL -->
+
+<div
+    id="assistantModal"
+    class="modal-bg hidden"
+>
+
+    <div class="modal">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <div class="modal-title">
+                    🤝 Assistant Access
+                </div>
+
+                <div class="modal-sub">
+                    Configure assistant administrator
+                </div>
+
+            </div>
+
+            <button
+                class="icon-btn"
+                onclick="closeAssistant()"
+            >
+                ✕
+            </button>
+
+        </div>
+
+
+        <div class="divider"></div>
+
+
+        <div class="mb-3">
+
+            <label class="text-[10px] text-gray-500 block mb-1.5">
+                Assistant Name
+            </label>
+
+            <input
+                id="assistantName"
+                class="input"
+                placeholder="Assistant name"
+            >
+
+        </div>
+
+
+        <div class="mb-4">
+
+            <label class="text-[10px] text-gray-500 block mb-1.5">
+                Assistant Email
+            </label>
+
+            <input
+                id="assistantEmail"
+                class="input"
+                type="email"
+                placeholder="assistant@email.com"
+            >
+
+        </div>
+
+
+        <button
+            class="btn btn-primary w-full"
+            onclick="saveAssistant()"
+        >
+            💾 Save Assistant Access
         </button>
 
     </div>
 
-</section>
-
-
 </div>
+
+
+<div
+    id="toast"
+    class="toast"
+></div>
 
 
 <script type="module">
@@ -835,6 +1336,7 @@ import {
 } from
 "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
+
 import {
     getAuth,
     onAuthStateChanged,
@@ -842,63 +1344,127 @@ import {
 } from
 "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+
 import {
     getFirestore,
-    doc,
-    getDoc,
-    updateDoc,
     collection,
     getDocs,
-    increment
+    getDoc,
+    setDoc,
+    updateDoc,
+    deleteDoc,
+    doc,
+    serverTimestamp
 } from
 "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 
+/* =========================================
+   FIREBASE
+========================================= */
+
 const firebaseConfig = {
 
     apiKey:
-    "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
+        "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
 
     authDomain:
-    "my-mess-17fbc.firebaseapp.com",
+        "my-mess-17fbc.firebaseapp.com",
 
     projectId:
-    "my-mess-17fbc",
+        "my-mess-17fbc",
 
     storageBucket:
-    "my-mess-17fbc.firebasestorage.app",
+        "my-mess-17fbc.firebasestorage.app",
 
     messagingSenderId:
-    "848426874799",
+        "848426874799",
 
     appId:
-    "1:848426874799:web:0722af59e7504da847e15a",
+        "1:848426874799:web:0722af59e7504da847e15a",
 
     measurementId:
-    "G-RWHJKGV5LS"
+        "G-RWHJKGV5LS"
+
 };
 
 
 const app =
     initializeApp(firebaseConfig);
 
+
 const auth =
     getAuth(app);
+
 
 const db =
     getFirestore(app);
 
 
+/* =========================================
+   STATE
+========================================= */
+
 let currentUser = null;
 
-let assistants = [];
+let currentUserData = null;
 
 let members = [];
 
+let mealRateValue = 0;
 
-/* ==============================
+let editingMemberId = null;
+
+
+/* =========================================
+   TOAST
+========================================= */
+
+let toastTimer;
+
+function toast(message){
+
+    const el =
+        document.getElementById("toast");
+
+    el.textContent = message;
+
+    el.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer =
+        setTimeout(() => {
+
+            el.classList.remove("show");
+
+        }, 2500);
+
+}
+
+window.toast = toast;
+
+
+/* =========================================
+   ESCAPE
+========================================= */
+
+function escapeHTML(value){
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        String(value ?? "");
+
+    return div.innerHTML;
+
+}
+
+
+/* =========================================
    AUTH
-============================== */
+========================================= */
 
 onAuthStateChanged(
     auth,
@@ -906,449 +1472,523 @@ onAuthStateChanged(
 
         if(!user){
 
-            location.replace(
-                "login.html"
-            );
+            window.location.href =
+                "login.html";
 
             return;
-        }
-
-
-        currentUser = user;
-
-
-        try{
-
-            const snap =
-                await getDoc(
-                    doc(
-                        db,
-                        "users",
-                        user.uid
-                    )
-                );
-
-
-            if(!snap.exists()){
-
-                await signOut(auth);
-
-                location.replace(
-                    "login.html"
-                );
-
-                return;
-            }
-
-
-            const data =
-                snap.data();
-
-
-            if(
-                data.active === false ||
-                data.role !== "admin"
-            ){
-
-                await signOut(auth);
-
-                alert(
-                    "Admin access denied."
-                );
-
-                location.replace(
-                    "login.html"
-                );
-
-                return;
-            }
-
-
-            document.getElementById(
-                "adminName"
-            ).textContent =
-                data.name ||
-                user.email ||
-                "Admin";
-
-
-            await loadData();
-
-
-        }catch(error){
-
-            console.error(error);
-
-            await signOut(auth);
-
-            location.replace(
-                "login.html"
-            );
 
         }
+
+        currentUser =
+            user;
+
+        await verifyAdmin(user);
 
     }
 );
 
 
-/* ==============================
-   LOAD DATA
-============================== */
+/* =========================================
+   VERIFY ADMIN
+========================================= */
 
-async function loadData(){
+async function verifyAdmin(user){
 
-    const memberSnap =
-        await getDocs(
-            collection(
+    try{
+
+        const userRef =
+            doc(
                 db,
-                "members"
-            )
-        );
+                "users",
+                user.uid
+            );
+
+        const snap =
+            await getDoc(userRef);
 
 
-    members = [];
+        if(!snap.exists()){
 
+            toast(
+                "Admin account information not found."
+            );
 
-    memberSnap.forEach(item => {
+            await signOut(auth);
 
-        members.push({
+            window.location.href =
+                "login.html";
 
-            id:item.id,
-
-            ...item.data()
-
-        });
-
-    });
-
-
-    document.getElementById(
-        "memberCount"
-    ).textContent =
-        members.length;
-
-
-    renderMembers();
-
-
-    const userSnap =
-        await getDocs(
-            collection(
-                db,
-                "users"
-            )
-        );
-
-
-    assistants = [];
-
-
-    userSnap.forEach(item => {
-
-        const data =
-            item.data();
-
-
-        if(
-            data.role ===
-            "assistant"
-        ){
-
-            assistants.push({
-
-                id:item.id,
-
-                ...data
-
-            });
+            return;
 
         }
 
-    });
+
+        currentUserData =
+            snap.data();
 
 
-    document.getElementById(
-        "assistantCount"
-    ).textContent =
-        assistants.length;
+        const role =
+            String(
+                currentUserData.role || ""
+            ).toLowerCase();
 
 
-    document.getElementById(
-        "activeCount"
-    ).textContent =
-        assistants.filter(
-            x => x.active !== false
-        ).length;
+        if(
+            role !== "admin" &&
+            role !== "main-admin" &&
+            role !== "superadmin"
+        ){
+
+            toast(
+                "You don't have admin access."
+            );
+
+            await signOut(auth);
+
+            window.location.href =
+                "index.html";
+
+            return;
+
+        }
 
 
-    renderAssistants();
+        /* Session version */
+
+        const systemRef =
+            doc(
+                db,
+                "settings",
+                "security"
+            );
+
+        const systemSnap =
+            await getDoc(systemRef);
+
+
+        if(systemSnap.exists()){
+
+            const system =
+                systemSnap.data();
+
+
+            const currentVersion =
+                Number(
+                    system.sessionVersion || 1
+                );
+
+
+            const userVersion =
+                Number(
+                    currentUserData.sessionVersion || 1
+                );
+
+
+            if(
+                currentVersion !==
+                userVersion
+            ){
+
+                toast(
+                    "Your session has expired."
+                );
+
+                await signOut(auth);
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+        }
+
+
+        document.getElementById(
+            "adminName"
+        ).textContent =
+            currentUserData.name ||
+            user.displayName ||
+            "Administrator";
+
+
+        document.getElementById(
+            "adminEmail"
+        ).textContent =
+            user.email || "—";
+
+
+        await loadDashboard();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        toast(
+            "Unable to verify admin."
+        );
+
+    }
 
 }
 
 
-/* ==============================
-   ASSISTANTS
-============================== */
+/* =========================================
+   LOAD DASHBOARD
+========================================= */
 
-function renderAssistants(){
+async function loadDashboard(){
 
-    const search =
+    await Promise.all([
+
+        loadMealRate(),
+
+        loadManager(),
+
+        loadMembers(),
+
+        loadBazar()
+
+    ]);
+
+}
+
+
+/* =========================================
+   MEAL RATE
+========================================= */
+
+async function loadMealRate(){
+
+    try{
+
+        const snap =
+            await getDoc(
+                doc(
+                    db,
+                    "settings",
+                    "mealRate"
+                )
+            );
+
+
+        if(snap.exists()){
+
+            mealRateValue =
+                Number(
+                    snap.data().rate || 0
+                );
+
+        }
+        else{
+
+            mealRateValue = 0;
+
+        }
+
+
         document.getElementById(
-            "assistantSearch"
-        ).value
-        .trim()
-        .toLowerCase();
+            "mealRate"
+        ).textContent =
+            "৳" +
+            mealRateValue.toFixed(2);
 
 
-    const list =
         document.getElementById(
-            "assistantList"
+            "rateInput"
+        ).value =
+            mealRateValue;
+
+    }
+    catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+
+/* =========================================
+   SAVE MEAL RATE
+========================================= */
+
+window.saveMealRate =
+async function(){
+
+    const value =
+        Number(
+            document.getElementById(
+                "rateInput"
+            ).value
         );
 
 
-    const filtered =
-        assistants.filter(a => {
+    if(!Number.isFinite(value) || value < 0){
 
-            const name =
-                String(
-                    a.name || ""
-                ).toLowerCase();
+        toast(
+            "Enter a valid meal rate."
+        );
 
-            const email =
-                String(
-                    a.email || ""
-                ).toLowerCase();
+        return;
 
-            return(
-                name.includes(search) ||
-                email.includes(search)
+    }
+
+
+    try{
+
+        await setDoc(
+
+            doc(
+                db,
+                "settings",
+                "mealRate"
+            ),
+
+            {
+                rate:value,
+
+                updatedAt:
+                    serverTimestamp(),
+
+                updatedBy:
+                    currentUser.uid
+            },
+
+            {
+                merge:true
+            }
+
+        );
+
+
+        mealRateValue =
+            value;
+
+
+        document.getElementById(
+            "mealRate"
+        ).textContent =
+            "৳" +
+            value.toFixed(2);
+
+
+        toast(
+            "Meal rate updated successfully."
+        );
+
+
+        await loadMembers();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        toast(
+            "Failed to update meal rate."
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   MANAGER
+========================================= */
+
+async function loadManager(){
+
+    try{
+
+        const snap =
+            await getDoc(
+                doc(
+                    db,
+                    "settings",
+                    "manager"
+                )
             );
+
+
+        if(snap.exists()){
+
+            document.getElementById(
+                "managerInput"
+            ).value =
+                snap.data().name || "";
+
+        }
+
+    }
+    catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+
+window.saveManager =
+async function(){
+
+    const name =
+        document.getElementById(
+            "managerInput"
+        ).value.trim();
+
+
+    if(!name){
+
+        toast(
+            "Enter manager name."
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        await setDoc(
+
+            doc(
+                db,
+                "settings",
+                "manager"
+            ),
+
+            {
+                name:name,
+
+                updatedAt:
+                    serverTimestamp(),
+
+                updatedBy:
+                    currentUser.uid
+            },
+
+            {
+                merge:true
+            }
+
+        );
+
+
+        toast(
+            "Manager name updated."
+        );
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        toast(
+            "Failed to update manager."
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   MEMBERS
+========================================= */
+
+async function loadMembers(){
+
+    const list =
+        document.getElementById(
+            "membersList"
+        );
+
+
+    list.innerHTML = `
+        <div class="loading">
+            <div class="spinner"></div>
+            Loading members...
+        </div>
+    `;
+
+
+    try{
+
+        const snap =
+            await getDocs(
+                collection(
+                    db,
+                    "members"
+                )
+            );
+
+
+        members = [];
+
+
+        snap.forEach(item => {
+
+            members.push({
+
+                id:item.id,
+
+                ...item.data()
+
+            });
 
         });
 
 
-    if(!filtered.length){
+        members.sort(
+            (a,b) =>
+                String(a.name || "")
+                .localeCompare(
+                    String(b.name || "")
+                )
+        );
+
+
+        document.getElementById(
+            "memberCount"
+        ).textContent =
+            members.length;
+
+
+        renderMembers();
+
+    }
+    catch(error){
+
+        console.error(error);
 
         list.innerHTML = `
-
-            <div class="text-center py-7 text-gray-500">
-                No assistant found
+            <div class="loading text-red-400">
+                Failed to load members.
             </div>
-
         `;
 
-        return;
     }
-
-
-    list.innerHTML =
-        filtered.map(a => {
-
-            const active =
-                a.active !== false;
-
-
-            return `
-
-                <div class="user-row">
-
-                    <div style="min-width:0">
-
-                        <div class="user-name">
-
-                            ${escapeHTML(
-                                a.name ||
-                                "Assistant"
-                            )}
-
-                        </div>
-
-
-                        <div class="user-email">
-
-                            ${escapeHTML(
-                                a.email ||
-                                ""
-                            )}
-
-                        </div>
-
-
-                        <div
-                            class="status"
-                            style="
-                                color:
-                                ${active
-                                ? 'var(--green)'
-                                : 'var(--red)'};
-                            "
-                        >
-
-                            ${active
-                            ? '● Active'
-                            : '● Disabled'}
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="flex gap-1 flex-wrap justify-end">
-
-                        <button
-                            class="btn
-                            ${active
-                                ? 'red'
-                                : 'green'}"
-                            onclick="
-                                toggleAssistant(
-                                    '${a.id}',
-                                    ${active}
-                                )
-                            "
-                        >
-
-                            ${active
-                            ? 'Disable'
-                            : 'Enable'}
-
-                        </button>
-
-
-                        <button
-                            class="btn blue"
-                            onclick="
-                                resetAssistantSession(
-                                    '${a.id}'
-                                )
-                            "
-                        >
-
-                            Reset
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            `;
-
-        }).join("");
 
 }
 
 
-/* ==============================
-   ENABLE / DISABLE
-============================== */
-
-window.toggleAssistant =
-async function(uid, currentState){
-
-    if(
-        !confirm(
-            currentState
-            ? "Disable this assistant?"
-            : "Enable this assistant?"
-        )
-    ){
-        return;
-    }
-
-
-    try{
-
-        await updateDoc(
-            doc(
-                db,
-                "users",
-                uid
-            ),
-            {
-
-                active:
-                    !currentState,
-
-                sessionVersion:
-                    increment(1)
-
-            }
-        );
-
-
-        await loadData();
-
-
-    }catch(error){
-
-        console.error(error);
-
-        alert(
-            "Failed to update assistant."
-        );
-
-    }
-
-};
-
-
-/* ==============================
-   RESET SESSION
-============================== */
-
-window.resetAssistantSession =
-async function(uid){
-
-    if(
-        !confirm(
-            "This will remove the assistant's current browser sessions. Continue?"
-        )
-    ){
-        return;
-    }
-
-
-    try{
-
-        await updateDoc(
-            doc(
-                db,
-                "users",
-                uid
-            ),
-            {
-
-                sessionVersion:
-                    increment(1)
-
-            }
-        );
-
-
-        alert(
-            "All existing assistant sessions have been invalidated."
-        );
-
-
-    }catch(error){
-
-        console.error(error);
-
-        alert(
-            "Failed to reset session."
-        );
-
-    }
-
-};
-
-
-/* ==============================
-   MEMBERS
-============================== */
+/* =========================================
+   RENDER MEMBERS
+========================================= */
 
 function renderMembers(){
+
+    const list =
+        document.getElementById(
+            "membersList"
+        );
+
 
     const search =
         document.getElementById(
@@ -1358,20 +1998,15 @@ function renderMembers(){
         .toLowerCase();
 
 
-    const list =
-        document.getElementById(
-            "membersList"
-        );
-
-
     const filtered =
-        members.filter(m => {
+        members.filter(member => {
 
-            return String(
-                m.name || ""
-            )
-            .toLowerCase()
-            .includes(search);
+            const name =
+                String(
+                    member.name || ""
+                ).toLowerCase();
+
+            return name.includes(search);
 
         });
 
@@ -1379,151 +2014,821 @@ function renderMembers(){
     if(!filtered.length){
 
         list.innerHTML = `
-
-            <div class="text-center py-7 text-gray-500">
-                No members found
+            <div class="loading">
+                No members found.
             </div>
-
         `;
 
         return;
+
     }
 
 
     list.innerHTML =
-        filtered.map(m => {
+        filtered.map(
+            member => {
 
-            return `
+                const deposit =
+                    Number(
+                        member.totalDeposit || 0
+                    );
 
-                <div class="user-row">
 
-                    <div>
+                const meals =
+                    Number(
+                        member.totalMeals || 0
+                    );
 
-                        <div class="user-name">
 
-                            ${escapeHTML(
-                                m.name ||
-                                "Unnamed"
-                            )}
+                const balance =
+                    deposit -
+                    (
+                        meals *
+                        mealRateValue
+                    );
 
+
+                const positive =
+                    balance >= 0;
+
+
+                const initials =
+                    String(
+                        member.name ||
+                        "?"
+                    )
+                    .trim()
+                    .charAt(0)
+                    .toUpperCase();
+
+
+                return `
+
+                <div class="glass-card member">
+
+                    <div class="member-left">
+
+                        <div class="avatar">
+                            ${escapeHTML(initials)}
                         </div>
 
-                        <div class="user-email">
 
-                            Deposit:
-                            ৳${Number(
-                                m.totalDeposit || 0
-                            ).toFixed(0)}
+                        <div class="min-w-0">
 
-                            &nbsp;•&nbsp;
+                            <div class="member-name">
+                                ${escapeHTML(
+                                    member.name ||
+                                    "Unnamed"
+                                )}
+                            </div>
 
-                            Meals:
-                            ${Number(
-                                m.totalMeals || 0
-                            )}
+                            <div class="member-meta">
+
+                                Deposit:
+                                <span class="green">
+                                    ৳${deposit.toFixed(0)}
+                                </span>
+
+                                <span class="mx-1 opacity-40">
+                                    •
+                                </span>
+
+                                Meals:
+                                <span class="blue">
+                                    ${meals}
+                                </span>
+
+                            </div>
 
                         </div>
 
                     </div>
 
+
+                    <div class="member-balance">
+
+                        <div class="
+                            balance
+                            ${positive ? "green" : "red"}
+                        ">
+
+                            ${
+                                positive
+                                ? "+"
+                                : "-"
+                            }৳${Math.abs(balance).toFixed(0)}
+
+                        </div>
+
+
+                        <div class="
+                            status
+                            ${positive ? "green" : "red"}
+                        ">
+
+                            ${
+                                positive
+                                ? "In Advance"
+                                : "Overdue"
+                            }
+
+                        </div>
+
+
+                        <button
+                            class="text-[10px] text-gray-500 hover:text-white mt-1"
+                            onclick="openEditMember('${member.id}')"
+                        >
+                            Edit
+                        </button>
+
+                    </div>
+
                 </div>
 
-            `;
+                `;
 
-        }).join("");
+            }
+        )
+        .join("");
 
 }
 
 
-/* ==============================
+/* =========================================
    SEARCH
-============================== */
+========================================= */
 
-document
-.getElementById(
-    "assistantSearch"
-)
-.addEventListener(
-    "input",
-    renderAssistants
-);
-
-
-document
-.getElementById(
+document.getElementById(
     "memberSearch"
-)
-.addEventListener(
+).addEventListener(
     "input",
     renderMembers
 );
 
 
-/* ==============================
-   LOGOUT
-============================== */
+/* =========================================
+   ADD MEMBER
+========================================= */
 
-window.logout =
-async function(){
+window.openAddMember =
+function(){
 
-    await signOut(auth);
+    editingMemberId =
+        null;
 
-    location.replace(
-        "login.html"
+
+    document.getElementById(
+        "memberModalTitle"
+    ).textContent =
+        "Add Member";
+
+
+    document.getElementById(
+        "memberId"
+    ).value = "";
+
+
+    document.getElementById(
+        "memberName"
+    ).value = "";
+
+
+    document.getElementById(
+        "memberDeposit"
+    ).value = "0";
+
+
+    document.getElementById(
+        "memberMeals"
+    ).value = "0";
+
+
+    document.getElementById(
+        "deleteMemberBtn"
+    ).classList.add(
+        "hidden"
+    );
+
+
+    document.getElementById(
+        "memberModal"
+    ).classList.remove(
+        "hidden"
     );
 
 };
 
 
-/* ==============================
-   ESCAPE
-============================== */
+/* =========================================
+   EDIT MEMBER
+========================================= */
 
-function escapeHTML(value){
+window.openEditMember =
+function(id){
 
-    const div =
-        document.createElement(
-            "div"
+    const member =
+        members.find(
+            m => m.id === id
         );
 
-    div.textContent =
-        String(value);
 
-    return div.innerHTML;
-
-}
-
-</script>
+    if(!member) return;
 
 
-<script>
+    editingMemberId =
+        id;
 
-function toggleMenu(){
 
-    document
-        .getElementById(
-            "dropdown"
-        )
-        .classList
-        .toggle("hidden");
+    document.getElementById(
+        "memberModalTitle"
+    ).textContent =
+        "Edit Member";
 
-}
 
-document.addEventListener(
+    document.getElementById(
+        "memberId"
+    ).value =
+        id;
+
+
+    document.getElementById(
+        "memberName"
+    ).value =
+        member.name || "";
+
+
+    document.getElementById(
+        "memberDeposit"
+    ).value =
+        Number(
+            member.totalDeposit || 0
+        );
+
+
+    document.getElementById(
+        "memberMeals"
+    ).value =
+        Number(
+            member.totalMeals || 0
+        );
+
+
+    document.getElementById(
+        "deleteMemberBtn"
+    ).classList.remove(
+        "hidden"
+    );
+
+
+    document.getElementById(
+        "memberModal"
+    ).classList.remove(
+        "hidden"
+    );
+
+};
+
+
+/* =========================================
+   CLOSE MEMBER
+========================================= */
+
+window.closeMemberModal =
+function(){
+
+    document.getElementById(
+        "memberModal"
+    ).classList.add(
+        "hidden"
+    );
+
+};
+
+
+/* =========================================
+   SAVE MEMBER
+========================================= */
+
+window.saveMember =
+async function(){
+
+    const name =
+        document.getElementById(
+            "memberName"
+        ).value.trim();
+
+
+    const deposit =
+        Number(
+            document.getElementById(
+                "memberDeposit"
+            ).value || 0
+        );
+
+
+    const meals =
+        Number(
+            document.getElementById(
+                "memberMeals"
+            ).value || 0
+        );
+
+
+    if(!name){
+
+        toast(
+            "Member name is required."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !Number.isFinite(deposit) ||
+        deposit < 0
+    ){
+
+        toast(
+            "Invalid deposit."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !Number.isFinite(meals) ||
+        meals < 0
+    ){
+
+        toast(
+            "Invalid meal count."
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        let id =
+            editingMemberId;
+
+
+        if(!id){
+
+            id =
+                crypto.randomUUID();
+
+        }
+
+
+        await setDoc(
+
+            doc(
+                db,
+                "members",
+                id
+            ),
+
+            {
+
+                name:name,
+
+                totalDeposit:deposit,
+
+                totalMeals:meals,
+
+                updatedAt:
+                    serverTimestamp(),
+
+                updatedBy:
+                    currentUser.uid
+
+            },
+
+            {
+                merge:true
+            }
+
+        );
+
+
+        closeMemberModal();
+
+
+        toast(
+            editingMemberId
+            ? "Member updated."
+            : "Member added."
+        );
+
+
+        await loadMembers();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        toast(
+            "Failed to save member."
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   DELETE MEMBER
+========================================= */
+
+window.deleteCurrentMember =
+async function(){
+
+    if(!editingMemberId)
+        return;
+
+
+    const member =
+        members.find(
+            m =>
+                m.id ===
+                editingMemberId
+        );
+
+
+    if(!member)
+        return;
+
+
+    const ok =
+        confirm(
+            `Remove "${member.name || "this member"}"?`
+        );
+
+
+    if(!ok)
+        return;
+
+
+    try{
+
+        await deleteDoc(
+
+            doc(
+                db,
+                "members",
+                editingMemberId
+            )
+
+        );
+
+
+        closeMemberModal();
+
+
+        toast(
+            "Member removed."
+        );
+
+
+        await loadMembers();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        toast(
+            "Failed to remove member."
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   SESSION RESET
+========================================= */
+
+window.invalidateSessions =
+async function(){
+
+    const ok =
+        confirm(
+            "This will invalidate all old sessions. Continue?"
+        );
+
+
+    if(!ok)
+        return;
+
+
+    try{
+
+        const securityRef =
+            doc(
+                db,
+                "settings",
+                "security"
+            );
+
+
+        const snap =
+            await getDoc(
+                securityRef
+            );
+
+
+        let version = 1;
+
+
+        if(snap.exists()){
+
+            version =
+                Number(
+                    snap.data().sessionVersion || 1
+                );
+
+        }
+
+
+        version++;
+
+
+        await setDoc(
+
+            securityRef,
+
+            {
+
+                sessionVersion:
+                    version,
+
+                updatedAt:
+                    serverTimestamp(),
+
+                updatedBy:
+                    currentUser.uid
+
+            },
+
+            {
+                merge:true
+            }
+
+        );
+
+
+        toast(
+            "All old sessions are now invalid."
+        );
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        toast(
+            "Failed to reset sessions."
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   ASSISTANT
+========================================= */
+
+window.openAssistant =
+async function(){
+
+    try{
+
+        const snap =
+            await getDoc(
+                doc(
+                    db,
+                    "settings",
+                    "assistant"
+                )
+            );
+
+
+        if(snap.exists()){
+
+            const data =
+                snap.data();
+
+
+            document.getElementById(
+                "assistantName"
+            ).value =
+                data.name || "";
+
+
+            document.getElementById(
+                "assistantEmail"
+            ).value =
+                data.email || "";
+
+        }
+        else{
+
+            document.getElementById(
+                "assistantName"
+            ).value = "";
+
+
+            document.getElementById(
+                "assistantEmail"
+            ).value = "";
+
+        }
+
+
+        document.getElementById(
+            "assistantModal"
+        ).classList.remove(
+            "hidden"
+        );
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        toast(
+            "Failed to load assistant settings."
+        );
+
+    }
+
+};
+
+
+window.closeAssistant =
+function(){
+
+    document.getElementById(
+        "assistantModal"
+    ).classList.add(
+        "hidden"
+    );
+
+};
+
+
+window.saveAssistant =
+async function(){
+
+    const name =
+        document.getElementById(
+            "assistantName"
+        ).value.trim();
+
+
+    const email =
+        document.getElementById(
+            "assistantEmail"
+        ).value.trim()
+        .toLowerCase();
+
+
+    if(!name || !email){
+
+        toast(
+            "Name and email are required."
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        await setDoc(
+
+            doc(
+                db,
+                "settings",
+                "assistant"
+            ),
+
+            {
+
+                name:name,
+
+                email:email,
+
+                enabled:true,
+
+                updatedAt:
+                    serverTimestamp(),
+
+                updatedBy:
+                    currentUser.uid
+
+            },
+
+            {
+                merge:true
+            }
+
+        );
+
+
+        closeAssistant();
+
+
+        toast(
+            "Assistant access updated."
+        );
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        toast(
+            "Failed to update assistant."
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+window.logout =
+async function(){
+
+    try{
+
+        await signOut(auth);
+
+        window.location.href =
+            "login.html";
+
+    }
+    catch(error){
+
+        console.error(error);
+
+    }
+
+};
+
+
+/* =========================================
+   MODAL BACKDROP
+========================================= */
+
+document.getElementById(
+    "memberModal"
+).addEventListener(
     "click",
-    function(e){
+    e => {
 
         if(
-            !e.target.closest(".menu") &&
-            !e.target.closest(".dropdown")
+            e.target.id ===
+            "memberModal"
         ){
 
-            document
-                .getElementById(
-                    "dropdown"
-                )
-                .classList
-                .add("hidden");
+            closeMemberModal();
+
+        }
+
+    }
+);
+
+
+document.getElementById(
+    "assistantModal"
+).addEventListener(
+    "click",
+    e => {
+
+        if(
+            e.target.id ===
+            "assistantModal"
+        ){
+
+            closeAssistant();
 
         }
 
