@@ -1,339 +1,565 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width,initial-scale=1.0">
 
-<title>Admin Manager — Ma Achiya Villa</title>
+<meta name="viewport"
+      content="width=device-width,initial-scale=1">
+
+<meta name="theme-color"
+      content="#05050b">
+
+<title>Admin Panel — Ma Achiya Villa</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 
-<link rel="preconnect"
-      href="https://fonts.googleapis.com">
-
-<link rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap"
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet">
-
-
-<script type="module">
-
-import {
-    initializeApp
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
-
-import {
-    getFirestore,
-    collection,
-    doc,
-    getDoc,
-    setDoc,
-    updateDoc,
-    deleteDoc,
-    getDocs
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-
-import {
-    getAuth,
-    onAuthStateChanged,
-    EmailAuthProvider,
-    reauthenticateWithCredential
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-
-const firebaseConfig = {
-
-    apiKey:
-        "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
-
-    authDomain:
-        "my-mess-17fbc.firebaseapp.com",
-
-    projectId:
-        "my-mess-17fbc",
-
-    storageBucket:
-        "my-mess-17fbc.firebasestorage.app",
-
-    messagingSenderId:
-        "848426874799",
-
-    appId:
-        "1:848426874799:web:0722af59e7504da847e15a",
-
-    measurementId:
-        "G-RWHJKGV5LS"
-};
-
-
-const app =
-    initializeApp(firebaseConfig);
-
-
-const db =
-    getFirestore(app);
-
-
-const auth =
-    getAuth(app);
-
-
-window.db = db;
-window.auth = auth;
-
-
-window.F =
-{
-    collection,
-    doc,
-    getDoc,
-    setDoc,
-    updateDoc,
-    deleteDoc,
-    getDocs,
-
-    onAuthStateChanged,
-
-    EmailAuthProvider,
-    reauthenticateWithCredential
-};
-
-
-window.firebaseReady = true;
-
-
-if (
-    typeof window.startAdminApp ===
-    "function"
-) {
-
-    window.startAdminApp();
-
-}
-
-</script>
-
 
 <style>
 
-:root {
+:root{
 
-    --bg:#05050c;
-    --glass:rgba(16,16,34,.48);
-    --border:rgba(255,255,255,.08);
+    --bg:#05050b;
+
     --purple:#a78bfa;
     --blue:#60a5fa;
     --green:#34d399;
     --red:#f87171;
 
+    --muted:rgba(255,255,255,.55);
+
+    --border:rgba(255,255,255,.09);
+
 }
 
-* {
+*{
     box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-body {
+html{
+    scroll-behavior:smooth;
+    -webkit-tap-highlight-color:transparent;
+}
 
-    margin:0;
-    padding:18px;
+body{
+
     min-height:100vh;
+
+    padding:14px;
 
     color:white;
 
     font-family:
         Inter,
-        'Noto Sans Bengali',
+        "Noto Sans Bengali",
         sans-serif;
 
     background:
-        radial-gradient(
-            ellipse 90% 70% at 50% -30%,
-            #241456 0%,
-            #0d0d20 45%,
-            #05050c 75%
-        );
 
+        radial-gradient(
+            circle at 50% -20%,
+            rgba(124,58,237,.35),
+            transparent 45%
+        ),
+
+        radial-gradient(
+            circle at 100% 60%,
+            rgba(37,99,235,.15),
+            transparent 35%
+        ),
+
+        #05050b;
 }
 
-.glass {
 
-    background:var(--glass);
+/* =====================
+   GLASS
+===================== */
 
-    backdrop-filter:
-        blur(35px)
-        saturate(180%);
+.glass{
 
-    -webkit-backdrop-filter:
-        blur(35px)
-        saturate(180%);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.065),
+            rgba(255,255,255,.018)
+        );
 
-    border:
-        1px solid var(--border);
+    border:1px solid var(--border);
 
     border-radius:24px;
 
+    backdrop-filter:
+        blur(28px)
+        saturate(160%);
+
+    -webkit-backdrop-filter:
+        blur(28px)
+        saturate(160%);
+
     box-shadow:
-        0 20px 50px
-        rgba(0,0,0,.45);
-
+        0 20px 60px rgba(0,0,0,.4),
+        inset 0 1px 0 rgba(255,255,255,.08);
 }
 
-.input {
 
-    width:100%;
+/* =====================
+   LOGO
+===================== */
 
-    padding:12px;
+.logo{
 
-    border-radius:13px;
+    width:58px;
+    height:58px;
 
-    color:white;
-
-    background:
-        rgba(255,255,255,.05);
-
-    border:
-        1px solid rgba(255,255,255,.08);
-
-    outline:none;
-
-}
-
-.input:focus {
-
-    border-color:
-        var(--purple);
-
-}
-
-.btn {
-
-    border:0;
-
-    border-radius:14px;
-
-    padding:
-        11px 16px;
-
-    color:white;
-
-    font-weight:700;
-
-    cursor:pointer;
-
-}
-
-.purple {
-
-    background:
-        linear-gradient(
-            135deg,
-            #8b5cf6,
-            #6d28d9
-        );
-
-}
-
-.green {
-
-    background:
-        linear-gradient(
-            135deg,
-            #34d399,
-            #059669
-        );
-
-}
-
-.blue {
-
-    background:
-        linear-gradient(
-            135deg,
-            #60a5fa,
-            #2563eb
-        );
-
-}
-
-.red {
-
-    background:
-        linear-gradient(
-            135deg,
-            #f87171,
-            #dc2626
-        );
-
-}
-
-.member {
+    border-radius:50%;
 
     display:flex;
 
     align-items:center;
+    justify-content:center;
+
+    border:2px solid var(--purple);
+
+    box-shadow:
+        0 0 30px rgba(167,139,250,.35),
+        inset 0 1px 0 rgba(255,255,255,.2);
+
+    background:rgba(255,255,255,.04);
+}
+
+.bn{
+
+    font-family:
+        "Noto Sans Bengali",
+        sans-serif;
+
+    font-size:10px;
+
+    font-weight:900;
+
+    text-align:center;
+}
+
+.en{
+
+    display:block;
+
+    font-size:7px;
+
+    text-align:center;
+
+    letter-spacing:1.5px;
+
+    color:var(--muted);
+}
+
+
+/* =====================
+   ADMIN BADGE
+===================== */
+
+.admin-badge{
+
+    padding:8px 15px;
+
+    border-radius:999px;
+
+    border:1px solid
+        rgba(167,139,250,.25);
+
+    background:
+        rgba(167,139,250,.09);
+
+    text-align:center;
+}
+
+.admin-label{
+
+    font-size:9px;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+    color:var(--muted);
+}
+
+.admin-name{
+
+    color:#c4b5fd;
+
+    font-size:12px;
+
+    font-weight:900;
+}
+
+
+/* =====================
+   MENU
+===================== */
+
+.menu{
+
+    width:46px;
+    height:46px;
+
+    border-radius:15px;
+
+    border:1px solid var(--border);
+
+    background:
+        rgba(255,255,255,.045);
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:5px;
+
+    cursor:pointer;
+}
+
+.menu span{
+
+    width:18px;
+    height:2px;
+
+    background:#fff;
+
+    border-radius:10px;
+}
+
+
+/* =====================
+   CARD
+===================== */
+
+.card{
+
+    padding:18px;
+
+    margin-bottom:14px;
+}
+
+.title{
+
+    font-size:18px;
+
+    font-weight:900;
+
+    margin-bottom:15px;
+
+    display:flex;
+
+    gap:9px;
+
+    align-items:center;
+}
+
+
+/* =====================
+   STATS
+===================== */
+
+.stat{
+
+    padding:16px 8px;
+
+    text-align:center;
+}
+
+.stat-icon{
+
+    font-size:22px;
+
+    margin-bottom:4px;
+}
+
+.stat-label{
+
+    color:var(--muted);
+
+    font-size:9px;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+}
+
+.stat-value{
+
+    font-size:21px;
+
+    font-weight:900;
+
+    margin-top:2px;
+}
+
+
+/* =====================
+   BUTTON
+===================== */
+
+.btn{
+
+    border:1px solid var(--border);
+
+    background:
+        rgba(255,255,255,.045);
+
+    color:white;
+
+    border-radius:15px;
+
+    padding:11px 15px;
+
+    cursor:pointer;
+
+    font-weight:800;
+
+    transition:.2s;
+}
+
+.btn:hover{
+
+    background:
+        rgba(255,255,255,.09);
+
+    transform:translateY(-1px);
+}
+
+.green{
+
+    color:#6ee7b7;
+
+    border-color:
+        rgba(52,211,153,.25);
+
+    background:
+        rgba(52,211,153,.08);
+}
+
+.red{
+
+    color:#fca5a5;
+
+    border-color:
+        rgba(248,113,113,.25);
+
+    background:
+        rgba(248,113,113,.08);
+}
+
+.blue{
+
+    color:#93c5fd;
+
+    border-color:
+        rgba(96,165,250,.25);
+
+    background:
+        rgba(96,165,250,.08);
+}
+
+
+/* =====================
+   SEARCH
+===================== */
+
+.search{
+
+    width:100%;
+
+    padding:13px 15px;
+
+    border-radius:16px;
+
+    border:1px solid var(--border);
+
+    background:
+        rgba(0,0,0,.2);
+
+    outline:none;
+
+    color:white;
+
+    font-size:13px;
+
+    margin-bottom:12px;
+}
+
+.search:focus{
+
+    border-color:
+        rgba(167,139,250,.45);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(167,139,250,.08);
+}
+
+
+/* =====================
+   USER ROW
+===================== */
+
+.user-row{
+
+    display:flex;
 
     justify-content:space-between;
 
+    align-items:center;
+
     gap:10px;
 
-    padding:14px;
+    padding:15px;
 
-    margin-bottom:8px;
-
-    border-radius:16px;
+    border-radius:18px;
 
     background:
         rgba(255,255,255,.035);
 
-    border:
-        1px solid rgba(255,255,255,.06);
+    border:1px solid
+        rgba(255,255,255,.06);
 
+    margin-bottom:8px;
 }
 
-.modal {
+.user-name{
 
-    position:fixed;
+    font-weight:900;
 
-    inset:0;
+    font-size:14px;
+}
 
-    z-index:100;
+.user-email{
 
-    display:flex;
+    color:var(--muted);
 
-    align-items:center;
+    font-size:10px;
 
-    justify-content:center;
+    margin-top:3px;
 
-    padding:20px;
+    word-break:break-all;
+}
+
+.status{
+
+    font-size:9px;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+    font-weight:900;
+
+    margin-top:3px;
+}
+
+
+/* =====================
+   DROPDOWN
+===================== */
+
+.dropdown{
+
+    position:absolute;
+
+    right:0;
+
+    top:56px;
+
+    min-width:210px;
+
+    padding:7px;
+
+    border-radius:20px;
 
     background:
-        rgba(0,0,0,.78);
+        rgba(18,18,34,.94);
 
-    backdrop-filter:
-        blur(10px);
+    border:1px solid var(--border);
 
+    backdrop-filter:blur(30px);
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.55);
+
+    z-index:100;
 }
 
-.modal-box {
+.dropdown button{
 
     width:100%;
 
-    max-width:500px;
+    border:0;
 
-    padding:22px;
+    background:transparent;
 
+    color:#fff;
+
+    padding:12px 14px;
+
+    border-radius:14px;
+
+    text-align:left;
+
+    cursor:pointer;
 }
 
-.hidden {
+.dropdown button:hover{
 
+    background:
+        rgba(255,255,255,.06);
+}
+
+.hidden{
     display:none!important;
+}
+
+
+/* =====================
+   MOBILE
+===================== */
+
+@media(max-width:600px){
+
+    body{
+        padding:10px;
+    }
+
+    .logo{
+
+        width:50px;
+        height:50px;
+
+    }
+
+    .admin-badge{
+
+        padding:7px 10px;
+    }
+
+    .admin-name{
+
+        font-size:10px;
+    }
+
+    .stat-value{
+
+        font-size:18px;
+    }
 
 }
 
@@ -344,1193 +570,965 @@ body {
 
 <body>
 
-
-<div class="max-w-5xl mx-auto relative z-10">
+<div class="max-w-2xl mx-auto">
 
 
 <!-- HEADER -->
 
-<div class="glass p-5 mb-5">
+<header class="flex items-center justify-between gap-3 mb-5">
 
-    <div class="flex flex-wrap
-                justify-between
-                items-center gap-3">
+    <div class="logo">
 
         <div>
 
-            <div class="text-2xl
-                        font-black">
-
-                👑 Main Manager
-
+            <div class="bn">
+                মা আছিয়া
             </div>
 
-            <div class="text-xs
-                        text-gray-400">
-
-                Ma Achiya Villa
-                Management Console
-
-            </div>
-
-            <div id="managerEmail"
-                 class="text-xs
-                        text-purple-300
-                        mt-1">
-
-            </div>
-
-        </div>
-
-
-        <div class="flex gap-2">
-
-            <a href="index.html"
-               class="btn blue">
-
-                🏠 Dashboard
-
-            </a>
-
-            <a href="assistant.html"
-               class="btn purple">
-
-                👨‍💼 Assistant
-
-            </a>
+            <span class="en">
+                VILLA
+            </span>
 
         </div>
 
     </div>
 
-</div>
+
+    <div class="admin-badge">
+
+        <div class="admin-label">
+            Main Admin
+        </div>
+
+        <div id="adminName"
+             class="admin-name">
+            Loading...
+        </div>
+
+    </div>
 
 
-<!-- MEMBERS -->
+    <div class="relative">
 
-<div class="glass p-5 mb-5">
+        <button class="menu"
+                onclick="toggleMenu()">
 
-    <div class="flex
-                justify-between
-                items-center mb-4">
-
-        <h2 class="text-xl
-                   font-bold">
-
-            👥 Members
-
-        </h2>
-
-        <button
-            class="btn green"
-            onclick="openAddMember()">
-
-            + Add Member
+            <span></span>
+            <span></span>
+            <span></span>
 
         </button>
 
+
+        <div id="dropdown"
+             class="dropdown hidden">
+
+            <button onclick="location.href='index.html'">
+                🏠 Dashboard
+            </button>
+
+            <button onclick="location.href='assistant.html'">
+                👨‍💼 Assistant Panel
+            </button>
+
+            <button onclick="logout()"
+                    style="color:#fca5a5">
+                🚪 Logout
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- STATS -->
+
+<div class="grid grid-cols-3 gap-2 mb-4">
+
+    <div class="glass stat">
+
+        <div class="stat-icon">
+            👥
+        </div>
+
+        <div class="stat-label">
+            Members
+        </div>
+
+        <div id="memberCount"
+             class="stat-value"
+             style="color:var(--blue)">
+            —
+        </div>
+
     </div>
 
 
-    <div id="membersList">
+    <div class="glass stat">
 
-        Loading...
+        <div class="stat-icon">
+            👨‍💼
+        </div>
+
+        <div class="stat-label">
+            Assistants
+        </div>
+
+        <div id="assistantCount"
+             class="stat-value"
+             style="color:var(--purple)">
+            —
+        </div>
+
+    </div>
+
+
+    <div class="glass stat">
+
+        <div class="stat-icon">
+            🟢
+        </div>
+
+        <div class="stat-label">
+            Active
+        </div>
+
+        <div id="activeCount"
+             class="stat-value"
+             style="color:var(--green)">
+            —
+        </div>
 
     </div>
 
 </div>
 
 
-<!-- DATA MANAGEMENT -->
+<!-- ASSISTANT MANAGEMENT -->
 
-<div class="glass p-5 mb-5">
+<section class="glass card">
 
-    <h2 class="text-xl
-               font-bold mb-2">
+    <div class="title">
 
-        🗄️ Data Management
+        <span>👨‍💼</span>
 
-    </h2>
+        Assistant Access
 
-    <p class="text-sm
-              text-gray-400 mb-4">
+    </div>
 
-        Meal and bazar records older
-        than two months can be removed.
-        Member names will remain.
+
+    <p class="text-xs text-gray-500 mb-4">
+
+        Manage assistant access and remove
+        old browser sessions.
 
     </p>
 
 
-    <div class="grid md:grid-cols-2 gap-3">
+    <input
+        id="assistantSearch"
+        class="search"
+        type="search"
+        placeholder="Search assistant..."
+        autocomplete="off"
+    >
 
-        <button
-            class="btn blue"
-            onclick="runOldDataCleanup()">
 
-            🧹 Clean Data Older Than 2 Months
+    <div id="assistantList">
 
-        </button>
+        <div class="text-center py-5">
+            Loading...
+        </div>
 
+    </div>
+
+</section>
+
+
+<!-- MEMBERS -->
+
+<section class="glass card">
+
+    <div class="title">
+
+        <span>👥</span>
+
+        Members
+
+    </div>
+
+
+    <input
+        id="memberSearch"
+        class="search"
+        type="search"
+        placeholder="Search member..."
+        autocomplete="off"
+    >
+
+
+    <div id="membersList">
+
+        <div class="text-center py-5">
+            Loading...
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- SECURITY -->
+
+<section class="glass card">
+
+    <div class="title">
+
+        <span>🔐</span>
+
+        Security
+
+    </div>
+
+
+    <div class="p-4 rounded-[18px]"
+         style="
+         background:rgba(167,139,250,.06);
+         border:1px solid rgba(167,139,250,.12);
+         ">
+
+        <div class="font-bold text-sm mb-1">
+            Session Security
+        </div>
+
+        <div class="text-xs text-gray-500 mb-3">
+
+            If an assistant password is changed,
+            increment their session version.
+            Their existing browsers will be
+            automatically rejected.
+
+        </div>
 
         <button
             class="btn red"
-            onclick="openClearModal()">
+            onclick="location.href='login.html'">
 
-            ⚠️ Clear Old Meal/Bazar Data
+            🔐 Security / Login
 
         </button>
 
     </div>
 
-
-    <div id="cleanupStatus"
-         class="text-sm
-                text-green-400
-                mt-3">
-
-    </div>
-
-</div>
-
-
-<!-- MANAGER SETTINGS -->
-
-<div class="glass p-5 mb-5">
-
-    <h2 class="text-xl
-               font-bold mb-4">
-
-        ⚙️ Manager Settings
-
-    </h2>
-
-
-    <label class="text-xs
-                  text-gray-400">
-
-        Manager Name
-
-    </label>
-
-    <input
-        id="managerName"
-        class="input mt-1 mb-3"
-        placeholder="Manager name">
-
-
-    <button
-        class="btn purple w-full"
-        onclick="saveManagerName()">
-
-        💾 Save Manager Name
-
-    </button>
-
-</div>
+</section>
 
 
 </div>
 
 
-<!-- ADD MEMBER MODAL -->
+<script type="module">
 
-<div id="memberModal"
-     class="modal hidden">
+import {
+    initializeApp
+} from
+"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-    <div class="glass modal-box">
+import {
+    getAuth,
+    onAuthStateChanged,
+    signOut
+} from
+"https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        <h2 class="text-xl
-                   font-bold mb-4">
+import {
+    getFirestore,
+    doc,
+    getDoc,
+    updateDoc,
+    collection,
+    getDocs,
+    increment
+} from
+"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-            👤 Add Member
 
-        </h2>
+const firebaseConfig = {
 
+    apiKey:
+    "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
 
-        <input
-            id="newMemberName"
-            class="input mb-3"
-            placeholder="Member name">
+    authDomain:
+    "my-mess-17fbc.firebaseapp.com",
 
+    projectId:
+    "my-mess-17fbc",
 
-        <input
-            id="newMemberDeposit"
-            type="number"
-            class="input mb-4"
-            placeholder="Initial deposit">
+    storageBucket:
+    "my-mess-17fbc.firebasestorage.app",
 
+    messagingSenderId:
+    "848426874799",
 
-        <div class="flex gap-2">
+    appId:
+    "1:848426874799:web:0722af59e7504da847e15a",
 
-            <button
-                class="btn green flex-1"
-                onclick="addMember()">
+    measurementId:
+    "G-RWHJKGV5LS"
+};
 
-                Add
 
-            </button>
+const app =
+    initializeApp(firebaseConfig);
 
+const auth =
+    getAuth(app);
 
-            <button
-                class="btn red flex-1"
-                onclick="closeMemberModal()">
+const db =
+    getFirestore(app);
 
-                Cancel
 
-            </button>
+let currentUser = null;
 
-        </div>
+let assistants = [];
 
-    </div>
+let members = [];
 
-</div>
 
+/* ==============================
+   AUTH
+============================== */
 
-<!-- CLEAR MODAL -->
+onAuthStateChanged(
+    auth,
+    async user => {
 
-<div id="clearModal"
-     class="modal hidden">
+        if(!user){
 
-    <div class="glass modal-box">
+            location.replace(
+                "login.html"
+            );
 
-        <h2 class="text-xl
-                   font-bold text-red-400">
+            return;
+        }
 
-            ⚠️ Confirm Data Clear
 
-        </h2>
+        currentUser = user;
 
 
-        <p class="text-sm
-                  text-gray-400 mt-2 mb-5">
+        try{
 
-            This will delete meal and bazar
-            records older than two months.
-            Member names will NOT be deleted.
+            const snap =
+                await getDoc(
+                    doc(
+                        db,
+                        "users",
+                        user.uid
+                    )
+                );
 
-            <br><br>
 
-            Both Manager password and
-            Assistant Manager password
-            are required.
+            if(!snap.exists()){
 
-        </p>
+                await signOut(auth);
 
-
-        <input
-            id="managerPassword"
-            type="password"
-            class="input mb-3"
-            placeholder="Main Manager password">
-
-
-        <input
-            id="assistantPassword"
-            type="password"
-            class="input mb-4"
-            placeholder="Assistant Manager password">
-
-
-        <div id="clearError"
-             class="text-red-400
-                    text-sm mb-3">
-
-        </div>
-
-
-        <div class="flex gap-2">
-
-            <button
-                class="btn red flex-1"
-                onclick="confirmClearData()">
-
-                🔥 Confirm Clear
-
-            </button>
-
-
-            <button
-                class="btn blue flex-1"
-                onclick="closeClearModal()">
-
-                Cancel
-
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<script>
-
-
-const MANAGER_EMAIL =
-    "spi@gmail.com";
-
-
-const ASSISTANT_EMAIL =
-    "spi1@gmail.com";
-
-
-/*
- * IMPORTANT:
- * Change MANAGER_EMAIL above to the
- * actual Firebase Auth email of your
- * main manager.
- */
-
-
-window.startAdminApp =
-function() {
-
-    if (
-        !window.firebaseReady ||
-        !window.auth
-    ) return;
-
-
-    window.F.onAuthStateChanged(
-        window.auth,
-        async user => {
-
-            if (!user) {
-
-                location.href =
-                    "login.html";
+                location.replace(
+                    "login.html"
+                );
 
                 return;
-
             }
 
 
-            /*
-             * Main manager only
-             */
+            const data =
+                snap.data();
 
-            if (
-                user.email.toLowerCase() !==
-                MANAGER_EMAIL.toLowerCase()
-            ) {
+
+            if(
+                data.active === false ||
+                data.role !== "admin"
+            ){
+
+                await signOut(auth);
 
                 alert(
-                    "Unauthorized manager account."
+                    "Admin access denied."
                 );
 
-                location.href =
-                    "login.html";
+                location.replace(
+                    "login.html"
+                );
 
                 return;
-
             }
 
 
             document.getElementById(
-                "managerEmail"
+                "adminName"
             ).textContent =
-                user.email;
+                data.name ||
+                user.email ||
+                "Admin";
 
 
-            await loadMembers();
-            await loadManagerSettings();
+            await loadData();
 
-            /*
-             * Automatic cleanup when
-             * main manager opens admin.
-             */
 
-            await runOldDataCleanup(
-                true
+        }catch(error){
+
+            console.error(error);
+
+            await signOut(auth);
+
+            location.replace(
+                "login.html"
             );
 
         }
-    );
 
-};
+    }
+);
 
 
-/* =========================
-   MEMBERS
-========================= */
+/* ==============================
+   LOAD DATA
+============================== */
 
-async function loadMembers() {
+async function loadData(){
 
-    const snap =
-        await window.F.getDocs(
-            window.F.collection(
-                window.db,
+    const memberSnap =
+        await getDocs(
+            collection(
+                db,
                 "members"
             )
         );
 
 
-    const box =
+    members = [];
+
+
+    memberSnap.forEach(item => {
+
+        members.push({
+
+            id:item.id,
+
+            ...item.data()
+
+        });
+
+    });
+
+
+    document.getElementById(
+        "memberCount"
+    ).textContent =
+        members.length;
+
+
+    renderMembers();
+
+
+    const userSnap =
+        await getDocs(
+            collection(
+                db,
+                "users"
+            )
+        );
+
+
+    assistants = [];
+
+
+    userSnap.forEach(item => {
+
+        const data =
+            item.data();
+
+
+        if(
+            data.role ===
+            "assistant"
+        ){
+
+            assistants.push({
+
+                id:item.id,
+
+                ...data
+
+            });
+
+        }
+
+    });
+
+
+    document.getElementById(
+        "assistantCount"
+    ).textContent =
+        assistants.length;
+
+
+    document.getElementById(
+        "activeCount"
+    ).textContent =
+        assistants.filter(
+            x => x.active !== false
+        ).length;
+
+
+    renderAssistants();
+
+}
+
+
+/* ==============================
+   ASSISTANTS
+============================== */
+
+function renderAssistants(){
+
+    const search =
+        document.getElementById(
+            "assistantSearch"
+        ).value
+        .trim()
+        .toLowerCase();
+
+
+    const list =
+        document.getElementById(
+            "assistantList"
+        );
+
+
+    const filtered =
+        assistants.filter(a => {
+
+            const name =
+                String(
+                    a.name || ""
+                ).toLowerCase();
+
+            const email =
+                String(
+                    a.email || ""
+                ).toLowerCase();
+
+            return(
+                name.includes(search) ||
+                email.includes(search)
+            );
+
+        });
+
+
+    if(!filtered.length){
+
+        list.innerHTML = `
+
+            <div class="text-center py-7 text-gray-500">
+                No assistant found
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    list.innerHTML =
+        filtered.map(a => {
+
+            const active =
+                a.active !== false;
+
+
+            return `
+
+                <div class="user-row">
+
+                    <div style="min-width:0">
+
+                        <div class="user-name">
+
+                            ${escapeHTML(
+                                a.name ||
+                                "Assistant"
+                            )}
+
+                        </div>
+
+
+                        <div class="user-email">
+
+                            ${escapeHTML(
+                                a.email ||
+                                ""
+                            )}
+
+                        </div>
+
+
+                        <div
+                            class="status"
+                            style="
+                                color:
+                                ${active
+                                ? 'var(--green)'
+                                : 'var(--red)'};
+                            "
+                        >
+
+                            ${active
+                            ? '● Active'
+                            : '● Disabled'}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="flex gap-1 flex-wrap justify-end">
+
+                        <button
+                            class="btn
+                            ${active
+                                ? 'red'
+                                : 'green'}"
+                            onclick="
+                                toggleAssistant(
+                                    '${a.id}',
+                                    ${active}
+                                )
+                            "
+                        >
+
+                            ${active
+                            ? 'Disable'
+                            : 'Enable'}
+
+                        </button>
+
+
+                        <button
+                            class="btn blue"
+                            onclick="
+                                resetAssistantSession(
+                                    '${a.id}'
+                                )
+                            "
+                        >
+
+                            Reset
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* ==============================
+   ENABLE / DISABLE
+============================== */
+
+window.toggleAssistant =
+async function(uid, currentState){
+
+    if(
+        !confirm(
+            currentState
+            ? "Disable this assistant?"
+            : "Enable this assistant?"
+        )
+    ){
+        return;
+    }
+
+
+    try{
+
+        await updateDoc(
+            doc(
+                db,
+                "users",
+                uid
+            ),
+            {
+
+                active:
+                    !currentState,
+
+                sessionVersion:
+                    increment(1)
+
+            }
+        );
+
+
+        await loadData();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "Failed to update assistant."
+        );
+
+    }
+
+};
+
+
+/* ==============================
+   RESET SESSION
+============================== */
+
+window.resetAssistantSession =
+async function(uid){
+
+    if(
+        !confirm(
+            "This will remove the assistant's current browser sessions. Continue?"
+        )
+    ){
+        return;
+    }
+
+
+    try{
+
+        await updateDoc(
+            doc(
+                db,
+                "users",
+                uid
+            ),
+            {
+
+                sessionVersion:
+                    increment(1)
+
+            }
+        );
+
+
+        alert(
+            "All existing assistant sessions have been invalidated."
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "Failed to reset session."
+        );
+
+    }
+
+};
+
+
+/* ==============================
+   MEMBERS
+============================== */
+
+function renderMembers(){
+
+    const search =
+        document.getElementById(
+            "memberSearch"
+        ).value
+        .trim()
+        .toLowerCase();
+
+
+    const list =
         document.getElementById(
             "membersList"
         );
 
 
-    box.innerHTML = "";
+    const filtered =
+        members.filter(m => {
+
+            return String(
+                m.name || ""
+            )
+            .toLowerCase()
+            .includes(search);
+
+        });
 
 
-    snap.forEach(d => {
+    if(!filtered.length){
 
-        const m = d.data();
+        list.innerHTML = `
 
-
-        box.innerHTML += `
-
-        <div class="member">
-
-            <div>
-
-                <div class="font-bold">
-
-                    ${escapeHTML(
-                        m.name ||
-                        "Unnamed"
-                    )}
-
-                </div>
-
-                <div class="text-xs
-                            text-gray-400">
-
-                    Deposit:
-                    ৳${Number(
-                        m.totalDeposit || 0
-                    ).toFixed(0)}
-
-                    • Meals:
-                    ${Number(
-                        m.totalMeals || 0
-                    )}
-
-                </div>
-
+            <div class="text-center py-7 text-gray-500">
+                No members found
             </div>
-
-
-            <div class="flex gap-2">
-
-                <button
-                    class="btn blue"
-                    onclick="
-                        editDeposit(
-                            '${d.id}',
-                            ${Number(
-                                m.totalDeposit || 0
-                            )}
-                        )
-                    ">
-
-                    💰 Deposit
-
-                </button>
-
-
-                <button
-                    class="btn red"
-                    onclick="
-                        removeMember(
-                            '${d.id}'
-                        )
-                    ">
-
-                    Remove
-
-                </button>
-
-            </div>
-
-        </div>
 
         `;
 
-    });
-
-
-    if (!snap.size) {
-
-        box.innerHTML =
-            `<div class="text-center
-                        text-gray-400
-                        py-8">
-                No members found.
-             </div>`;
-
+        return;
     }
+
+
+    list.innerHTML =
+        filtered.map(m => {
+
+            return `
+
+                <div class="user-row">
+
+                    <div>
+
+                        <div class="user-name">
+
+                            ${escapeHTML(
+                                m.name ||
+                                "Unnamed"
+                            )}
+
+                        </div>
+
+                        <div class="user-email">
+
+                            Deposit:
+                            ৳${Number(
+                                m.totalDeposit || 0
+                            ).toFixed(0)}
+
+                            &nbsp;•&nbsp;
+
+                            Meals:
+                            ${Number(
+                                m.totalMeals || 0
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join("");
 
 }
 
 
-/* =========================
-   ADD MEMBER
-========================= */
-
-window.openAddMember =
-function() {
-
-    document.getElementById(
-        "memberModal"
-    ).classList.remove("hidden");
-
-};
-
-
-window.closeMemberModal =
-function() {
-
-    document.getElementById(
-        "memberModal"
-    ).classList.add("hidden");
-
-};
-
-
-window.addMember =
-async function() {
-
-    const name =
-        document.getElementById(
-            "newMemberName"
-        ).value.trim();
-
-
-    const deposit =
-        Number(
-            document.getElementById(
-                "newMemberDeposit"
-            ).value || 0
-        );
-
-
-    if (!name) {
-
-        alert(
-            "Enter member name."
-        );
-
-        return;
-
-    }
-
-
-    const id =
-        "member_" +
-        Date.now();
-
-
-    await window.F.setDoc(
-        window.F.doc(
-            window.db,
-            "members",
-            id
-        ),
-        {
-            name,
-            totalDeposit:
-                deposit,
-            totalMeals:0,
-            active:true,
-            createdAt:
-                new Date()
-                .toISOString()
-        }
-    );
-
-
-    closeMemberModal();
-
-    document.getElementById(
-        "newMemberName"
-    ).value = "";
-
-
-    document.getElementById(
-        "newMemberDeposit"
-    ).value = "";
-
-
-    await loadMembers();
-
-};
-
-
-/* =========================
-   DEPOSIT
-========================= */
-
-window.editDeposit =
-async function(id,current) {
-
-    const value =
-        prompt(
-            "New total deposit:",
-            current
-        );
-
-
-    if (value === null)
-        return;
-
-
-    const deposit =
-        Number(value);
-
-
-    if (!Number.isFinite(deposit))
-        return;
-
-
-    await window.F.updateDoc(
-        window.F.doc(
-            window.db,
-            "members",
-            id
-        ),
-        {
-            totalDeposit:
-                deposit
-        }
-    );
-
-
-    await loadMembers();
-
-};
-
-
-/* =========================
-   REMOVE MEMBER
-========================= */
-
-window.removeMember =
-async function(id) {
-
-    const ok =
-        confirm(
-            "Remove this member from active members?"
-        );
-
-
-    if (!ok)
-        return;
-
-
-    /*
-     * Soft remove.
-     * Name/history remains in Firestore.
-     */
-
-    await window.F.updateDoc(
-        window.F.doc(
-            window.db,
-            "members",
-            id
-        ),
-        {
-            active:false
-        }
-    );
-
-
-    await loadMembers();
-
-};
-
-
-/* =========================
-   MANAGER SETTINGS
-========================= */
-
-async function loadManagerSettings() {
-
-    const snap =
-        await window.F.getDoc(
-            window.F.doc(
-                window.db,
-                "settings",
-                "manager"
-            )
-        );
-
-
-    if (snap.exists()) {
-
-        document.getElementById(
-            "managerName"
-        ).value =
-            snap.data().name || "";
-
-    }
-
-}
-
-
-window.saveManagerName =
-async function() {
-
-    const name =
-        document.getElementById(
-            "managerName"
-        ).value.trim();
-
-
-    if (!name)
-        return;
-
-
-    await window.F.setDoc(
-        window.F.doc(
-            window.db,
-            "settings",
-            "manager"
-        ),
-        {
-            name
-        },
-        {
-            merge:true
-        }
-    );
-
-
-    alert(
-        "✅ Manager name saved."
+/* ==============================
+   SEARCH
+============================== */
+
+document
+.getElementById(
+    "assistantSearch"
+)
+.addEventListener(
+    "input",
+    renderAssistants
+);
+
+
+document
+.getElementById(
+    "memberSearch"
+)
+.addEventListener(
+    "input",
+    renderMembers
+);
+
+
+/* ==============================
+   LOGOUT
+============================== */
+
+window.logout =
+async function(){
+
+    await signOut(auth);
+
+    location.replace(
+        "login.html"
     );
 
 };
 
 
-/* =========================
-   TWO MONTH CLEANUP
-========================= */
-
-function getCutoffDate() {
-
-    const d =
-        new Date();
-
-    /*
-     * Two calendar months before today.
-     */
-
-    d.setMonth(
-        d.getMonth() - 2
-    );
-
-    return d;
-
-}
-
-
-function isOlderThanTwoMonths(
-    dateString
-) {
-
-    if (!dateString)
-        return false;
-
-
-    const d =
-        new Date(
-            dateString +
-            "T23:59:59"
-        );
-
-
-    return d <
-        getCutoffDate();
-
-}
-
-
-/*
- * This deletes ONLY:
- *
- * meals/YYYY-MM-DD
- * bazar documents
- *
- * It NEVER deletes members.
- */
-
-window.runOldDataCleanup =
-async function(silent=false) {
-
-    try {
-
-        let removedMeals = 0;
-        let removedBazar = 0;
-
-
-        /*
-         * MEALS
-         */
-
-        const mealSnap =
-            await window.F.getDocs(
-                window.F.collection(
-                    window.db,
-                    "meals"
-                )
-            );
-
-
-        for (
-            const d
-            of mealSnap.docs
-        ) {
-
-            const id =
-                d.id;
-
-
-            if (
-                /^\d{4}-\d{2}-\d{2}$/
-                    .test(id) &&
-                isOlderThanTwoMonths(id)
-            ) {
-
-                await window.F.deleteDoc(
-                    d.ref
-                );
-
-                removedMeals++;
-
-            }
-
-        }
-
-
-        /*
-         * BAZAR
-         */
-
-        const bazarSnap =
-            await window.F.getDocs(
-                window.F.collection(
-                    window.db,
-                    "bazar"
-                )
-            );
-
-
-        for (
-            const d
-            of bazarSnap.docs
-        ) {
-
-            const data =
-                d.data();
-
-
-            if (
-                data.date &&
-                isOlderThanTwoMonths(
-                    data.date
-                )
-            ) {
-
-                await window.F.deleteDoc(
-                    d.ref
-                );
-
-                removedBazar++;
-
-            }
-
-        }
-
-
-        const message =
-            `Meals removed: ${removedMeals}
-             | Bazar removed: ${removedBazar}`;
-
-
-        document.getElementById(
-            "cleanupStatus"
-        ).textContent =
-            "✓ " + message;
-
-
-        if (!silent) {
-
-            alert(
-                "✅ Old data cleanup completed.\n\n" +
-                message
-            );
-
-        }
-
-    } catch(error) {
-
-        console.error(error);
-
-        if (!silent) {
-
-            alert(
-                "❌ Cleanup failed:\n" +
-                error.message
-            );
-
-        }
-
-    }
-
-};
-
-
-/* =========================
-   CLEAR MODAL
-========================= */
-
-window.openClearModal =
-function() {
-
-    document.getElementById(
-        "clearModal"
-    ).classList.remove("hidden");
-
-};
-
-
-window.closeClearModal =
-function() {
-
-    document.getElementById(
-        "clearModal"
-    ).classList.add("hidden");
-
-};
-
-
-/* =========================
-   DOUBLE PASSWORD CLEAR
-========================= */
-
-window.confirmClearData =
-async function() {
-
-    const managerPassword =
-        document.getElementById(
-            "managerPassword"
-        ).value;
-
-
-    const assistantPassword =
-        document.getElementById(
-            "assistantPassword"
-        ).value;
-
-
-    const error =
-        document.getElementById(
-            "clearError"
-        );
-
-
-    error.textContent = "";
-
-
-    if (
-        !managerPassword ||
-        !assistantPassword
-    ) {
-
-        error.textContent =
-            "Both passwords are required.";
-
-        return;
-
-    }
-
-
-    try {
-
-        /*
-         * 1. Verify MAIN MANAGER password
-         */
-
-        const manager =
-            window.auth.currentUser;
-
-
-        if (!manager) {
-
-            throw new Error(
-                "Manager session expired."
-            );
-
-        }
-
-
-        const managerCredential =
-            window.F.EmailAuthProvider
-                .credential(
-                    manager.email,
-                    managerPassword
-                );
-
-
-        await window.F
-            .reauthenticateWithCredential(
-                manager,
-                managerCredential
-            );
-
-
-        /*
-         * 2. Verify ASSISTANT password
-         *
-         * A second Firebase App/Auth is used
-         * so manager session is not replaced.
-         */
-
-        const {
-            initializeApp,
-            getApps
-        } = await import(
-            "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"
-        );
-
-
-        const {
-            getAuth,
-            signInWithEmailAndPassword,
-            signOut
-        } = await import(
-            "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"
-        );
-
-
-        let secondaryApp;
-
-
-        const apps =
-            getApps();
-
-
-        secondaryApp =
-            apps.find(
-                a =>
-                    a.name ===
-                    "AssistantVerification"
-            );
-
-
-        if (!secondaryApp) {
-
-            secondaryApp =
-                initializeApp(
-                    {
-                        apiKey:
-                            "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
-
-                        authDomain:
-                            "my-mess-17fbc.firebaseapp.com",
-
-                        projectId:
-                            "my-mess-17fbc",
-
-                        storageBucket:
-                            "my-mess-17fbc.firebasestorage.app",
-
-                        messagingSenderId:
-                            "848426874799",
-
-                        appId:
-                            "1:848426874799:web:0722af59e7504da847e15a"
-                    },
-                    "AssistantVerification"
-                );
-
-        }
-
-
-        const secondaryAuth =
-            getAuth(
-                secondaryApp
-            );
-
-
-        await signInWithEmailAndPassword(
-            secondaryAuth,
-            ASSISTANT_EMAIL,
-            assistantPassword
-        );
-
-
-        /*
-         * Both passwords verified.
-         */
-
-        await signOut(
-            secondaryAuth
-        );
-
-
-        /*
-         * Now clear OLD data.
-         * Members stay.
-         */
-
-        await runOldDataCleanup(
-            true
-        );
-
-
-        alert(
-            "✅ Both passwords verified.\n\n" +
-            "Old meal and bazar data cleared.\n" +
-            "Member names were kept."
-        );
-
-
-        document.getElementById(
-            "managerPassword"
-        ).value = "";
-
-
-        document.getElementById(
-            "assistantPassword"
-        ).value = "";
-
-
-        closeClearModal();
-
-
-    } catch(error) {
-
-        console.error(error);
-
-        error.textContent =
-            "Verification failed: " +
-            error.message;
-
-    }
-
-};
-
-
-/* =========================
-   HELPER
-========================= */
-
-function escapeHTML(str) {
+/* ==============================
+   ESCAPE
+============================== */
+
+function escapeHTML(value){
 
     const div =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     div.textContent =
-        String(str);
+        String(value);
 
     return div.innerHTML;
 
 }
+
+</script>
+
+
+<script>
+
+function toggleMenu(){
+
+    document
+        .getElementById(
+            "dropdown"
+        )
+        .classList
+        .toggle("hidden");
+
+}
+
+document.addEventListener(
+    "click",
+    function(e){
+
+        if(
+            !e.target.closest(".menu") &&
+            !e.target.closest(".dropdown")
+        ){
+
+            document
+                .getElementById(
+                    "dropdown"
+                )
+                .classList
+                .add("hidden");
+
+        }
+
+    }
+);
 
 </script>
 
