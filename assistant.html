@@ -1,1713 +1,1271 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Ma Achiya Villa - Assistant Manager Console">
-<title>Assistant Console — Ma Achiya Villa</title>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color" content="#070711">
+
+<title>Assistant Panel — Ma Achiya Villa</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- PDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
 
-<script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
-import {
-    getFirestore,
-    collection,
-    doc,
-    getDoc,
-    setDoc,
-    updateDoc,
-    getDocs
-}
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-import {
-    getAuth,
-    onAuthStateChanged,
-    signOut,
-    EmailAuthProvider,
-    reauthenticateWithCredential,
-    updatePassword
-}
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-
-const firebaseConfig = {
-    apiKey: "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
-    authDomain: "my-mess-17fbc.firebaseapp.com",
-    projectId: "my-mess-17fbc",
-    storageBucket: "my-mess-17fbc.firebasestorage.app",
-    messagingSenderId: "848426874799",
-    appId: "1:848426874799:web:0722af59e7504da847e15a",
-    measurementId: "G-RWHJKGV5LS"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
-
-window.db = db;
-window.auth = auth;
-
-window.FirebaseFunctions = {
-    collection,
-    doc,
-    getDoc,
-    setDoc,
-    updateDoc,
-    getDocs,
-    onAuthStateChanged,
-    signOut,
-    EmailAuthProvider,
-    reauthenticateWithCredential,
-    updatePassword
-};
-
-window.firebaseReady = true;
-
-console.log("Firebase initialized successfully");
-
-if (typeof window.startAssistantApp === "function") {
-    window.startAssistantApp();
-}
-
-</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet">
 
 <style>
 
-:root {
-    --bg:#05050c;
-    --glass:rgba(16,16,34,.48);
-    --border:rgba(255,255,255,.08);
-    --text:#fff;
-    --muted:rgba(255,255,255,.55);
+:root{
+    --bg:#05050b;
+    --glass:rgba(20,20,38,.55);
+    --glass2:rgba(255,255,255,.045);
+    --border:rgba(255,255,255,.09);
+
     --purple:#a78bfa;
     --blue:#60a5fa;
     --green:#34d399;
     --red:#f87171;
+
+    --text:#fff;
+    --muted:rgba(255,255,255,.55);
+
+    --radius:24px;
 }
 
-* {
+*{
     box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-body {
-    margin:0;
-    padding:18px;
+html{
+    scroll-behavior:smooth;
+    -webkit-tap-highlight-color:transparent;
+}
+
+body{
+
     min-height:100vh;
-    color:var(--text);
-    font-family:Inter,'Noto Sans Bengali',sans-serif;
+
     background:
         radial-gradient(
-            ellipse 90% 70% at 50% -30%,
-            #1c1148 0%,
-            #0d0d20 42%,
-            #05050c 72%
-        );
+            circle at 50% -20%,
+            rgba(124,58,237,.35),
+            transparent 45%
+        ),
+        radial-gradient(
+            circle at 100% 40%,
+            rgba(37,99,235,.16),
+            transparent 35%
+        ),
+        #05050b;
+
+    color:var(--text);
+
+    font-family:Inter,
+        "Noto Sans Bengali",
+        sans-serif;
+
+    padding:14px;
+
+    overflow-x:hidden;
 }
 
-body:after {
-    content:"";
-    position:fixed;
-    inset:0;
-    pointer-events:none;
+/* ---------- glass ---------- */
+
+.glass{
+
     background:
-        radial-gradient(circle at 20% 60%,#8b5cf6,transparent 35%),
-        radial-gradient(circle at 80% 20%,#3b82f6,transparent 35%);
-    opacity:.12;
-    filter:blur(80px);
-}
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.065),
+            rgba(255,255,255,.018)
+        );
 
-.glass {
-    position:relative;
-    z-index:2;
-    background:var(--glass);
-    backdrop-filter:blur(35px) saturate(180%);
-    -webkit-backdrop-filter:blur(35px) saturate(180%);
     border:1px solid var(--border);
-    border-radius:25px;
+
+    backdrop-filter:
+        blur(28px)
+        saturate(160%);
+
+    -webkit-backdrop-filter:
+        blur(28px)
+        saturate(160%);
+
     box-shadow:
-        0 20px 50px rgba(0,0,0,.45),
-        inset 0 1px 0 rgba(255,255,255,.07);
+        0 20px 60px rgba(0,0,0,.38),
+        inset 0 1px 0 rgba(255,255,255,.08);
+
+    border-radius:var(--radius);
 }
 
-.input {
-    width:100%;
-    background:rgba(255,255,255,.045);
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:13px;
-    padding:11px 13px;
-    color:#fff;
-    outline:none;
-}
+/* ---------- header ---------- */
 
-.input:focus {
-    border-color:var(--purple);
-    box-shadow:0 0 0 4px rgba(167,139,250,.1);
-}
+.logo{
 
-.btn {
-    border:0;
-    border-radius:14px;
-    padding:11px 16px;
-    color:white;
-    font-weight:700;
-    cursor:pointer;
-    transition:.2s;
-}
+    width:58px;
+    height:58px;
 
-.btn:hover {
-    transform:translateY(-1px);
-}
+    border-radius:50%;
 
-.btn-purple {
-    background:linear-gradient(135deg,#8b5cf6,#6d28d9);
-}
-
-.btn-green {
-    background:linear-gradient(135deg,#34d399,#059669);
-}
-
-.btn-blue {
-    background:linear-gradient(135deg,#60a5fa,#2563eb);
-}
-
-.btn-red {
-    background:linear-gradient(135deg,#f87171,#dc2626);
-}
-
-.meal-table {
-    width:100%;
-    border-collapse:collapse;
-    min-width:850px;
-}
-
-.meal-table th {
-    padding:12px 8px;
-    color:var(--muted);
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:1px;
-    border-bottom:1px solid var(--border);
-}
-
-.meal-table td {
-    padding:11px 8px;
-    border-bottom:1px solid rgba(255,255,255,.04);
-    text-align:center;
-}
-
-.meal-table td:first-child {
-    text-align:left;
-    font-weight:700;
-}
-
-.meal-check {
-    width:21px;
-    height:21px;
-    accent-color:#8b5cf6;
-    cursor:pointer;
-}
-
-.guest-input {
-    width:70px;
-    text-align:center;
-}
-
-.total {
-    color:#c4b5fd;
-    font-weight:800;
-}
-
-.guest-total {
-    color:#34d399;
-    font-weight:700;
-}
-
-.daily-total {
-    color:#60a5fa;
-    font-weight:900;
-    font-size:16px;
-}
-
-.modal {
-    position:fixed;
-    inset:0;
-    z-index:100;
-    background:rgba(0,0,0,.7);
-    backdrop-filter:blur(10px);
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:20px;
+
+    border:2px solid var(--green);
+
+    box-shadow:
+        0 0 28px rgba(52,211,153,.35),
+        inset 0 1px 0 rgba(255,255,255,.2);
+
+    background:rgba(255,255,255,.04);
+
+    flex-shrink:0;
 }
 
-.modal-box {
-    width:100%;
-    max-width:480px;
-    padding:22px;
-}
+.logo-bn{
 
-.hidden {
-    display:none!important;
-}
+    font-family:
+        "Noto Sans Bengali",
+        sans-serif;
 
-.stat {
-    padding:15px;
+    font-size:10px;
+    font-weight:900;
     text-align:center;
 }
 
-.stat-value {
-    font-size:24px;
-    font-weight:900;
+.logo-en{
+
+    display:block;
+
+    font-size:7px;
+    letter-spacing:1.4px;
+
+    color:var(--muted);
+
+    text-align:center;
 }
 
-.stat-label {
-    font-size:10px;
-    color:var(--muted);
+.menu{
+
+    width:46px;
+    height:46px;
+
+    border-radius:15px;
+
+    border:1px solid var(--border);
+
+    background:var(--glass2);
+
+    display:flex;
+    flex-direction:column;
+
+    justify-content:center;
+    align-items:center;
+
+    gap:5px;
+
+    cursor:pointer;
+}
+
+.menu span{
+
+    width:18px;
+    height:2px;
+
+    background:#fff;
+
+    border-radius:10px;
+}
+
+/* ---------- role badge ---------- */
+
+.role{
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    background:rgba(52,211,153,.08);
+
+    border:1px solid rgba(52,211,153,.2);
+
+    text-align:center;
+}
+
+.role-title{
+
+    font-size:9px;
+
     text-transform:uppercase;
+
+    letter-spacing:1px;
+
+    color:var(--muted);
+}
+
+.role-name{
+
+    font-size:12px;
+
+    font-weight:800;
+
+    color:var(--green);
+}
+
+/* ---------- cards ---------- */
+
+.card{
+
+    padding:18px;
+
+    margin-bottom:14px;
+}
+
+.card-title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    font-size:18px;
+
+    font-weight:800;
+
+    margin-bottom:14px;
+}
+
+/* ---------- stats ---------- */
+
+.stat{
+
+    padding:15px 8px;
+
+    text-align:center;
+}
+
+.stat-icon{
+
+    font-size:22px;
+
+    margin-bottom:5px;
+}
+
+.stat-label{
+
+    font-size:9px;
+
+    color:var(--muted);
+
+    text-transform:uppercase;
+
     letter-spacing:1px;
 }
 
-@media(max-width:700px) {
-    body {
+.stat-value{
+
+    margin-top:3px;
+
+    font-size:21px;
+
+    font-weight:900;
+}
+
+/* ---------- buttons ---------- */
+
+.btn{
+
+    border:1px solid var(--border);
+
+    background:rgba(255,255,255,.045);
+
+    color:white;
+
+    border-radius:15px;
+
+    padding:11px 15px;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+    transition:.2s;
+
+    font-size:13px;
+}
+
+.btn:hover{
+
+    background:rgba(255,255,255,.09);
+
+    transform:translateY(-1px);
+}
+
+.btn-green{
+
+    background:rgba(52,211,153,.12);
+
+    border-color:rgba(52,211,153,.25);
+
+    color:#6ee7b7;
+}
+
+.btn-red{
+
+    background:rgba(248,113,113,.1);
+
+    border-color:rgba(248,113,113,.2);
+
+    color:#fca5a5;
+}
+
+/* ---------- search ---------- */
+
+.search{
+
+    width:100%;
+
+    padding:13px 15px;
+
+    border-radius:16px;
+
+    outline:none;
+
+    border:1px solid var(--border);
+
+    background:rgba(0,0,0,.2);
+
+    color:#fff;
+
+    font-size:13px;
+
+    margin-bottom:12px;
+}
+
+.search:focus{
+
+    border-color:rgba(167,139,250,.45);
+
+    box-shadow:
+        0 0 0 3px rgba(167,139,250,.08);
+}
+
+/* ---------- member ---------- */
+
+.member{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:10px;
+
+    padding:14px;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,.035);
+
+    border:1px solid rgba(255,255,255,.06);
+
+    margin-bottom:8px;
+
+    transition:.2s;
+}
+
+.member:hover{
+
+    background:rgba(255,255,255,.065);
+
+    border-color:rgba(255,255,255,.11);
+}
+
+.member-name{
+
+    font-family:
+        "Noto Sans Bengali",
+        sans-serif;
+
+    font-weight:800;
+
+    font-size:14px;
+}
+
+.member-info{
+
+    font-size:11px;
+
+    color:var(--muted);
+
+    margin-top:3px;
+}
+
+.balance{
+
+    font-size:17px;
+
+    font-weight:900;
+
+    white-space:nowrap;
+}
+
+/* ---------- dropdown ---------- */
+
+.dropdown{
+
+    position:absolute;
+
+    right:0;
+
+    top:56px;
+
+    min-width:210px;
+
+    padding:7px;
+
+    border-radius:20px;
+
+    background:rgba(18,18,34,.92);
+
+    border:1px solid var(--border);
+
+    backdrop-filter:blur(30px);
+
+    box-shadow:0 25px 70px rgba(0,0,0,.55);
+
+    z-index:100;
+}
+
+.dropdown button{
+
+    width:100%;
+
+    border:0;
+
+    background:transparent;
+
+    color:#fff;
+
+    padding:12px 14px;
+
+    border-radius:14px;
+
+    text-align:left;
+
+    cursor:pointer;
+}
+
+.dropdown button:hover{
+
+    background:rgba(255,255,255,.06);
+}
+
+.hidden{
+    display:none!important;
+}
+
+/* ---------- loading ---------- */
+
+.loader{
+
+    width:32px;
+    height:32px;
+
+    border-radius:50%;
+
+    border:3px solid rgba(255,255,255,.08);
+
+    border-top-color:var(--purple);
+
+    animation:spin .7s linear infinite;
+
+    margin:20px auto;
+}
+
+@keyframes spin{
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+/* ---------- mobile ---------- */
+
+@media(max-width:600px){
+
+    body{
         padding:10px;
     }
 
-    .meal-table {
-        min-width:850px;
+    .glass{
+        border-radius:21px;
     }
+
+    .card{
+        padding:15px;
+    }
+
+    .logo{
+        width:50px;
+        height:50px;
+    }
+
+    .role{
+        padding:7px 10px;
+    }
+
+    .role-name{
+        font-size:10px;
+    }
+
+    .stat-value{
+        font-size:18px;
+    }
+
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div class="max-w-6xl mx-auto relative z-10">
+<div class="max-w-2xl mx-auto">
 
 <!-- HEADER -->
 
-<div class="glass p-4 mb-4 flex flex-wrap items-center justify-between gap-3">
+<header class="flex items-center justify-between gap-3 mb-5">
 
-    <div>
-        <div class="text-xl font-black">
-            🏠 Ma Achiya Villa
+    <div class="logo">
+
+        <div>
+
+            <div class="logo-bn">
+                মা আছিয়া
+            </div>
+
+            <span class="logo-en">
+                VILLA
+            </span>
+
         </div>
 
-        <div class="text-xs text-gray-400">
-            Assistant Manager Console
-        </div>
-
-        <div id="userEmail"
-             class="text-xs text-purple-300 mt-1">
-        </div>
     </div>
 
-    <div class="flex gap-2">
 
-        <a href="index.html"
-           class="btn btn-blue">
-            🏠 Home
-        </a>
+    <div class="role">
 
-        <button
-            class="btn btn-red"
-            onclick="logout()">
-            🚪 Logout
+        <div class="role-title">
+            Assistant
+        </div>
+
+        <div class="role-name"
+             id="assistantName">
+            Loading...
+        </div>
+
+    </div>
+
+
+    <div class="relative">
+
+        <button class="menu"
+                onclick="toggleMenu()">
+
+            <span></span>
+            <span></span>
+            <span></span>
+
         </button>
 
+        <div id="dropdown"
+             class="dropdown hidden">
+
+            <button onclick="location.href='index.html'">
+                🏠 Dashboard
+            </button>
+
+            <button onclick="logout()"
+                    style="color:#fca5a5">
+                🚪 Logout
+            </button>
+
+        </div>
+
     </div>
 
-</div>
+</header>
 
 
 <!-- STATS -->
 
-<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+<div class="grid grid-cols-3 gap-2 mb-4">
 
     <div class="glass stat">
-        <div class="stat-label">Date</div>
-        <div id="statDate"
-             class="font-bold">
+
+        <div class="stat-icon">
+            💰
         </div>
+
+        <div class="stat-label">
+            Meal Rate
+        </div>
+
+        <div class="stat-value"
+             id="mealRate"
+             style="color:var(--purple)">
+            —
+        </div>
+
     </div>
 
-    <div class="glass stat">
-        <div class="stat-label">Members</div>
-        <div id="statMembers"
-             class="stat-value text-purple-300">
-            0
-        </div>
-    </div>
 
     <div class="glass stat">
-        <div class="stat-label">Main Meals</div>
-        <div id="statMain"
-             class="stat-value text-blue-300">
-            0
+
+        <div class="stat-icon">
+            👥
         </div>
+
+        <div class="stat-label">
+            Members
+        </div>
+
+        <div class="stat-value"
+             id="memberCount"
+             style="color:var(--blue)">
+            —
+        </div>
+
     </div>
 
+
     <div class="glass stat">
-        <div class="stat-label">Guest Meals</div>
-        <div id="statGuest"
-             class="stat-value text-green-300">
-            0
+
+        <div class="stat-icon">
+            🍽️
         </div>
+
+        <div class="stat-label">
+            Meals
+        </div>
+
+        <div class="stat-value"
+             id="totalMeals"
+             style="color:var(--green)">
+            —
+        </div>
+
     </div>
 
 </div>
 
 
-<!-- CONTROLS -->
+<!-- MEMBERS -->
 
-<div class="glass p-4 mb-4">
+<section class="glass card">
 
-    <div class="flex flex-wrap gap-3 items-end">
+    <div class="card-title">
 
-        <div class="flex-1 min-w-[180px]">
+        <span>👥</span>
 
-            <label class="text-xs text-gray-400">
-                📅 Select Date
-            </label>
+        Members
 
-            <input
-                id="selectedDate"
-                type="date"
-                class="input mt-1"
-                onchange="changeDate()">
+    </div>
 
-        </div>
 
-        <button
-            class="btn btn-blue"
-            onclick="copyYesterdayMeals()">
-            📋 Copy Yesterday
+    <input
+        id="memberSearch"
+        class="search"
+        type="search"
+        placeholder="Search member..."
+        autocomplete="off"
+    >
+
+
+    <div id="membersList">
+
+        <div class="loader"></div>
+
+    </div>
+
+</section>
+
+
+<!-- QUICK ACTION -->
+
+<section class="glass card">
+
+    <div class="card-title">
+        ⚡ Quick Access
+    </div>
+
+    <div class="grid grid-cols-2 gap-2">
+
+        <button class="btn btn-green"
+                onclick="location.href='index.html'">
+            📊 Dashboard
         </button>
 
-        <button
-            class="btn btn-green"
-            onclick="saveMeals()">
-            💾 Save Meals
-        </button>
-
-        <button
-            class="btn btn-purple"
-            onclick="downloadPDF()">
-            📄 Download PDF
+        <button class="btn"
+                onclick="location.reload()">
+            🔄 Refresh
         </button>
 
     </div>
 
-</div>
-
-
-<!-- MEAL SHEET -->
-
-<div class="glass p-4 mb-4">
-
-    <div class="flex justify-between items-center mb-4">
-
-        <div>
-            <h2 class="text-lg font-bold">
-                📋 Daily Meal Sheet
-            </h2>
-
-            <p class="text-xs text-gray-400">
-                Guest সংখ্যা দিলে শুধু সেই guest meal total-এ যোগ হবে
-            </p>
-        </div>
-
-        <div id="saveStatus"
-             class="text-xs text-green-400">
-        </div>
-
-    </div>
-
-
-    <div class="overflow-x-auto">
-
-        <table class="meal-table">
-
-            <thead>
-
-                <tr>
-
-                    <th>Member</th>
-
-                    <th>Breakfast<br>(0.5)</th>
-
-                    <th>Lunch<br>(1)</th>
-
-                    <th>Dinner<br>(1)</th>
-
-                    <th>Guest</th>
-
-                    <th>Guest Meal</th>
-
-                    <th>Main Meal</th>
-
-                    <th>Total</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody id="mealTableBody">
-
-                <tr>
-                    <td colspan="8"
-                        class="text-center py-10">
-                        Loading...
-                    </td>
-                </tr>
-
-            </tbody>
-
-        </table>
-
-    </div>
+</section>
 
 </div>
 
 
-<!-- PASSWORD -->
+<script type="module">
 
-<div class="glass p-4 mb-4">
+import {
+    initializeApp
+} from
+"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-    <h2 class="font-bold mb-3">
-        🔐 Change Assistant Password
-    </h2>
+import {
+    getAuth,
+    onAuthStateChanged,
+    signOut
+} from
+"https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    <div class="grid md:grid-cols-2 gap-3">
-
-        <input
-            id="oldPasswordAssist"
-            type="password"
-            class="input"
-            placeholder="Current password">
-
-        <input
-            id="newPasswordAssist"
-            type="password"
-            class="input"
-            placeholder="New password">
-
-    </div>
-
-    <button
-        class="btn btn-purple mt-3 w-full"
-        onclick="changePassword()">
-        🔑 Update Password
-    </button>
-
-    <div id="assistPasswordError"
-         class="text-red-400 text-sm mt-2">
-    </div>
-
-</div>
-
-</div>
+import {
+    getFirestore,
+    doc,
+    getDoc,
+    collection,
+    getDocs
+} from
+"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 
-<script>
+const firebaseConfig = {
+
+    apiKey:
+    "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
+
+    authDomain:
+    "my-mess-17fbc.firebaseapp.com",
+
+    projectId:
+    "my-mess-17fbc",
+
+    storageBucket:
+    "my-mess-17fbc.firebasestorage.app",
+
+    messagingSenderId:
+    "848426874799",
+
+    appId:
+    "1:848426874799:web:0722af59e7504da847e15a",
+
+    measurementId:
+    "G-RWHJKGV5LS"
+};
+
+
+const app =
+    initializeApp(firebaseConfig);
+
+const auth =
+    getAuth(app);
+
+const db =
+    getFirestore(app);
+
+
+let currentUser = null;
 
 let members = [];
-let currentMealsData = {};
-let selectedDateStr = new Date()
-    .toISOString()
-    .split("T")[0];
 
-document.getElementById("selectedDate").value =
-    selectedDateStr;
-
-document.getElementById("statDate").textContent =
-    selectedDateStr;
+let sessionVersion = null;
 
 
-/* =========================
+/* ==============================
    AUTH
-========================= */
+============================== */
 
-function setupAuth() {
+onAuthStateChanged(auth, async user => {
 
-    if (!window.auth) {
-        console.error("Firebase Auth not ready.");
-        return;
-    }
+    if(!user){
 
-    const {
-        onAuthStateChanged
-    } = window.FirebaseFunctions;
-
-    onAuthStateChanged(
-        window.auth,
-        async user => {
-
-            console.log(
-                "Auth:",
-                user ? user.email : "none"
-            );
-
-            if (
-                !user ||
-                user.email.toLowerCase() !==
-                "spi1@gmail.com"
-            ) {
-
-                window.location.href =
-                    "login.html";
-
-                return;
-            }
-
-            localStorage.setItem(
-                "assistLoggedIn",
-                "true"
-            );
-
-            document.getElementById(
-                "userEmail"
-            ).textContent = user.email;
-
-            await loadMembersAndMeals();
-
-        }
-    );
-}
-
-
-/* =========================
-   LOAD MEMBERS
-========================= */
-
-async function loadMembersAndMeals() {
-
-    try {
-
-        const {
-            collection,
-            getDocs
-        } = window.FirebaseFunctions;
-
-        const snap =
-            await getDocs(
-                collection(
-                    window.db,
-                    "members"
-                )
-            );
-
-        members = [];
-
-        snap.forEach(d => {
-
-            const data = d.data();
-
-            /*
-             * active false হলে member history-তে
-             * থাকতে পারে কিন্তু current assistant
-             * sheet-এ দেখানো হবে না.
-             */
-            if (data.active !== false) {
-
-                members.push({
-                    id: d.id,
-                    ...data
-                });
-
-            }
-
-        });
-
-        document.getElementById(
-            "statMembers"
-        ).textContent = members.length;
-
-        await loadTodaysMealsData();
-
-        renderTable();
-
-    } catch(error) {
-
-        console.error(error);
-
-        document.getElementById(
-            "mealTableBody"
-        ).innerHTML = `
-            <tr>
-                <td colspan="8"
-                    class="text-center py-10 text-red-400">
-                    ❌ ${escapeHTML(error.message)}
-                </td>
-            </tr>
-        `;
-
-    }
-}
-
-
-/* =========================
-   LOAD DAY
-========================= */
-
-async function loadTodaysMealsData() {
-
-    const {
-        doc,
-        getDoc
-    } = window.FirebaseFunctions;
-
-    const snap =
-        await getDoc(
-            doc(
-                window.db,
-                "meals",
-                selectedDateStr
-            )
-        );
-
-    if (snap.exists()) {
-
-        const data = snap.data();
-
-        currentMealsData =
-            data.members || {};
-
-    } else {
-
-        currentMealsData = {};
-
-    }
-
-}
-
-
-/* =========================
-   RENDER
-========================= */
-
-function renderTable() {
-
-    const tbody =
-        document.getElementById(
-            "mealTableBody"
-        );
-
-    tbody.innerHTML = "";
-
-    let mainTotal = 0;
-    let guestTotal = 0;
-
-    if (!members.length) {
-
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="8"
-                    class="text-center py-10">
-                    No members found.
-                </td>
-            </tr>
-        `;
+        location.replace("login.html");
 
         return;
     }
 
+    currentUser = user;
 
-    members.forEach(member => {
-
-        const m =
-            currentMealsData[member.id] || {};
-
-        const breakfast =
-            m.breakfast ? 1 : 0;
-
-        const lunch =
-            m.lunch ? 1 : 0;
-
-        const dinner =
-            m.dinner ? 1 : 0;
-
-        const guest =
-            Number(m.guest || 0);
-
-        const mainMeal =
-            (breakfast ? .5 : 0) +
-            (lunch ? 1 : 0) +
-            (dinner ? 1 : 0);
-
-        /*
-         * Guest সংখ্যাকে 1 meal হিসেবে ধরা হচ্ছে।
-         * অর্থাৎ Guest = 2 হলে +2 meals.
-         */
-        const guestMeal = guest;
-
-        const total =
-            mainMeal + guestMeal;
-
-        mainTotal += mainMeal;
-        guestTotal += guestMeal;
-
-
-        tbody.innerHTML += `
-
-        <tr>
-
-            <td>
-                ${escapeHTML(
-                    member.name || "Unnamed"
-                )}
-            </td>
-
-
-            <td>
-                <input
-                    type="checkbox"
-                    class="meal-check"
-                    ${breakfast ? "checked" : ""}
-                    onchange="
-                        updateMeal(
-                            '${member.id}',
-                            'breakfast',
-                            this.checked
-                        )
-                    ">
-            </td>
-
-
-            <td>
-                <input
-                    type="checkbox"
-                    class="meal-check"
-                    ${lunch ? "checked" : ""}
-                    onchange="
-                        updateMeal(
-                            '${member.id}',
-                            'lunch',
-                            this.checked
-                        )
-                    ">
-            </td>
-
-
-            <td>
-                <input
-                    type="checkbox"
-                    class="meal-check"
-                    ${dinner ? "checked" : ""}
-                    onchange="
-                        updateMeal(
-                            '${member.id}',
-                            'dinner',
-                            this.checked
-                        )
-                    ">
-            </td>
-
-
-            <td>
-
-                <input
-                    id="guest_${member.id}"
-                    type="number"
-                    min="0"
-                    step="1"
-                    value="${guest || ""}"
-                    placeholder="0"
-                    class="input guest-input"
-                    onchange="
-                        updateGuest(
-                            '${member.id}',
-                            this.value
-                        )
-                    ">
-
-            </td>
-
-
-            <td
-                id="guestTotal_${member.id}"
-                class="guest-total">
-                ${guestMeal}
-            </td>
-
-
-            <td
-                id="mainTotal_${member.id}"
-                class="total">
-                ${mainMeal}
-            </td>
-
-
-            <td
-                id="total_${member.id}"
-                class="daily-total">
-                ${total}
-            </td>
-
-        </tr>
-        `;
-
-    });
-
-
-    document.getElementById(
-        "statMain"
-    ).textContent =
-        formatMeal(mainTotal);
-
-    document.getElementById(
-        "statGuest"
-    ).textContent =
-        formatMeal(guestTotal);
-
-}
-
-
-/* =========================
-   UPDATE MAIN MEAL
-========================= */
-
-window.updateMeal =
-function(memberId,type,checked) {
-
-    if (!currentMealsData[memberId]) {
-
-        currentMealsData[memberId] = {
-            breakfast:0,
-            lunch:0,
-            dinner:0,
-            guest:0
-        };
-
-    }
-
-    currentMealsData[memberId][type] =
-        checked ? 1 : 0;
-
-    refreshMemberTotal(memberId);
-};
-
-
-/* =========================
-   UPDATE GUEST
-========================= */
-
-window.updateGuest =
-function(memberId,value) {
-
-    if (!currentMealsData[memberId]) {
-
-        currentMealsData[memberId] = {
-            breakfast:0,
-            lunch:0,
-            dinner:0,
-            guest:0
-        };
-
-    }
-
-    let number =
-        Number(value);
-
-    if (
-        !Number.isFinite(number) ||
-        number < 0
-    ) {
-        number = 0;
-    }
-
-    number =
-        Math.floor(number);
-
-    currentMealsData[memberId].guest =
-        number;
-
-    refreshMemberTotal(memberId);
-};
-
-
-/* =========================
-   REFRESH TOTAL
-========================= */
-
-function refreshMemberTotal(memberId) {
-
-    const m =
-        currentMealsData[memberId] || {};
-
-    const mainMeal =
-        (m.breakfast ? .5 : 0) +
-        (m.lunch ? 1 : 0) +
-        (m.dinner ? 1 : 0);
-
-    const guestMeal =
-        Number(m.guest || 0);
-
-    const total =
-        mainMeal + guestMeal;
-
-
-    const mainEl =
-        document.getElementById(
-            `mainTotal_${memberId}`
-        );
-
-    const guestEl =
-        document.getElementById(
-            `guestTotal_${memberId}`
-        );
-
-    const totalEl =
-        document.getElementById(
-            `total_${memberId}`
-        );
-
-
-    if (mainEl)
-        mainEl.textContent =
-            formatMeal(mainMeal);
-
-    if (guestEl)
-        guestEl.textContent =
-            formatMeal(guestMeal);
-
-    if (totalEl)
-        totalEl.textContent =
-            formatMeal(total);
-
-
-    calculateStats();
-}
-
-
-/* =========================
-   STATS
-========================= */
-
-function calculateStats() {
-
-    let main = 0;
-    let guest = 0;
-
-    Object.values(
-        currentMealsData
-    ).forEach(m => {
-
-        main +=
-            (m.breakfast ? .5 : 0) +
-            (m.lunch ? 1 : 0) +
-            (m.dinner ? 1 : 0);
-
-        guest +=
-            Number(m.guest || 0);
-
-    });
-
-    document.getElementById(
-        "statMain"
-    ).textContent =
-        formatMeal(main);
-
-    document.getElementById(
-        "statGuest"
-    ).textContent =
-        formatMeal(guest);
-}
-
-
-/* =========================
-   SAVE
-========================= */
-
-window.saveMeals =
-async function() {
-
-    try {
-
-        const {
-            doc,
-            setDoc
-        } = window.FirebaseFunctions;
-
-        let total = 0;
-
-        Object.values(
-            currentMealsData
-        ).forEach(m => {
-
-            total +=
-                (m.breakfast ? .5 : 0) +
-                (m.lunch ? 1 : 0) +
-                (m.dinner ? 1 : 0) +
-                Number(m.guest || 0);
-
-        });
-
-
-        await setDoc(
-            doc(
-                window.db,
-                "meals",
-                selectedDateStr
-            ),
-            {
-                date: selectedDateStr,
-                members: currentMealsData,
-                totalMeals: total,
-                updatedAt: new Date().toISOString()
-            },
-            {
-                merge:true
-            }
-        );
-
-
-        /*
-         * Update member totalMeals
-         * from all available meal documents.
-         */
-        const {
-            collection,
-            getDocs,
-            updateDoc
-        } = window.FirebaseFunctions;
-
-
-        const allSnap =
-            await getDocs(
-                collection(
-                    window.db,
-                    "meals"
-                )
-            );
-
-
-        const totals = {};
-
-        members.forEach(m => {
-            totals[m.id] = 0;
-        });
-
-
-        allSnap.forEach(d => {
-
-            const data = d.data();
-
-            if (!data.members)
-                return;
-
-            Object.entries(
-                data.members
-            ).forEach(
-                ([id,m]) => {
-
-                    if (
-                        totals[id] !== undefined
-                    ) {
-
-                        totals[id] +=
-                            (m.breakfast ? .5 : 0) +
-                            (m.lunch ? 1 : 0) +
-                            (m.dinner ? 1 : 0) +
-                            Number(m.guest || 0);
-
-                    }
-
-                }
-            );
-
-        });
-
-
-        for (const member of members) {
-
-            await updateDoc(
-                doc(
-                    window.db,
-                    "members",
-                    member.id
-                ),
-                {
-                    totalMeals:
-                        totals[member.id] || 0
-                }
-            );
-
-        }
-
-
-        document.getElementById(
-            "saveStatus"
-        ).textContent =
-            "✓ Saved successfully";
-
-        setTimeout(() => {
-
-            document.getElementById(
-                "saveStatus"
-            ).textContent = "";
-
-        },3000);
-
-
-    } catch(error) {
-
-        console.error(error);
-
-        alert(
-            "❌ Save failed:\n" +
-            error.message
-        );
-
-    }
-
-};
-
-
-/* =========================
-   COPY YESTERDAY
-========================= */
-
-window.copyYesterdayMeals =
-async function() {
-
-    try {
-
-        const d =
-            new Date(
-                selectedDateStr
-            );
-
-        d.setDate(
-            d.getDate() - 1
-        );
-
-        const yesterday =
-            d.toISOString()
-            .split("T")[0];
-
-
-        const {
-            doc,
-            getDoc
-        } = window.FirebaseFunctions;
-
+    try{
 
         const snap =
             await getDoc(
                 doc(
-                    window.db,
-                    "meals",
-                    yesterday
+                    db,
+                    "users",
+                    user.uid
                 )
             );
 
+        if(!snap.exists()){
 
-        if (!snap.exists()) {
+            await signOut(auth);
+
+            location.replace("login.html");
+
+            return;
+        }
+
+        const data =
+            snap.data();
+
+
+        if(
+            data.active === false ||
+            data.role !== "assistant"
+        ){
+
+            await signOut(auth);
 
             alert(
-                "⚠️ Yesterday has no meal record."
+                "Assistant access is disabled."
             );
+
+            location.replace("login.html");
 
             return;
         }
 
 
-        const data =
-            snap.data();
+        sessionVersion =
+            Number(
+                data.sessionVersion || 1
+            );
 
-        currentMealsData =
-            JSON.parse(
-                JSON.stringify(
-                    data.members || {}
+
+        document.getElementById(
+            "assistantName"
+        ).textContent =
+            data.name ||
+            user.email ||
+            "Assistant";
+
+
+        await loadDashboard();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        await signOut(auth);
+
+        location.replace("login.html");
+
+    }
+
+});
+
+
+/* ==============================
+   SESSION VERSION
+============================== */
+
+async function checkSession(){
+
+    if(!currentUser)
+        return false;
+
+
+    try{
+
+        const snap =
+            await getDoc(
+                doc(
+                    db,
+                    "users",
+                    currentUser.uid
                 )
             );
 
 
-        renderTable();
+        if(!snap.exists())
+            return false;
 
-        alert(
-            "📋 Yesterday copied. Click Save Meals."
-        );
 
+        const data =
+            snap.data();
 
-    } catch(error) {
 
-        console.error(error);
+        if(
+            data.active === false ||
+            Number(data.sessionVersion || 1)
+            !== sessionVersion
+        ){
 
-        alert(
-            "❌ " +
-            error.message
-        );
+            await signOut(auth);
 
-    }
-
-};
-
-
-/* =========================
-   DATE
-========================= */
-
-window.changeDate =
-async function() {
-
-    selectedDateStr =
-        document.getElementById(
-            "selectedDate"
-        ).value;
-
-    document.getElementById(
-        "statDate"
-    ).textContent =
-        selectedDateStr;
-
-    await loadTodaysMealsData();
-
-    renderTable();
-
-};
-
-
-/* =========================
-   PDF
-========================= */
-
-window.downloadPDF =
-function() {
-
-    if (
-        !window.jspdf ||
-        !window.jspdf.jsPDF
-    ) {
-
-        alert(
-            "PDF library is still loading."
-        );
-
-        return;
-    }
-
-
-    const {
-        jsPDF
-    } = window.jspdf;
-
-
-    const pdf =
-        new jsPDF(
-            "landscape",
-            "mm",
-            "a4"
-        );
-
-
-    pdf.setFontSize(18);
-
-    pdf.text(
-        "Ma Achiya Villa",
-        15,
-        15
-    );
-
-
-    pdf.setFontSize(12);
-
-    pdf.text(
-        "Daily Meal Report - " +
-        selectedDateStr,
-        15,
-        23
-    );
-
-
-    let y = 34;
-
-    pdf.setFontSize(9);
-
-    pdf.text(
-        "Member",
-        15,
-        y
-    );
-
-    pdf.text(
-        "Breakfast",
-        70,
-        y
-    );
-
-    pdf.text(
-        "Lunch",
-        105,
-        y
-    );
-
-    pdf.text(
-        "Dinner",
-        135,
-        y
-    );
-
-    pdf.text(
-        "Guest",
-        165,
-        y
-    );
-
-    pdf.text(
-        "Main",
-        195,
-        y
-    );
-
-    pdf.text(
-        "Total",
-        225,
-        y
-    );
-
-
-    y += 7;
-
-
-    members.forEach(member => {
-
-        const m =
-            currentMealsData[
-                member.id
-            ] || {};
-
-
-        const breakfast =
-            m.breakfast ? .5 : 0;
-
-        const lunch =
-            m.lunch ? 1 : 0;
-
-        const dinner =
-            m.dinner ? 1 : 0;
-
-        const guest =
-            Number(m.guest || 0);
-
-        const main =
-            breakfast +
-            lunch +
-            dinner;
-
-        const total =
-            main + guest;
-
-
-        pdf.text(
-            String(
-                member.name || "Unnamed"
-            ).substring(0,28),
-            15,
-            y
-        );
-
-        pdf.text(
-            String(breakfast),
-            70,
-            y
-        );
-
-        pdf.text(
-            String(lunch),
-            105,
-            y
-        );
-
-        pdf.text(
-            String(dinner),
-            135,
-            y
-        );
-
-        pdf.text(
-            String(guest),
-            165,
-            y
-        );
-
-        pdf.text(
-            String(main),
-            195,
-            y
-        );
-
-        pdf.text(
-            String(total),
-            225,
-            y
-        );
-
-        y += 6;
-
-        if (y > 190) {
-
-            pdf.addPage();
-            y = 20;
-
-        }
-
-    });
-
-
-    let mainTotal = 0;
-    let guestTotal = 0;
-
-
-    Object.values(
-        currentMealsData
-    ).forEach(m => {
-
-        mainTotal +=
-            (m.breakfast ? .5 : 0) +
-            (m.lunch ? 1 : 0) +
-            (m.dinner ? 1 : 0);
-
-        guestTotal +=
-            Number(m.guest || 0);
-
-    });
-
-
-    y += 5;
-
-    pdf.setFontSize(11);
-
-    pdf.text(
-        "Main Meals: " +
-        formatMeal(mainTotal),
-        15,
-        y
-    );
-
-    pdf.text(
-        "Guest Meals: " +
-        formatMeal(guestTotal),
-        85,
-        y
-    );
-
-    pdf.text(
-        "Grand Total: " +
-        formatMeal(
-            mainTotal + guestTotal
-        ),
-        170,
-        y
-    );
-
-
-    pdf.save(
-        `Ma-Achiya-Villa-${selectedDateStr}.pdf`
-    );
-
-};
-
-
-/* =========================
-   PASSWORD
-========================= */
-
-window.changePassword =
-async function() {
-
-    const oldPass =
-        document.getElementById(
-            "oldPasswordAssist"
-        ).value;
-
-    const newPass =
-        document.getElementById(
-            "newPasswordAssist"
-        ).value;
-
-    const errorEl =
-        document.getElementById(
-            "assistPasswordError"
-        );
-
-
-    errorEl.textContent = "";
-
-
-    if (!oldPass || !newPass) {
-
-        errorEl.textContent =
-            "Please fill both passwords.";
-
-        return;
-    }
-
-
-    if (newPass.length < 6) {
-
-        errorEl.textContent =
-            "New password must be at least 6 characters.";
-
-        return;
-    }
-
-
-    try {
-
-        const {
-            EmailAuthProvider,
-            reauthenticateWithCredential,
-            updatePassword
-        } = window.FirebaseFunctions;
-
-
-        const user =
-            window.auth.currentUser;
-
-
-        if (!user) {
-
-            throw new Error(
-                "You are not logged in."
+            alert(
+                "Your session has expired. Please login again."
             );
 
+            location.replace("login.html");
+
+            return false;
         }
 
 
-        const credential =
-            EmailAuthProvider.credential(
-                user.email,
-                oldPass
-            );
+        return true;
 
+    }catch(e){
 
-        await reauthenticateWithCredential(
-            user,
-            credential
-        );
+        console.error(e);
 
-
-        await updatePassword(
-            user,
-            newPass
-        );
-
-
-        alert(
-            "✅ Password updated successfully."
-        );
-
-
-        document.getElementById(
-            "oldPasswordAssist"
-        ).value = "";
-
-        document.getElementById(
-            "newPasswordAssist"
-        ).value = "";
-
-
-    } catch(error) {
-
-        errorEl.textContent =
-            error.message;
-
+        return true;
     }
-
-};
-
-
-/* =========================
-   LOGOUT
-========================= */
-
-window.logout =
-async function() {
-
-    try {
-
-        await window.FirebaseFunctions
-            .signOut(
-                window.auth
-            );
-
-        localStorage.removeItem(
-            "assistLoggedIn"
-        );
-
-        window.location.href =
-            "login.html";
-
-    } catch(error) {
-
-        console.error(error);
-
-    }
-
-};
-
-
-/* =========================
-   HELPERS
-========================= */
-
-function formatMeal(n) {
-
-    return Number(n)
-        .toFixed(2)
-        .replace(/\.00$/,"")
-        .replace(/(\.\d)0$/,"$1");
 
 }
 
 
-function escapeHTML(str) {
+/* ==============================
+   LOAD
+============================== */
+
+async function loadDashboard(){
+
+    const rateSnap =
+        await getDoc(
+            doc(
+                db,
+                "settings",
+                "mealRate"
+            )
+        );
+
+
+    const rate =
+        rateSnap.exists()
+        ? Number(
+            rateSnap.data().rate || 0
+        )
+        : 0;
+
+
+    document.getElementById(
+        "mealRate"
+    ).textContent =
+        "৳" + rate.toFixed(2);
+
+
+    const snap =
+        await getDocs(
+            collection(
+                db,
+                "members"
+            )
+        );
+
+
+    members = [];
+
+    let totalMeals = 0;
+
+
+    snap.forEach(item => {
+
+        const data =
+            item.data();
+
+
+        const member = {
+
+            id:item.id,
+
+            ...data
+
+        };
+
+
+        members.push(member);
+
+
+        totalMeals +=
+            Number(
+                data.totalMeals || 0
+            );
+
+    });
+
+
+    document.getElementById(
+        "memberCount"
+    ).textContent =
+        members.length;
+
+
+    document.getElementById(
+        "totalMeals"
+    ).textContent =
+        totalMeals;
+
+
+    renderMembers(rate);
+
+}
+
+
+/* ==============================
+   MEMBERS
+============================== */
+
+function renderMembers(rate){
+
+    const search =
+        document.getElementById(
+            "memberSearch"
+        ).value
+        .trim()
+        .toLowerCase();
+
+
+    const list =
+        document.getElementById(
+            "membersList"
+        );
+
+
+    const filtered =
+        members.filter(member => {
+
+            const name =
+                String(
+                    member.name || ""
+                ).toLowerCase();
+
+            return name.includes(search);
+
+        });
+
+
+    if(!filtered.length){
+
+        list.innerHTML = `
+
+            <div class="text-center py-7 text-sm"
+                 style="color:var(--muted)">
+
+                No members found
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    list.innerHTML =
+        filtered.map(member => {
+
+            const deposit =
+                Number(
+                    member.totalDeposit || 0
+                );
+
+
+            const meals =
+                Number(
+                    member.totalMeals || 0
+                );
+
+
+            const balance =
+                deposit -
+                meals * rate;
+
+
+            const positive =
+                balance >= 0;
+
+
+            return `
+
+                <div class="member">
+
+                    <div style="min-width:0">
+
+                        <div class="member-name">
+                            ${escapeHTML(
+                                member.name ||
+                                "Unnamed"
+                            )}
+                        </div>
+
+                        <div class="member-info">
+
+                            Deposit:
+                            ৳${deposit.toFixed(0)}
+
+                            &nbsp;•&nbsp;
+
+                            Meals:
+                            ${meals}
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="balance"
+                        style="
+                            color:
+                            ${positive
+                                ? 'var(--green)'
+                                : 'var(--red)'};
+                        "
+                    >
+
+                        ${positive
+                            ? '+'
+                            : '-'}
+                        ৳${Math.abs(balance).toFixed(0)}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* ==============================
+   SEARCH
+============================== */
+
+document
+.getElementById("memberSearch")
+.addEventListener(
+    "input",
+    async () => {
+
+        const ok =
+            await checkSession();
+
+        if(ok){
+
+            const rate =
+                Number(
+                    document
+                    .getElementById(
+                        "mealRate"
+                    )
+                    .textContent
+                    .replace("৳","")
+                ) || 0;
+
+            renderMembers(rate);
+        }
+
+    }
+);
+
+
+/* ==============================
+   LOGOUT
+============================== */
+
+window.logout =
+async function(){
+
+    await signOut(auth);
+
+    location.replace(
+        "login.html"
+    );
+
+};
+
+
+/* ==============================
+   ESCAPE
+============================== */
+
+function escapeHTML(value){
 
     const div =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     div.textContent =
-        String(str);
+        String(value);
 
     return div.innerHTML;
 
 }
 
 
-/* =========================
-   START
-========================= */
+/* ==============================
+   AUTO SESSION CHECK
+============================== */
 
-window.startAssistantApp =
-function() {
+setInterval(
+    checkSession,
+    15000
+);
 
-    if (
-        !window.firebaseReady ||
-        !window.auth
-    ) {
+</script>
 
-        return;
+
+<script>
+
+function toggleMenu(){
+
+    document
+        .getElementById("dropdown")
+        .classList
+        .toggle("hidden");
+
+}
+
+document.addEventListener(
+    "click",
+    function(e){
+
+        if(
+            !e.target.closest(".menu") &&
+            !e.target.closest(".dropdown")
+        ){
+
+            document
+                .getElementById("dropdown")
+                .classList
+                .add("hidden");
+
+        }
 
     }
-
-    setupAuth();
-
-};
-
+);
 
 </script>
 
