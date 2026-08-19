@@ -2,670 +2,1656 @@
 <html lang="en" data-theme="dark">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#070711">
+    <meta name="description"
+        content="Ma Achiya Villa Assistant Management">
 
-<meta name="theme-color" content="#070711">
+    <title>Assistant — Ma Achiya Villa</title>
 
-<title>Assistant Panel — Ma Achiya Villa</title>
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-<script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap"
-      rel="stylesheet">
 
-<style>
+    <!-- Firebase -->
+    <script type="module">
 
-:root{
-    --bg:#05050b;
-    --glass:rgba(20,20,38,.55);
-    --glass2:rgba(255,255,255,.045);
-    --border:rgba(255,255,255,.09);
+        import {
+            initializeApp
+        } from
+        "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-    --purple:#a78bfa;
-    --blue:#60a5fa;
-    --green:#34d399;
-    --red:#f87171;
+        import {
+            getAuth,
+            onAuthStateChanged,
+            signInWithEmailAndPassword,
+            signOut,
+            setPersistence,
+            browserLocalPersistence
+        } from
+        "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    --text:#fff;
-    --muted:rgba(255,255,255,.55);
+        import {
+            getFirestore,
+            collection,
+            getDocs,
+            getDoc,
+            setDoc,
+            addDoc,
+            updateDoc,
+            deleteDoc,
+            doc,
+            serverTimestamp
+        } from
+        "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    --radius:24px;
-}
 
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
+        const firebaseConfig = {
 
-html{
-    scroll-behavior:smooth;
-    -webkit-tap-highlight-color:transparent;
-}
+            apiKey:
+                "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
 
-body{
+            authDomain:
+                "my-mess-17fbc.firebaseapp.com",
 
-    min-height:100vh;
+            projectId:
+                "my-mess-17fbc",
 
-    background:
-        radial-gradient(
-            circle at 50% -20%,
-            rgba(124,58,237,.35),
-            transparent 45%
-        ),
-        radial-gradient(
-            circle at 100% 40%,
-            rgba(37,99,235,.16),
-            transparent 35%
-        ),
-        #05050b;
+            storageBucket:
+                "my-mess-17fbc.firebasestorage.app",
 
-    color:var(--text);
+            messagingSenderId:
+                "848426874799",
 
-    font-family:Inter,
-        "Noto Sans Bengali",
-        sans-serif;
+            appId:
+                "1:848426874799:web:0722af59e7504da847e15a",
 
-    padding:14px;
+            measurementId:
+                "G-RWHJKGV5LS"
+        };
 
-    overflow-x:hidden;
-}
 
-/* ---------- glass ---------- */
+        const app =
+            initializeApp(firebaseConfig);
 
-.glass{
+        const auth =
+            getAuth(app);
 
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.065),
-            rgba(255,255,255,.018)
+        const db =
+            getFirestore(app);
+
+
+        await setPersistence(
+            auth,
+            browserLocalPersistence
         );
 
-    border:1px solid var(--border);
 
-    backdrop-filter:
-        blur(28px)
-        saturate(160%);
+        window.firebaseAssistant = {
 
-    -webkit-backdrop-filter:
-        blur(28px)
-        saturate(160%);
+            auth,
+            db,
 
-    box-shadow:
-        0 20px 60px rgba(0,0,0,.38),
-        inset 0 1px 0 rgba(255,255,255,.08);
+            onAuthStateChanged,
+            signInWithEmailAndPassword,
+            signOut,
 
-    border-radius:var(--radius);
-}
+            collection,
+            getDocs,
+            getDoc,
+            setDoc,
+            addDoc,
+            updateDoc,
+            deleteDoc,
+            doc,
+            serverTimestamp
 
-/* ---------- header ---------- */
+        };
 
-.logo{
 
-    width:58px;
-    height:58px;
+        window.dispatchEvent(
+            new Event("firebase-ready")
+        );
 
-    border-radius:50%;
+    </script>
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
 
-    border:2px solid var(--green);
+    <style>
 
-    box-shadow:
-        0 0 28px rgba(52,211,153,.35),
-        inset 0 1px 0 rgba(255,255,255,.2);
+        :root {
 
-    background:rgba(255,255,255,.04);
+            --bg:
+                #05050c;
 
-    flex-shrink:0;
-}
+            --glass:
+                rgba(18,18,38,.58);
 
-.logo-bn{
+            --glass-soft:
+                rgba(255,255,255,.045);
 
-    font-family:
-        "Noto Sans Bengali",
-        sans-serif;
+            --glass-hover:
+                rgba(255,255,255,.075);
 
-    font-size:10px;
-    font-weight:900;
-    text-align:center;
-}
+            --border:
+                rgba(255,255,255,.085);
 
-.logo-en{
+            --border-strong:
+                rgba(255,255,255,.16);
 
-    display:block;
+            --white:
+                #ffffff;
 
-    font-size:7px;
-    letter-spacing:1.4px;
+            --muted:
+                rgba(255,255,255,.55);
 
-    color:var(--muted);
+            --purple:
+                #a78bfa;
 
-    text-align:center;
-}
+            --purple-light:
+                #c4b5fd;
 
-.menu{
+            --blue:
+                #60a5fa;
 
-    width:46px;
-    height:46px;
+            --green:
+                #34d399;
 
-    border-radius:15px;
+            --red:
+                #f87171;
 
-    border:1px solid var(--border);
+            --orange:
+                #fb923c;
 
-    background:var(--glass2);
+            --radius:
+                22px;
 
-    display:flex;
-    flex-direction:column;
+            --transition:
+                .25s ease;
 
-    justify-content:center;
-    align-items:center;
+        }
 
-    gap:5px;
 
-    cursor:pointer;
-}
+        * {
+            box-sizing:border-box;
+            margin:0;
+            padding:0;
+        }
 
-.menu span{
 
-    width:18px;
-    height:2px;
+        html {
+            scroll-behavior:smooth;
+            -webkit-tap-highlight-color:transparent;
+        }
 
-    background:#fff;
 
-    border-radius:10px;
-}
+        body {
 
-/* ---------- role badge ---------- */
+            min-height:100vh;
 
-.role{
+            background:
+                radial-gradient(
+                    ellipse 90% 60% at 50% -20%,
+                    #211452 0%,
+                    #0d0d20 42%,
+                    #05050c 75%
+                );
 
-    padding:8px 14px;
+            color:var(--white);
 
-    border-radius:999px;
+            font-family:
+                Inter,
+                system-ui,
+                sans-serif;
 
-    background:rgba(52,211,153,.08);
+            overflow-x:hidden;
+        }
 
-    border:1px solid rgba(52,211,153,.2);
 
-    text-align:center;
-}
+        body::before {
 
-.role-title{
+            content:"";
 
-    font-size:9px;
+            position:fixed;
 
-    text-transform:uppercase;
+            width:420px;
+            height:420px;
 
-    letter-spacing:1px;
+            top:-180px;
+            left:-130px;
 
-    color:var(--muted);
-}
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(167,139,250,.17),
+                    transparent 68%
+                );
 
-.role-name{
+            pointer-events:none;
+        }
 
-    font-size:12px;
 
-    font-weight:800;
+        body::after {
 
-    color:var(--green);
-}
+            content:"";
 
-/* ---------- cards ---------- */
+            position:fixed;
 
-.card{
+            width:350px;
+            height:350px;
 
-    padding:18px;
+            right:-150px;
+            top:260px;
 
-    margin-bottom:14px;
-}
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(96,165,250,.12),
+                    transparent 68%
+                );
 
-.card-title{
+            pointer-events:none;
+        }
 
-    display:flex;
 
-    align-items:center;
+        .bn {
+            font-family:
+                "Noto Sans Bengali",
+                sans-serif;
+        }
 
-    gap:9px;
 
-    font-size:18px;
+        .glass {
 
-    font-weight:800;
+            background:
+                var(--glass);
 
-    margin-bottom:14px;
-}
+            border:
+                1px solid var(--border);
 
-/* ---------- stats ---------- */
+            backdrop-filter:
+                blur(24px)
+                saturate(170%);
 
-.stat{
+            -webkit-backdrop-filter:
+                blur(24px)
+                saturate(170%);
 
-    padding:15px 8px;
+            box-shadow:
+                0 20px 55px rgba(0,0,0,.35),
+                inset 0 1px 0
+                rgba(255,255,255,.055);
+        }
 
-    text-align:center;
-}
 
-.stat-icon{
+        .card {
 
-    font-size:22px;
+            background:
+                rgba(255,255,255,.035);
 
-    margin-bottom:5px;
-}
+            border:
+                1px solid var(--border);
 
-.stat-label{
+            border-radius:
+                var(--radius);
 
-    font-size:9px;
+            transition:
+                transform var(--transition),
+                background var(--transition),
+                border-color var(--transition);
+        }
 
-    color:var(--muted);
 
-    text-transform:uppercase;
+        .card:hover {
 
-    letter-spacing:1px;
-}
+            background:
+                var(--glass-hover);
 
-.stat-value{
+            border-color:
+                var(--border-strong);
+        }
 
-    margin-top:3px;
 
-    font-size:21px;
+        .logo {
 
-    font-weight:900;
-}
+            width:58px;
+            height:58px;
 
-/* ---------- buttons ---------- */
+            border-radius:50%;
 
-.btn{
+            display:flex;
+            align-items:center;
+            justify-content:center;
 
-    border:1px solid var(--border);
+            border:
+                2px solid var(--green);
 
-    background:rgba(255,255,255,.045);
+            background:
+                rgba(52,211,153,.07);
 
-    color:white;
+            box-shadow:
+                0 0 28px
+                rgba(52,211,153,.25);
+        }
 
-    border-radius:15px;
 
-    padding:11px 15px;
+        .logo-bn {
 
-    cursor:pointer;
+            font-size:10px;
+            font-weight:900;
 
-    font-weight:700;
+            text-align:center;
+        }
 
-    transition:.2s;
 
-    font-size:13px;
-}
+        .logo-en {
 
-.btn:hover{
+            font-size:7px;
 
-    background:rgba(255,255,255,.09);
+            color:
+                var(--muted);
 
-    transform:translateY(-1px);
-}
+            letter-spacing:1px;
 
-.btn-green{
+            text-align:center;
+        }
 
-    background:rgba(52,211,153,.12);
 
-    border-color:rgba(52,211,153,.25);
+        .top-pill {
 
-    color:#6ee7b7;
-}
+            padding:
+                8px 15px;
 
-.btn-red{
+            border-radius:
+                999px;
 
-    background:rgba(248,113,113,.1);
+            border:
+                1px solid var(--border);
 
-    border-color:rgba(248,113,113,.2);
+            background:
+                rgba(255,255,255,.035);
 
-    color:#fca5a5;
-}
+            text-align:center;
+        }
 
-/* ---------- search ---------- */
 
-.search{
+        .input {
 
-    width:100%;
+            width:100%;
 
-    padding:13px 15px;
+            padding:
+                13px 15px;
 
-    border-radius:16px;
+            border-radius:
+                14px;
 
-    outline:none;
+            border:
+                1px solid var(--border);
 
-    border:1px solid var(--border);
+            background:
+                rgba(0,0,0,.25);
 
-    background:rgba(0,0,0,.2);
+            color:white;
 
-    color:#fff;
+            outline:none;
 
-    font-size:13px;
+            transition:
+                border var(--transition),
+                background var(--transition);
+        }
 
-    margin-bottom:12px;
-}
 
-.search:focus{
+        .input:focus {
 
-    border-color:rgba(167,139,250,.45);
+            border-color:
+                rgba(167,139,250,.55);
 
-    box-shadow:
-        0 0 0 3px rgba(167,139,250,.08);
-}
+            background:
+                rgba(167,139,250,.055);
 
-/* ---------- member ---------- */
+            box-shadow:
+                0 0 0 3px
+                rgba(167,139,250,.07);
+        }
 
-.member{
 
-    display:flex;
+        .btn {
 
-    align-items:center;
+            border:none;
 
-    justify-content:space-between;
+            cursor:pointer;
 
-    gap:10px;
+            transition:
+                transform .18s ease,
+                opacity .18s ease,
+                background .18s ease;
+        }
 
-    padding:14px;
 
-    border-radius:18px;
+        .btn:active {
+            transform:scale(.97);
+        }
 
-    background:rgba(255,255,255,.035);
 
-    border:1px solid rgba(255,255,255,.06);
+        .btn-primary {
 
-    margin-bottom:8px;
+            padding:
+                12px 17px;
 
-    transition:.2s;
-}
+            border-radius:
+                14px;
 
-.member:hover{
+            color:white;
 
-    background:rgba(255,255,255,.065);
+            font-weight:700;
 
-    border-color:rgba(255,255,255,.11);
-}
+            background:
+                linear-gradient(
+                    135deg,
+                    #8b5cf6,
+                    #6366f1
+                );
 
-.member-name{
+            box-shadow:
+                0 10px 25px
+                rgba(99,102,241,.20);
+        }
 
-    font-family:
-        "Noto Sans Bengali",
-        sans-serif;
 
-    font-weight:800;
+        .btn-green {
 
-    font-size:14px;
-}
+            padding:
+                11px 15px;
 
-.member-info{
+            border-radius:
+                13px;
 
-    font-size:11px;
+            color:#06130e;
 
-    color:var(--muted);
+            font-weight:800;
 
-    margin-top:3px;
-}
+            background:
+                var(--green);
+        }
 
-.balance{
 
-    font-size:17px;
+        .btn-red {
 
-    font-weight:900;
+            padding:
+                9px 12px;
 
-    white-space:nowrap;
-}
+            border-radius:
+                12px;
 
-/* ---------- dropdown ---------- */
+            color:#fff;
 
-.dropdown{
+            font-weight:700;
 
-    position:absolute;
+            background:
+                rgba(248,113,113,.12);
 
-    right:0;
+            border:
+                1px solid
+                rgba(248,113,113,.18);
+        }
 
-    top:56px;
 
-    min-width:210px;
+        .btn-soft {
 
-    padding:7px;
+            padding:
+                10px 14px;
 
-    border-radius:20px;
+            border-radius:
+                13px;
 
-    background:rgba(18,18,34,.92);
+            color:white;
 
-    border:1px solid var(--border);
+            font-weight:600;
 
-    backdrop-filter:blur(30px);
+            background:
+                rgba(255,255,255,.055);
 
-    box-shadow:0 25px 70px rgba(0,0,0,.55);
+            border:
+                1px solid var(--border);
+        }
 
-    z-index:100;
-}
 
-.dropdown button{
+        .nav-btn {
 
-    width:100%;
+            display:flex;
 
-    border:0;
+            align-items:center;
 
-    background:transparent;
+            gap:8px;
 
-    color:#fff;
+            padding:
+                9px 12px;
 
-    padding:12px 14px;
+            border-radius:
+                12px;
 
-    border-radius:14px;
+            color:
+                var(--muted);
 
-    text-align:left;
+            cursor:pointer;
 
-    cursor:pointer;
-}
+            background:transparent;
 
-.dropdown button:hover{
+            border:none;
+        }
 
-    background:rgba(255,255,255,.06);
-}
 
-.hidden{
-    display:none!important;
-}
+        .nav-btn.active {
 
-/* ---------- loading ---------- */
+            color:white;
 
-.loader{
+            background:
+                rgba(167,139,250,.12);
+        }
 
-    width:32px;
-    height:32px;
 
-    border-radius:50%;
+        .section {
+            display:none;
+        }
 
-    border:3px solid rgba(255,255,255,.08);
 
-    border-top-color:var(--purple);
+        .section.active {
+            display:block;
+        }
 
-    animation:spin .7s linear infinite;
 
-    margin:20px auto;
-}
+        .member-row {
 
-@keyframes spin{
+            display:flex;
 
-    to{
-        transform:rotate(360deg);
-    }
+            align-items:center;
 
-}
+            justify-content:space-between;
 
-/* ---------- mobile ---------- */
+            gap:12px;
 
-@media(max-width:600px){
+            padding:
+                13px 14px;
 
-    body{
-        padding:10px;
-    }
+            border-radius:
+                16px;
 
-    .glass{
-        border-radius:21px;
-    }
+            background:
+                rgba(255,255,255,.035);
 
-    .card{
-        padding:15px;
-    }
+            border:
+                1px solid var(--border);
+        }
 
-    .logo{
-        width:50px;
-        height:50px;
-    }
 
-    .role{
-        padding:7px 10px;
-    }
+        .member-row:hover {
 
-    .role-name{
-        font-size:10px;
-    }
+            background:
+                rgba(255,255,255,.055);
+        }
 
-    .stat-value{
-        font-size:18px;
-    }
 
-}
+        .meal-toggle {
 
-</style>
+            min-width:72px;
+
+            padding:
+                10px 8px;
+
+            border-radius:
+                13px;
+
+            border:
+                1px solid var(--border);
+
+            background:
+                rgba(255,255,255,.035);
+
+            color:
+                var(--muted);
+
+            cursor:pointer;
+
+            font-size:12px;
+
+            font-weight:700;
+        }
+
+
+        .meal-toggle.on {
+
+            color:
+                #052017;
+
+            background:
+                var(--green);
+
+            border-color:
+                var(--green);
+
+            box-shadow:
+                0 5px 18px
+                rgba(52,211,153,.15);
+        }
+
+
+        .badge {
+
+            display:inline-flex;
+
+            align-items:center;
+
+            padding:
+                5px 9px;
+
+            border-radius:
+                999px;
+
+            font-size:9px;
+
+            font-weight:800;
+
+            letter-spacing:.7px;
+
+            text-transform:uppercase;
+        }
+
+
+        .badge-green {
+
+            color:
+                #6ee7b7;
+
+            background:
+                rgba(52,211,153,.09);
+        }
+
+
+        .badge-purple {
+
+            color:
+                #c4b5fd;
+
+            background:
+                rgba(167,139,250,.10);
+        }
+
+
+        .modal {
+
+            position:fixed;
+
+            inset:0;
+
+            z-index:100;
+
+            display:none;
+
+            align-items:center;
+
+            justify-content:center;
+
+            padding:18px;
+
+            background:
+                rgba(0,0,0,.68);
+
+            backdrop-filter:
+                blur(10px);
+        }
+
+
+        .modal.show {
+            display:flex;
+        }
+
+
+        .modal-box {
+
+            width:100%;
+            max-width:470px;
+
+            padding:20px;
+
+            border-radius:
+                24px;
+
+            background:
+                #111121;
+
+            border:
+                1px solid var(--border-strong);
+
+            box-shadow:
+                0 30px 80px
+                rgba(0,0,0,.6);
+        }
+
+
+        .toast {
+
+            position:fixed;
+
+            z-index:200;
+
+            right:18px;
+            bottom:18px;
+
+            max-width:320px;
+
+            padding:
+                12px 16px;
+
+            border-radius:
+                14px;
+
+            background:
+                rgba(20,20,35,.94);
+
+            border:
+                1px solid var(--border-strong);
+
+            box-shadow:
+                0 20px 45px
+                rgba(0,0,0,.4);
+
+            transform:
+                translateY(30px);
+
+            opacity:0;
+
+            pointer-events:none;
+
+            transition:
+                .25s ease;
+        }
+
+
+        .toast.show {
+
+            transform:
+                translateY(0);
+
+            opacity:1;
+        }
+
+
+        .spinner {
+
+            width:30px;
+            height:30px;
+
+            margin:auto;
+
+            border:
+                3px solid
+                rgba(255,255,255,.08);
+
+            border-top-color:
+                var(--purple);
+
+            border-radius:50%;
+
+            animation:
+                spin .7s linear infinite;
+        }
+
+
+        @keyframes spin {
+            to {
+                transform:rotate(360deg);
+            }
+        }
+
+
+        .login-screen {
+
+            min-height:100vh;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            padding:20px;
+        }
+
+
+        .login-box {
+
+            width:100%;
+            max-width:390px;
+
+            padding:28px;
+
+            border-radius:
+                28px;
+        }
+
+
+        .hidden-screen {
+            display:none !important;
+        }
+
+
+        @media(max-width:640px) {
+
+            .desktop-only {
+                display:none !important;
+            }
+
+            .member-row {
+                align-items:flex-start;
+            }
+
+            .meal-toggle {
+                min-width:64px;
+            }
+
+        }
+
+
+    </style>
 
 </head>
 
+
 <body>
 
-<div class="max-w-2xl mx-auto">
 
-<!-- HEADER -->
+<!-- =====================================================
+     LOGIN SCREEN
+===================================================== -->
 
-<header class="flex items-center justify-between gap-3 mb-5">
+<div id="loginScreen" class="login-screen">
 
-    <div class="logo">
+    <div class="login-box glass">
 
-        <div>
+        <div class="flex flex-col items-center mb-7">
 
-            <div class="logo-bn">
-                মা আছিয়া
+            <div class="logo mb-4">
+
+                <div>
+
+                    <div class="logo-bn bn">
+                        মা আছিয়া
+                    </div>
+
+                    <div class="logo-en">
+                        VILLA
+                    </div>
+
+                </div>
+
             </div>
 
-            <span class="logo-en">
-                VILLA
-            </span>
+
+            <h1 class="text-xl font-black">
+                Assistant Access
+            </h1>
+
+            <p class="text-xs text-white/40 mt-1">
+                Ma Achiya Villa Management
+            </p>
 
         </div>
+
+
+        <form id="loginForm">
+
+            <label class="text-xs text-white/50">
+                Email
+            </label>
+
+            <input
+                id="loginEmail"
+                type="email"
+                class="input mt-2 mb-4"
+                placeholder="assistant@email.com"
+                autocomplete="username"
+                required
+            >
+
+
+            <label class="text-xs text-white/50">
+                Password
+            </label>
+
+            <input
+                id="loginPassword"
+                type="password"
+                class="input mt-2 mb-5"
+                placeholder="••••••••"
+                autocomplete="current-password"
+                required
+            >
+
+
+            <button
+                id="loginButton"
+                type="submit"
+                class="btn btn-primary w-full"
+            >
+                🔐 Sign In
+            </button>
+
+        </form>
+
+
+        <div
+            id="loginError"
+            class="hidden mt-4 text-center text-xs text-red-400"
+        ></div>
 
     </div>
 
+</div>
 
-    <div class="role">
 
-        <div class="role-title">
-            Assistant
+
+<!-- =====================================================
+     ACCESS DENIED
+===================================================== -->
+
+<div
+    id="deniedScreen"
+    class="login-screen hidden-screen"
+>
+
+    <div class="login-box glass text-center">
+
+        <div class="text-5xl mb-5">
+            🚫
         </div>
 
-        <div class="role-name"
-             id="assistantName">
-            Loading...
-        </div>
+        <h1 class="text-xl font-black">
+            Access Denied
+        </h1>
 
-    </div>
+        <p class="text-sm text-white/45 mt-2">
+            This account does not have Assistant access.
+        </p>
 
-
-    <div class="relative">
-
-        <button class="menu"
-                onclick="toggleMenu()">
-
-            <span></span>
-            <span></span>
-            <span></span>
-
+        <button
+            onclick="logoutUser()"
+            class="btn btn-red mt-6"
+        >
+            Logout
         </button>
 
-        <div id="dropdown"
-             class="dropdown hidden">
+    </div>
 
-            <button onclick="location.href='index.html'">
-                🏠 Dashboard
+</div>
+
+
+
+<!-- =====================================================
+     MAIN APP
+===================================================== -->
+
+<div
+    id="appScreen"
+    class="hidden-screen"
+>
+
+
+    <div class="max-w-5xl mx-auto px-3 sm:px-5 py-4 sm:py-6">
+
+
+        <!-- HEADER -->
+
+        <header
+            class="glass rounded-[26px] p-3 sm:p-4 mb-5"
+        >
+
+            <div class="flex items-center gap-3">
+
+
+                <div class="logo flex-shrink-0">
+
+                    <div>
+
+                        <div class="logo-bn bn">
+                            মা আছিয়া
+                        </div>
+
+                        <div class="logo-en">
+                            VILLA
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="flex-1 min-w-0">
+
+                    <div class="text-sm sm:text-base font-black truncate">
+                        Assistant Dashboard
+                    </div>
+
+                    <div
+                        id="assistantEmail"
+                        class="text-[10px] text-white/40 truncate mt-0.5"
+                    >
+                        Loading...
+                    </div>
+
+                </div>
+
+
+                <div class="top-pill desktop-only">
+
+                    <div
+                        id="managerHeader"
+                        class="text-xs font-bold"
+                    >
+                        Manager
+                    </div>
+
+                    <div class="text-[9px] text-white/35">
+                        CURRENT MANAGER
+                    </div>
+
+                </div>
+
+
+                <button
+                    onclick="logoutUser()"
+                    class="btn btn-soft text-xs"
+                    title="Logout"
+                >
+                    ↪
+                    <span class="desktop-only">
+                        Logout
+                    </span>
+                </button>
+
+            </div>
+
+
+            <!-- NAV -->
+
+            <div
+                class="mt-4 pt-3 border-t border-white/[.05]
+                       flex gap-1 overflow-x-auto"
+            >
+
+                <button
+                    class="nav-btn active"
+                    data-section="overview"
+                >
+                    📊
+                    <span>Overview</span>
+                </button>
+
+                <button
+                    class="nav-btn"
+                    data-section="members"
+                >
+                    👥
+                    <span>Members</span>
+                </button>
+
+                <button
+                    class="nav-btn"
+                    data-section="meals"
+                >
+                    🍽️
+                    <span>Meals</span>
+                </button>
+
+                <button
+                    class="nav-btn"
+                    data-section="bazar"
+                >
+                    🛒
+                    <span>Bazar</span>
+                </button>
+
+                <button
+                    class="nav-btn"
+                    data-section="settings"
+                >
+                    ⚙️
+                    <span>Settings</span>
+                </button>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================================
+             OVERVIEW
+        ================================================== -->
+
+        <section
+            id="section-overview"
+            class="section active"
+        >
+
+
+            <div
+                class="grid grid-cols-3 gap-2 sm:gap-3 mb-5"
+            >
+
+                <div class="card p-4 text-center">
+
+                    <div class="text-xl">
+                        👥
+                    </div>
+
+                    <div class="text-[9px] text-white/35
+                                uppercase tracking-widest mt-2">
+                        Members
+                    </div>
+
+                    <div
+                        id="statMembers"
+                        class="text-2xl font-black mt-1"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="card p-4 text-center">
+
+                    <div class="text-xl">
+                        🍽️
+                    </div>
+
+                    <div class="text-[9px] text-white/35
+                                uppercase tracking-widest mt-2">
+                        Meals
+                    </div>
+
+                    <div
+                        id="statMeals"
+                        class="text-2xl font-black text-blue-300 mt-1"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="card p-4 text-center">
+
+                    <div class="text-xl">
+                        💰
+                    </div>
+
+                    <div class="text-[9px] text-white/35
+                                uppercase tracking-widest mt-2">
+                        Rate
+                    </div>
+
+                    <div
+                        id="statRate"
+                        class="text-xl font-black text-purple-300 mt-2"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- TODAY -->
+
+            <div class="glass rounded-[24px] p-4 sm:p-5 mb-5">
+
+                <div class="flex justify-between items-center mb-4">
+
+                    <div>
+
+                        <h2 class="font-black text-lg">
+                            Today's Meals
+                        </h2>
+
+                        <p
+                            id="todayLabel"
+                            class="text-[10px] text-white/35 mt-1"
+                        >
+                            Loading...
+                        </p>
+
+                    </div>
+
+                    <button
+                        onclick="showSection('meals')"
+                        class="btn btn-soft text-xs"
+                    >
+                        Manage →
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="todayPreview"
+                    class="space-y-2"
+                >
+
+                    <div class="py-7">
+                        <div class="spinner"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- RECENT BAZAR -->
+
+            <div class="glass rounded-[24px] p-4 sm:p-5">
+
+                <div class="flex justify-between items-center mb-4">
+
+                    <h2 class="font-black text-lg">
+                        Recent Bazar
+                    </h2>
+
+                    <button
+                        onclick="showSection('bazar')"
+                        class="btn btn-soft text-xs"
+                    >
+                        View All →
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="recentBazar"
+                    class="space-y-2"
+                >
+                    <div class="py-6">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             MEMBERS
+        ================================================== -->
+
+        <section
+            id="section-members"
+            class="section"
+        >
+
+            <div class="glass rounded-[24px] p-4 sm:p-5">
+
+                <div
+                    class="flex flex-col sm:flex-row
+                           sm:items-center justify-between
+                           gap-3 mb-5"
+                >
+
+                    <div>
+
+                        <h2 class="text-lg font-black">
+                            👥 Members
+                        </h2>
+
+                        <p class="text-[10px] text-white/35 mt-1">
+                            Search and manage villa members
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        onclick="openMemberModal()"
+                        class="btn btn-green"
+                    >
+                        + Add Member
+                    </button>
+
+                </div>
+
+
+                <!-- SEARCH -->
+
+                <div class="relative mb-4">
+
+                    <span
+                        class="absolute left-4 top-1/2
+                               -translate-y-1/2
+                               text-white/30"
+                    >
+                        🔍
+                    </span>
+
+                    <input
+                        id="memberSearch"
+                        class="input pl-11"
+                        placeholder="Search member..."
+                        oninput="renderMembers()"
+                    >
+
+                </div>
+
+
+                <div
+                    id="membersContainer"
+                    class="space-y-2"
+                >
+
+                    <div class="py-8">
+                        <div class="spinner"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             MEALS
+        ================================================== -->
+
+        <section
+            id="section-meals"
+            class="section"
+        >
+
+            <div class="glass rounded-[24px] p-4 sm:p-5">
+
+                <div
+                    class="flex flex-col sm:flex-row
+                           sm:items-center justify-between
+                           gap-3 mb-5"
+                >
+
+                    <div>
+
+                        <h2 class="text-lg font-black">
+                            🍽️ Today's Meal Sheet
+                        </h2>
+
+                        <p
+                            id="mealDateLabel"
+                            class="text-[10px] text-white/35 mt-1"
+                        ></p>
+
+                    </div>
+
+
+                    <button
+                        onclick="saveAllMeals()"
+                        class="btn btn-green"
+                    >
+                        ✓ Save Meals
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="mealContainer"
+                    class="space-y-2"
+                >
+
+                    <div class="py-8">
+                        <div class="spinner"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             BAZAR
+        ================================================== -->
+
+        <section
+            id="section-bazar"
+            class="section"
+        >
+
+            <div class="glass rounded-[24px] p-4 sm:p-5">
+
+                <div
+                    class="flex justify-between
+                           items-center mb-5"
+                >
+
+                    <div>
+
+                        <h2 class="text-lg font-black">
+                            🛒 Bazar History
+                        </h2>
+
+                        <p class="text-[10px] text-white/35 mt-1">
+                            Add and manage bazar records
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        onclick="openBazarModal()"
+                        class="btn btn-green"
+                    >
+                        + Add Bazar
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="bazarContainer"
+                    class="space-y-2"
+                >
+
+                    <div class="py-8">
+                        <div class="spinner"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             SETTINGS
+        ================================================== -->
+
+        <section
+            id="section-settings"
+            class="section"
+        >
+
+            <div class="glass rounded-[24px] p-4 sm:p-5">
+
+                <h2 class="text-lg font-black mb-1">
+                    ⚙️ Assistant Settings
+                </h2>
+
+                <p class="text-[10px] text-white/35 mb-6">
+                    Limited settings available for Assistant
+                </p>
+
+
+                <div class="card p-4 mb-3">
+
+                    <label class="text-xs text-white/50">
+                        Current Manager Name
+                    </label>
+
+                    <div class="flex gap-2 mt-2">
+
+                        <input
+                            id="managerInput"
+                            class="input"
+                            placeholder="Manager name"
+                        >
+
+                        <button
+                            onclick="saveManager()"
+                            class="btn btn-green flex-shrink-0"
+                        >
+                            Save
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card p-4">
+
+                    <div class="flex items-center gap-3">
+
+                        <div
+                            class="w-10 h-10 rounded-xl
+                                   bg-purple-400/10
+                                   flex items-center
+                                   justify-center"
+                        >
+                            🔐
+                        </div>
+
+                        <div>
+
+                            <div class="font-bold text-sm">
+                                Account Security
+                            </div>
+
+                            <div class="text-[10px] text-white/35 mt-1">
+                                Password and global session controls
+                                are managed by Main Admin.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     MEMBER MODAL
+===================================================== -->
+
+<div
+    id="memberModal"
+    class="modal"
+>
+
+    <div class="modal-box">
+
+        <div class="flex justify-between items-center mb-5">
+
+            <h3
+                id="memberModalTitle"
+                class="font-black text-lg"
+            >
+                Add Member
+            </h3>
+
+            <button
+                onclick="closeModal('memberModal')"
+                class="text-white/40 text-xl"
+            >
+                ×
             </button>
 
-            <button onclick="logout()"
-                    style="color:#fca5a5">
-                🚪 Logout
+        </div>
+
+
+        <input
+            id="memberId"
+            type="hidden"
+        >
+
+
+        <label class="text-xs text-white/45">
+            Member Name
+        </label>
+
+        <input
+            id="memberName"
+            class="input mt-2 mb-4"
+            placeholder="Enter member name"
+        >
+
+
+        <label class="text-xs text-white/45">
+            Total Deposit
+        </label>
+
+        <input
+            id="memberDeposit"
+            type="number"
+            step="1"
+            class="input mt-2 mb-5"
+            placeholder="0"
+        >
+
+
+        <div class="flex gap-2">
+
+            <button
+                onclick="closeModal('memberModal')"
+                class="btn btn-soft flex-1"
+            >
+                Cancel
             </button>
 
-        </div>
+            <button
+                onclick="saveMember()"
+                class="btn btn-primary flex-1"
+            >
+                Save Member
+            </button>
 
-    </div>
-
-</header>
-
-
-<!-- STATS -->
-
-<div class="grid grid-cols-3 gap-2 mb-4">
-
-    <div class="glass stat">
-
-        <div class="stat-icon">
-            💰
-        </div>
-
-        <div class="stat-label">
-            Meal Rate
-        </div>
-
-        <div class="stat-value"
-             id="mealRate"
-             style="color:var(--purple)">
-            —
-        </div>
-
-    </div>
-
-
-    <div class="glass stat">
-
-        <div class="stat-icon">
-            👥
-        </div>
-
-        <div class="stat-label">
-            Members
-        </div>
-
-        <div class="stat-value"
-             id="memberCount"
-             style="color:var(--blue)">
-            —
-        </div>
-
-    </div>
-
-
-    <div class="glass stat">
-
-        <div class="stat-icon">
-            🍽️
-        </div>
-
-        <div class="stat-label">
-            Meals
-        </div>
-
-        <div class="stat-value"
-             id="totalMeals"
-             style="color:var(--green)">
-            —
         </div>
 
     </div>
@@ -673,310 +1659,576 @@ body{
 </div>
 
 
-<!-- MEMBERS -->
 
-<section class="glass card">
+<!-- =====================================================
+     BAZAR MODAL
+===================================================== -->
 
-    <div class="card-title">
+<div
+    id="bazarModal"
+    class="modal"
+>
 
-        <span>👥</span>
+    <div class="modal-box">
 
-        Members
+        <div class="flex justify-between items-center mb-5">
+
+            <h3 class="font-black text-lg">
+                Add Bazar
+            </h3>
+
+            <button
+                onclick="closeModal('bazarModal')"
+                class="text-white/40 text-xl"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <label class="text-xs text-white/45">
+            Date
+        </label>
+
+        <input
+            id="bazarDate"
+            type="date"
+            class="input mt-2 mb-4"
+        >
+
+
+        <label class="text-xs text-white/45">
+            Purchaser
+        </label>
+
+        <input
+            id="bazarPurchaser"
+            class="input mt-2 mb-4"
+            placeholder="Who purchased?"
+        >
+
+
+        <label class="text-xs text-white/45">
+            Amount
+        </label>
+
+        <input
+            id="bazarAmount"
+            type="number"
+            step="1"
+            class="input mt-2 mb-5"
+            placeholder="৳ 0"
+        >
+
+
+        <div class="flex gap-2">
+
+            <button
+                onclick="closeModal('bazarModal')"
+                class="btn btn-soft flex-1"
+            >
+                Cancel
+            </button>
+
+            <button
+                onclick="saveBazar()"
+                class="btn btn-primary flex-1"
+            >
+                Add Bazar
+            </button>
+
+        </div>
 
     </div>
-
-
-    <input
-        id="memberSearch"
-        class="search"
-        type="search"
-        placeholder="Search member..."
-        autocomplete="off"
-    >
-
-
-    <div id="membersList">
-
-        <div class="loader"></div>
-
-    </div>
-
-</section>
-
-
-<!-- QUICK ACTION -->
-
-<section class="glass card">
-
-    <div class="card-title">
-        ⚡ Quick Access
-    </div>
-
-    <div class="grid grid-cols-2 gap-2">
-
-        <button class="btn btn-green"
-                onclick="location.href='index.html'">
-            📊 Dashboard
-        </button>
-
-        <button class="btn"
-                onclick="location.reload()">
-            🔄 Refresh
-        </button>
-
-    </div>
-
-</section>
 
 </div>
+
+
+
+<!-- TOAST -->
+
+<div
+    id="toast"
+    class="toast"
+>
+    <span id="toastText"></span>
+</div>
+
 
 
 <script type="module">
 
-import {
-    initializeApp
-} from
-"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+/* =====================================================
+   FIREBASE STATE
+===================================================== */
 
-import {
-    getAuth,
-    onAuthStateChanged,
-    signOut
-} from
-"https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-import {
-    getFirestore,
-    doc,
-    getDoc,
-    collection,
-    getDocs
-} from
-"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-
-const firebaseConfig = {
-
-    apiKey:
-    "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
-
-    authDomain:
-    "my-mess-17fbc.firebaseapp.com",
-
-    projectId:
-    "my-mess-17fbc",
-
-    storageBucket:
-    "my-mess-17fbc.firebasestorage.app",
-
-    messagingSenderId:
-    "848426874799",
-
-    appId:
-    "1:848426874799:web:0722af59e7504da847e15a",
-
-    measurementId:
-    "G-RWHJKGV5LS"
-};
-
-
-const app =
-    initializeApp(firebaseConfig);
-
-const auth =
-    getAuth(app);
-
-const db =
-    getFirestore(app);
-
+let fb = null;
 
 let currentUser = null;
 
+let currentUserData = null;
+
 let members = [];
 
-let sessionVersion = null;
+let meals = {};
+
+let mealSaving = false;
 
 
-/* ==============================
-   AUTH
-============================== */
+/* =====================================================
+   WAIT FOR FIREBASE
+===================================================== */
 
-onAuthStateChanged(auth, async user => {
+function waitForFirebase() {
 
-    if(!user){
+    if (window.firebaseAssistant) {
 
-        location.replace("login.html");
+        fb =
+            window.firebaseAssistant;
 
-        return;
-    }
+        startAuth();
 
-    currentUser = user;
+    } else {
 
-    try{
+        setTimeout(
+            waitForFirebase,
+            100
+        );
 
-        const snap =
-            await getDoc(
-                doc(
-                    db,
-                    "users",
-                    user.uid
-                )
-            );
-
-        if(!snap.exists()){
-
-            await signOut(auth);
-
-            location.replace("login.html");
-
-            return;
-        }
-
-        const data =
-            snap.data();
-
-
-        if(
-            data.active === false ||
-            data.role !== "assistant"
-        ){
-
-            await signOut(auth);
-
-            alert(
-                "Assistant access is disabled."
-            );
-
-            location.replace("login.html");
-
-            return;
-        }
-
-
-        sessionVersion =
-            Number(
-                data.sessionVersion || 1
-            );
-
-
-        document.getElementById(
-            "assistantName"
-        ).textContent =
-            data.name ||
-            user.email ||
-            "Assistant";
-
-
-        await loadDashboard();
-
-
-    }catch(error){
-
-        console.error(error);
-
-        await signOut(auth);
-
-        location.replace("login.html");
-
-    }
-
-});
-
-
-/* ==============================
-   SESSION VERSION
-============================== */
-
-async function checkSession(){
-
-    if(!currentUser)
-        return false;
-
-
-    try{
-
-        const snap =
-            await getDoc(
-                doc(
-                    db,
-                    "users",
-                    currentUser.uid
-                )
-            );
-
-
-        if(!snap.exists())
-            return false;
-
-
-        const data =
-            snap.data();
-
-
-        if(
-            data.active === false ||
-            Number(data.sessionVersion || 1)
-            !== sessionVersion
-        ){
-
-            await signOut(auth);
-
-            alert(
-                "Your session has expired. Please login again."
-            );
-
-            location.replace("login.html");
-
-            return false;
-        }
-
-
-        return true;
-
-    }catch(e){
-
-        console.error(e);
-
-        return true;
     }
 
 }
 
 
-/* ==============================
-   LOAD
-============================== */
+/* =====================================================
+   AUTH
+===================================================== */
 
-async function loadDashboard(){
+function startAuth() {
 
-    const rateSnap =
-        await getDoc(
-            doc(
-                db,
-                "settings",
-                "mealRate"
-            )
+    fb.onAuthStateChanged(
+        async user => {
+
+            if (!user) {
+
+                currentUser = null;
+
+                showLogin();
+
+                return;
+
+            }
+
+
+            currentUser = user;
+
+
+            try {
+
+                const userSnap =
+                    await fb.getDoc(
+                        fb.doc(
+                            fb.db,
+                            "users",
+                            user.uid
+                        )
+                    );
+
+
+                if (!userSnap.exists()) {
+
+                    showDenied();
+
+                    return;
+
+                }
+
+
+                currentUserData =
+                    userSnap.data();
+
+
+                if (
+                    currentUserData.role !==
+                    "assistant"
+                ) {
+
+                    showDenied();
+
+                    return;
+
+                }
+
+
+                /*
+                 * Session version check
+                 *
+                 * Admin can increase sessionVersion
+                 * to invalidate old browser sessions.
+                 */
+
+                const localVersion =
+                    Number(
+                        localStorage.getItem(
+                            "assistant_session_version"
+                        ) || "0"
+                    );
+
+
+                const serverVersion =
+                    Number(
+                        currentUserData.sessionVersion ||
+                        1
+                    );
+
+
+                if (
+                    localVersion &&
+                    localVersion !== serverVersion
+                ) {
+
+                    await fb.signOut(
+                        fb.auth
+                    );
+
+                    localStorage.removeItem(
+                        "assistant_session_version"
+                    );
+
+                    showLogin();
+
+                    showToast(
+                        "Session expired. Please login again."
+                    );
+
+                    return;
+
+                }
+
+
+                localStorage.setItem(
+                    "assistant_session_version",
+                    String(serverVersion)
+                );
+
+
+                showApp();
+
+
+                await loadDashboard();
+
+
+            } catch(error) {
+
+                console.error(error);
+
+                showToast(
+                    "Unable to verify account."
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+document
+    .getElementById("loginForm")
+    .addEventListener(
+        "submit",
+        async e => {
+
+            e.preventDefault();
+
+
+            const email =
+                document
+                    .getElementById("loginEmail")
+                    .value
+                    .trim();
+
+
+            const password =
+                document
+                    .getElementById("loginPassword")
+                    .value;
+
+
+            const button =
+                document
+                    .getElementById("loginButton");
+
+
+            const error =
+                document
+                    .getElementById("loginError");
+
+
+            button.disabled = true;
+
+            button.textContent =
+                "Signing in...";
+
+            error.classList.add(
+                "hidden"
+            );
+
+
+            try {
+
+                await fb.signInWithEmailAndPassword(
+                    fb.auth,
+                    email,
+                    password
+                );
+
+
+            } catch(err) {
+
+                console.error(err);
+
+
+                let message =
+                    "Login failed.";
+
+
+                if (
+                    err.code ===
+                    "auth/invalid-credential"
+                ) {
+
+                    message =
+                        "Email or password is incorrect.";
+
+                }
+
+                else if (
+                    err.code ===
+                    "auth/too-many-requests"
+                ) {
+
+                    message =
+                        "Too many attempts. Try again later.";
+
+                }
+
+
+                error.textContent =
+                    message;
+
+                error.classList.remove(
+                    "hidden"
+                );
+
+
+                button.disabled = false;
+
+                button.textContent =
+                    "🔐 Sign In";
+
+            }
+
+        }
+    );
+
+
+window.logoutUser =
+    async function() {
+
+        try {
+
+            await fb.signOut(
+                fb.auth
+            );
+
+            localStorage.removeItem(
+                "assistant_session_version"
+            );
+
+            showLogin();
+
+        } catch(error) {
+
+            console.error(error);
+
+        }
+
+    };
+
+
+/* =====================================================
+   SCREEN
+===================================================== */
+
+function showLogin() {
+
+    document
+        .getElementById("loginScreen")
+        .classList.remove(
+            "hidden-screen"
+        );
+
+    document
+        .getElementById("appScreen")
+        .classList.add(
+            "hidden-screen"
+        );
+
+    document
+        .getElementById("deniedScreen")
+        .classList.add(
+            "hidden-screen"
+        );
+
+}
+
+
+function showDenied() {
+
+    document
+        .getElementById("loginScreen")
+        .classList.add(
+            "hidden-screen"
+        );
+
+    document
+        .getElementById("appScreen")
+        .classList.add(
+            "hidden-screen"
+        );
+
+    document
+        .getElementById("deniedScreen")
+        .classList.remove(
+            "hidden-screen"
+        );
+
+}
+
+
+function showApp() {
+
+    document
+        .getElementById("loginScreen")
+        .classList.add(
+            "hidden-screen"
+        );
+
+    document
+        .getElementById("deniedScreen")
+        .classList.add(
+            "hidden-screen"
+        );
+
+    document
+        .getElementById("appScreen")
+        .classList.remove(
+            "hidden-screen"
         );
 
 
-    const rate =
-        rateSnap.exists()
-        ? Number(
-            rateSnap.data().rate || 0
-        )
-        : 0;
+    document
+        .getElementById("assistantEmail")
+        .textContent =
+        currentUser?.email || "Assistant";
+
+}
 
 
-    document.getElementById(
-        "mealRate"
-    ).textContent =
-        "৳" + rate.toFixed(2);
+/* =====================================================
+   NAVIGATION
+===================================================== */
 
+window.showSection =
+    function(section) {
+
+        document
+            .querySelectorAll(".section")
+            .forEach(el => {
+
+                el.classList.remove(
+                    "active"
+                );
+
+            });
+
+
+        document
+            .getElementById(
+                "section-" + section
+            )
+            ?.classList.add(
+                "active"
+            );
+
+
+        document
+            .querySelectorAll(".nav-btn")
+            .forEach(btn => {
+
+                btn.classList.toggle(
+                    "active",
+                    btn.dataset.section ===
+                    section
+                );
+
+            });
+
+    };
+
+
+document
+    .querySelectorAll(".nav-btn")
+    .forEach(btn => {
+
+        btn.addEventListener(
+            "click",
+            () => {
+
+                showSection(
+                    btn.dataset.section
+                );
+
+            }
+        );
+
+    });
+
+
+/* =====================================================
+   LOAD DASHBOARD
+===================================================== */
+
+async function loadDashboard() {
+
+    await Promise.all([
+        loadMembers(),
+        loadMealRate(),
+        loadManager(),
+        loadTodayMeals(),
+        loadBazar()
+    ]);
+
+}
+
+
+/* =====================================================
+   MEMBERS
+===================================================== */
+
+async function loadMembers() {
 
     const snap =
-        await getDocs(
-            collection(
-                db,
+        await fb.getDocs(
+            fb.collection(
+                fb.db,
                 "members"
             )
         );
@@ -984,233 +2236,1541 @@ async function loadDashboard(){
 
     members = [];
 
-    let totalMeals = 0;
+
+    snap.forEach(
+        d => {
+
+            members.push({
+                id:d.id,
+                ...d.data()
+            });
+
+        }
+    );
 
 
-    snap.forEach(item => {
-
-        const data =
-            item.data();
-
-
-        const member = {
-
-            id:item.id,
-
-            ...data
-
-        };
+    members.sort(
+        (a,b) =>
+            String(a.name || "")
+                .localeCompare(
+                    String(b.name || "")
+                )
+    );
 
 
-        members.push(member);
-
-
-        totalMeals +=
-            Number(
-                data.totalMeals || 0
-            );
-
-    });
-
-
-    document.getElementById(
-        "memberCount"
-    ).textContent =
+    document
+        .getElementById("statMembers")
+        .textContent =
         members.length;
 
 
-    document.getElementById(
-        "totalMeals"
-    ).textContent =
-        totalMeals;
-
-
-    renderMembers(rate);
+    renderMembers();
 
 }
 
 
-/* ==============================
-   MEMBERS
-============================== */
+/* =====================================================
+   RENDER MEMBERS
+===================================================== */
 
-function renderMembers(rate){
+window.renderMembers =
+    function() {
 
-    const search =
-        document.getElementById(
-            "memberSearch"
-        ).value
-        .trim()
-        .toLowerCase();
+        const container =
+            document.getElementById(
+                "membersContainer"
+            );
 
 
-    const list =
-        document.getElementById(
-            "membersList"
+        const search =
+            (
+                document
+                    .getElementById(
+                        "memberSearch"
+                    )
+                    .value || ""
+            )
+            .toLowerCase()
+            .trim();
+
+
+        const filtered =
+            members.filter(
+                m =>
+                    String(
+                        m.name || ""
+                    )
+                    .toLowerCase()
+                    .includes(search)
+            );
+
+
+        if (!filtered.length) {
+
+            container.innerHTML = `
+
+                <div class="
+                    text-center
+                    py-10
+                    text-white/30
+                    text-sm
+                ">
+                    No members found
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        container.innerHTML =
+            filtered
+                .map(
+                    m => {
+
+                        const deposit =
+                            Number(
+                                m.totalDeposit || 0
+                            );
+
+
+                        const totalMeals =
+                            Number(
+                                m.totalMeals || 0
+                            );
+
+
+                        return `
+
+                        <div class="member-row">
+
+                            <div class="min-w-0">
+
+                                <div class="
+                                    font-bold
+                                    text-sm
+                                    truncate
+                                    bn
+                                ">
+                                    ${escapeHTML(
+                                        m.name ||
+                                        "Unnamed"
+                                    )}
+                                </div>
+
+                                <div class="
+                                    text-[10px]
+                                    text-white/35
+                                    mt-1
+                                ">
+                                    Deposit:
+                                    <span class="text-green-300">
+                                        ৳${deposit.toFixed(0)}
+                                    </span>
+
+                                    <span class="mx-1">
+                                        •
+                                    </span>
+
+                                    Meals:
+                                    <span class="text-blue-300">
+                                        ${totalMeals}
+                                    </span>
+                                </div>
+
+                            </div>
+
+
+                            <div class="flex gap-1.5">
+
+                                <button
+                                    class="btn btn-soft text-xs"
+                                    onclick="editMember('${m.id}')"
+                                >
+                                    Edit
+                                </button>
+
+                                <button
+                                    class="btn btn-red text-xs"
+                                    onclick="removeMember('${m.id}')"
+                                >
+                                    Remove
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        `;
+
+                    }
+                )
+                .join("");
+
+    };
+
+
+/* =====================================================
+   MEMBER MODAL
+===================================================== */
+
+window.openMemberModal =
+    function(id = "") {
+
+        document
+            .getElementById(
+                "memberModal"
+            )
+            .classList.add(
+                "show"
+            );
+
+
+        document
+            .getElementById(
+                "memberId"
+            )
+            .value =
+            id;
+
+
+        if (id) {
+
+            const member =
+                members.find(
+                    m => m.id === id
+                );
+
+
+            document
+                .getElementById(
+                    "memberModalTitle"
+                )
+                .textContent =
+                "Edit Member";
+
+
+            document
+                .getElementById(
+                    "memberName"
+                )
+                .value =
+                member?.name || "";
+
+
+            document
+                .getElementById(
+                    "memberDeposit"
+                )
+                .value =
+                Number(
+                    member?.totalDeposit || 0
+                );
+
+        } else {
+
+            document
+                .getElementById(
+                    "memberModalTitle"
+                )
+                .textContent =
+                "Add Member";
+
+
+            document
+                .getElementById(
+                    "memberName"
+                )
+                .value =
+                "";
+
+
+            document
+                .getElementById(
+                    "memberDeposit"
+                )
+                .value =
+                "";
+
+        }
+
+    };
+
+
+window.editMember =
+    function(id) {
+
+        openMemberModal(id);
+
+    };
+
+
+window.saveMember =
+    async function() {
+
+        const id =
+            document
+                .getElementById(
+                    "memberId"
+                )
+                .value;
+
+
+        const name =
+            document
+                .getElementById(
+                    "memberName"
+                )
+                .value
+                .trim();
+
+
+        const deposit =
+            Number(
+                document
+                    .getElementById(
+                        "memberDeposit"
+                    )
+                    .value || 0
+            );
+
+
+        if (!name) {
+
+            showToast(
+                "Member name is required."
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            if (id) {
+
+                await fb.updateDoc(
+                    fb.doc(
+                        fb.db,
+                        "members",
+                        id
+                    ),
+                    {
+                        name,
+                        totalDeposit:deposit
+                    }
+                );
+
+
+                showToast(
+                    "Member updated."
+                );
+
+            } else {
+
+                await fb.addDoc(
+                    fb.collection(
+                        fb.db,
+                        "members"
+                    ),
+                    {
+                        name,
+                        totalDeposit:deposit,
+                        totalMeals:0,
+                        createdAt:
+                            fb.serverTimestamp()
+                    }
+                );
+
+
+                showToast(
+                    "Member added."
+                );
+
+            }
+
+
+            closeModal(
+                "memberModal"
+            );
+
+
+            await loadMembers();
+
+
+        } catch(error) {
+
+            console.error(error);
+
+            showToast(
+                "Could not save member."
+            );
+
+        }
+
+    };
+
+
+window.removeMember =
+    async function(id) {
+
+        const member =
+            members.find(
+                m => m.id === id
+            );
+
+
+        if (!confirm(
+            `Remove "${member?.name || "this member"}"?`
+        )) {
+
+            return;
+
+        }
+
+
+        try {
+
+            await fb.deleteDoc(
+                fb.doc(
+                    fb.db,
+                    "members",
+                    id
+                )
+            );
+
+
+            showToast(
+                "Member removed."
+            );
+
+
+            await loadMembers();
+
+            await loadTodayMeals();
+
+        } catch(error) {
+
+            console.error(error);
+
+            showToast(
+                "Could not remove member."
+            );
+
+        }
+
+    };
+
+
+/* =====================================================
+   MEAL RATE
+===================================================== */
+
+async function loadMealRate() {
+
+    const snap =
+        await fb.getDoc(
+            fb.doc(
+                fb.db,
+                "settings",
+                "mealRate"
+            )
         );
 
 
-    const filtered =
-        members.filter(member => {
-
-            const name =
-                String(
-                    member.name || ""
-                ).toLowerCase();
-
-            return name.includes(search);
-
-        });
+    const rate =
+        snap.exists()
+            ? Number(
+                snap.data().rate || 0
+            )
+            : 0;
 
 
-    if(!filtered.length){
+    document
+        .getElementById(
+            "statRate"
+        )
+        .textContent =
+        "৳" +
+        rate.toFixed(2);
 
-        list.innerHTML = `
+}
 
-            <div class="text-center py-7 text-sm"
-                 style="color:var(--muted)">
 
-                No members found
+/* =====================================================
+   MANAGER
+===================================================== */
 
+async function loadManager() {
+
+    const snap =
+        await fb.getDoc(
+            fb.doc(
+                fb.db,
+                "settings",
+                "manager"
+            )
+        );
+
+
+    const name =
+        snap.exists()
+            ? (
+                snap.data().name ||
+                "Manager"
+            )
+            : "Manager";
+
+
+    document
+        .getElementById(
+            "managerHeader"
+        )
+        .textContent =
+        name;
+
+
+    document
+        .getElementById(
+            "managerInput"
+        )
+        .value =
+        name;
+
+}
+
+
+window.saveManager =
+    async function() {
+
+        const name =
+            document
+                .getElementById(
+                    "managerInput"
+                )
+                .value
+                .trim();
+
+
+        if (!name) {
+
+            showToast(
+                "Enter manager name."
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            await fb.setDoc(
+                fb.doc(
+                    fb.db,
+                    "settings",
+                    "manager"
+                ),
+                {
+                    name
+                },
+                {
+                    merge:true
+                }
+            );
+
+
+            document
+                .getElementById(
+                    "managerHeader"
+                )
+                .textContent =
+                name;
+
+
+            showToast(
+                "Manager updated."
+            );
+
+
+        } catch(error) {
+
+            console.error(error);
+
+            showToast(
+                "Could not update manager."
+            );
+
+        }
+
+    };
+
+
+/* =====================================================
+   TODAY MEALS
+===================================================== */
+
+function todayID() {
+
+    const d =
+        new Date();
+
+
+    return [
+        d.getFullYear(),
+        String(
+            d.getMonth()+1
+        ).padStart(2,"0"),
+        String(
+            d.getDate()
+        ).padStart(2,"0")
+    ].join("-");
+
+}
+
+
+function todayReadable() {
+
+    return new Date()
+        .toLocaleDateString(
+            "en-US",
+            {
+                weekday:"long",
+                month:"long",
+                day:"numeric",
+                year:"numeric"
+            }
+        );
+
+}
+
+
+async function loadTodayMeals() {
+
+    const date =
+        todayID();
+
+
+    document
+        .getElementById(
+            "todayLabel"
+        )
+        .textContent =
+        todayReadable();
+
+
+    document
+        .getElementById(
+            "mealDateLabel"
+        )
+        .textContent =
+        todayReadable();
+
+
+    const snap =
+        await fb.getDoc(
+            fb.doc(
+                fb.db,
+                "meals",
+                date
+            )
+        );
+
+
+    meals =
+        snap.exists()
+            ? (
+                snap.data().members ||
+                {}
+            )
+            : {};
+
+
+    renderMeals();
+
+    renderTodayPreview();
+
+
+    let total = 0;
+
+
+    Object.values(meals)
+        .forEach(
+            m => {
+
+                if (m.breakfast)
+                    total += .5;
+
+                if (m.lunch)
+                    total += 1;
+
+                if (m.dinner)
+                    total += 1;
+
+                total +=
+                    Number(
+                        m.guest || 0
+                    );
+
+            }
+        );
+
+
+    document
+        .getElementById(
+            "statMeals"
+        )
+        .textContent =
+        Number.isInteger(total)
+            ? total
+            : total.toFixed(1);
+
+}
+
+
+/* =====================================================
+   RENDER MEALS
+===================================================== */
+
+function renderMeals() {
+
+    const container =
+        document.getElementById(
+            "mealContainer"
+        );
+
+
+    if (!members.length) {
+
+        container.innerHTML = `
+
+            <div class="
+                text-center
+                py-10
+                text-white/30
+            ">
+                No members found.
             </div>
 
         `;
 
         return;
+
     }
 
 
-    list.innerHTML =
-        filtered.map(member => {
+    container.innerHTML =
+        members.map(
+            member => {
 
-            const deposit =
-                Number(
-                    member.totalDeposit || 0
-                );
-
-
-            const meals =
-                Number(
-                    member.totalMeals || 0
-                );
+                const m =
+                    meals[member.id] ||
+                    {};
 
 
-            const balance =
-                deposit -
-                meals * rate;
+                return `
 
+                <div class="member-row">
 
-            const positive =
-                balance >= 0;
+                    <div class="min-w-0 flex-1">
 
-
-            return `
-
-                <div class="member">
-
-                    <div style="min-width:0">
-
-                        <div class="member-name">
+                        <div class="
+                            font-bold
+                            text-sm
+                            bn
+                            truncate
+                        ">
                             ${escapeHTML(
                                 member.name ||
                                 "Unnamed"
                             )}
                         </div>
 
-                        <div class="member-info">
-
-                            Deposit:
-                            ৳${deposit.toFixed(0)}
-
-                            &nbsp;•&nbsp;
-
-                            Meals:
-                            ${meals}
-
-                        </div>
-
                     </div>
 
 
-                    <div
-                        class="balance"
-                        style="
-                            color:
-                            ${positive
-                                ? 'var(--green)'
-                                : 'var(--red)'};
-                        "
-                    >
+                    <div class="
+                        flex
+                        gap-1.5
+                        flex-wrap
+                        justify-end
+                    ">
 
-                        ${positive
-                            ? '+'
-                            : '-'}
-                        ৳${Math.abs(balance).toFixed(0)}
+
+                        <button
+                            class="
+                                meal-toggle
+                                ${m.breakfast ? "on" : ""}
+                            "
+                            onclick="toggleMeal('${member.id}','breakfast')"
+                        >
+                            ☀️
+                            <span class="hidden sm:inline">
+                                Breakfast
+                            </span>
+                            <span class="sm:hidden">
+                                B.Fast
+                            </span>
+                        </button>
+
+
+                        <button
+                            class="
+                                meal-toggle
+                                ${m.lunch ? "on" : ""}
+                            "
+                            onclick="toggleMeal('${member.id}','lunch')"
+                        >
+                            🍛
+                            <span class="hidden sm:inline">
+                                Lunch
+                            </span>
+                            <span class="sm:hidden">
+                                Lunch
+                            </span>
+                        </button>
+
+
+                        <button
+                            class="
+                                meal-toggle
+                                ${m.dinner ? "on" : ""}
+                            "
+                            onclick="toggleMeal('${member.id}','dinner')"
+                        >
+                            🌙
+                            <span class="hidden sm:inline">
+                                Dinner
+                            </span>
+                            <span class="sm:hidden">
+                                Dinner
+                            </span>
+                        </button>
+
 
                     </div>
 
                 </div>
 
-            `;
+                `;
 
-        }).join("");
+            }
+        )
+        .join("");
 
 }
 
 
-/* ==============================
-   SEARCH
-============================== */
+window.toggleMeal =
+    function(memberId, type) {
 
-document
-.getElementById("memberSearch")
-.addEventListener(
-    "input",
-    async () => {
+        if (!meals[memberId]) {
 
-        const ok =
-            await checkSession();
+            meals[memberId] = {};
 
-        if(ok){
-
-            const rate =
-                Number(
-                    document
-                    .getElementById(
-                        "mealRate"
-                    )
-                    .textContent
-                    .replace("৳","")
-                ) || 0;
-
-            renderMembers(rate);
         }
 
+
+        meals[memberId][type] =
+            !meals[memberId][type];
+
+
+        renderMeals();
+
+        renderTodayPreview();
+
+    };
+
+
+window.saveAllMeals =
+    async function() {
+
+        if (mealSaving)
+            return;
+
+
+        mealSaving = true;
+
+
+        try {
+
+            await fb.setDoc(
+                fb.doc(
+                    fb.db,
+                    "meals",
+                    todayID()
+                ),
+                {
+                    members:meals,
+                    updatedAt:
+                        fb.serverTimestamp()
+                },
+                {
+                    merge:true
+                }
+            );
+
+
+            showToast(
+                "Today's meals saved."
+            );
+
+
+            await loadTodayMeals();
+
+
+        } catch(error) {
+
+            console.error(error);
+
+            showToast(
+                "Could not save meals."
+            );
+
+        }
+
+
+        mealSaving = false;
+
+    };
+
+
+/* =====================================================
+   TODAY PREVIEW
+===================================================== */
+
+function renderTodayPreview() {
+
+    const container =
+        document.getElementById(
+            "todayPreview"
+        );
+
+
+    const active =
+        members.filter(
+            member => {
+
+                const m =
+                    meals[member.id] ||
+                    {};
+
+                return (
+                    m.breakfast ||
+                    m.lunch ||
+                    m.dinner ||
+                    Number(m.guest || 0)
+                );
+
+            }
+        );
+
+
+    if (!active.length) {
+
+        container.innerHTML = `
+
+            <div class="
+                text-center
+                py-7
+                text-white/30
+                text-sm
+            ">
+                No meal added today.
+            </div>
+
+        `;
+
+        return;
+
     }
-);
 
 
-/* ==============================
-   LOGOUT
-============================== */
+    container.innerHTML =
+        active
+            .slice(0,8)
+            .map(
+                member => {
 
-window.logout =
-async function(){
+                    const m =
+                        meals[member.id] ||
+                        {};
 
-    await signOut(auth);
 
-    location.replace(
-        "login.html"
+                    return `
+
+                    <div class="
+                        flex
+                        justify-between
+                        items-center
+                        p-3
+                        rounded-xl
+                        bg-white/[.035]
+                        border
+                        border-white/[.05]
+                    ">
+
+                        <span class="
+                            text-sm
+                            font-semibold
+                            bn
+                        ">
+                            ${escapeHTML(
+                                member.name
+                            )}
+                        </span>
+
+
+                        <span class="
+                            text-[10px]
+                            text-green-300
+                        ">
+
+                            ${
+                                m.breakfast
+                                    ? "B "
+                                    : ""
+                            }
+
+                            ${
+                                m.lunch
+                                    ? "L "
+                                    : ""
+                            }
+
+                            ${
+                                m.dinner
+                                    ? "D"
+                                    : ""
+                            }
+
+                        </span>
+
+                    </div>
+
+                    `;
+
+                }
+            )
+            .join("");
+
+
+    if (active.length > 8) {
+
+        container.innerHTML += `
+
+            <div class="
+                text-center
+                text-[10px]
+                text-white/30
+                pt-2
+            ">
+                + ${active.length - 8}
+                more members
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   BAZAR
+===================================================== */
+
+let bazarRecords = [];
+
+
+async function loadBazar() {
+
+    const snap =
+        await fb.getDocs(
+            fb.collection(
+                fb.db,
+                "bazar"
+            )
+        );
+
+
+    bazarRecords = [];
+
+
+    snap.forEach(
+        d => {
+
+            bazarRecords.push({
+                id:d.id,
+                ...d.data()
+            });
+
+        }
     );
 
-};
+
+    bazarRecords.sort(
+        (a,b) =>
+            String(b.date || "")
+                .localeCompare(
+                    String(a.date || "")
+                )
+    );
 
 
-/* ==============================
-   ESCAPE
-============================== */
+    renderBazar();
 
-function escapeHTML(value){
+    renderRecentBazar();
+
+}
+
+
+function renderBazar() {
+
+    const container =
+        document.getElementById(
+            "bazarContainer"
+        );
+
+
+    if (!bazarRecords.length) {
+
+        container.innerHTML = `
+
+            <div class="
+                text-center
+                py-10
+                text-white/30
+            ">
+                No bazar records.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        bazarRecords
+            .map(
+                b => `
+
+                <div class="member-row">
+
+                    <div>
+
+                        <div class="
+                            text-sm
+                            font-bold
+                        ">
+                            ${escapeHTML(
+                                b.purchaser ||
+                                "Unknown"
+                            )}
+                        </div>
+
+                        <div class="
+                            text-[10px]
+                            text-white/35
+                            mt-1
+                        ">
+                            ${escapeHTML(
+                                b.date || "—"
+                            )}
+                        </div>
+
+                    </div>
+
+
+                    <div class="flex items-center gap-2">
+
+                        <div class="
+                            font-black
+                            text-green-300
+                        ">
+                            ৳${Number(
+                                b.amount || 0
+                            ).toFixed(0)}
+                        </div>
+
+
+                        <button
+                            class="btn btn-red"
+                            onclick="removeBazar('${b.id}')"
+                        >
+                            ×
+                        </button>
+
+                    </div>
+
+                </div>
+
+                `
+            )
+            .join("");
+
+}
+
+
+function renderRecentBazar() {
+
+    const container =
+        document.getElementById(
+            "recentBazar"
+        );
+
+
+    const recent =
+        bazarRecords.slice(
+            0,
+            5
+        );
+
+
+    if (!recent.length) {
+
+        container.innerHTML = `
+
+            <div class="
+                text-center
+                py-6
+                text-white/30
+                text-sm
+            ">
+                No bazar records.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        recent
+            .map(
+                b => `
+
+                <div class="
+                    flex
+                    justify-between
+                    items-center
+                    p-3
+                    rounded-xl
+                    bg-white/[.035]
+                    border
+                    border-white/[.05]
+                ">
+
+                    <div>
+
+                        <div class="text-sm font-semibold">
+                            ${escapeHTML(
+                                b.purchaser ||
+                                "Unknown"
+                            )}
+                        </div>
+
+                        <div class="
+                            text-[10px]
+                            text-white/35
+                            mt-1
+                        ">
+                            ${escapeHTML(
+                                b.date || "—"
+                            )}
+                        </div>
+
+                    </div>
+
+
+                    <div class="
+                        font-black
+                        text-green-300
+                    ">
+                        ৳${Number(
+                            b.amount || 0
+                        ).toFixed(0)}
+                    </div>
+
+                </div>
+
+                `
+            )
+            .join("");
+
+}
+
+
+window.openBazarModal =
+    function() {
+
+        document
+            .getElementById(
+                "bazarModal"
+            )
+            .classList.add(
+                "show"
+            );
+
+
+        document
+            .getElementById(
+                "bazarDate"
+            )
+            .value =
+            todayID();
+
+
+        document
+            .getElementById(
+                "bazarPurchaser"
+            )
+            .value =
+            "";
+
+
+        document
+            .getElementById(
+                "bazarAmount"
+            )
+            .value =
+            "";
+
+    };
+
+
+window.saveBazar =
+    async function() {
+
+        const date =
+            document
+                .getElementById(
+                    "bazarDate"
+                )
+                .value;
+
+
+        const purchaser =
+            document
+                .getElementById(
+                    "bazarPurchaser"
+                )
+                .value
+                .trim();
+
+
+        const amount =
+            Number(
+                document
+                    .getElementById(
+                        "bazarAmount"
+                    )
+                    .value || 0
+            );
+
+
+        if (!date || !purchaser || amount <= 0) {
+
+            showToast(
+                "Enter date, purchaser and amount."
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            await fb.addDoc(
+                fb.collection(
+                    fb.db,
+                    "bazar"
+                ),
+                {
+                    date,
+                    purchaser,
+                    amount,
+                    createdAt:
+                        fb.serverTimestamp(),
+                    createdBy:
+                        currentUser.uid
+                }
+            );
+
+
+            closeModal(
+                "bazarModal"
+            );
+
+
+            showToast(
+                "Bazar added."
+            );
+
+
+            await loadBazar();
+
+
+        } catch(error) {
+
+            console.error(error);
+
+            showToast(
+                "Could not add bazar."
+            );
+
+        }
+
+    };
+
+
+window.removeBazar =
+    async function(id) {
+
+        if (!confirm(
+            "Remove this bazar record?"
+        )) {
+
+            return;
+
+        }
+
+
+        try {
+
+            await fb.deleteDoc(
+                fb.doc(
+                    fb.db,
+                    "bazar",
+                    id
+                )
+            );
+
+
+            showToast(
+                "Bazar removed."
+            );
+
+
+            await loadBazar();
+
+
+        } catch(error) {
+
+            console.error(error);
+
+            showToast(
+                "Could not remove record."
+            );
+
+        }
+
+    };
+
+
+/* =====================================================
+   MODALS
+===================================================== */
+
+window.closeModal =
+    function(id) {
+
+        document
+            .getElementById(id)
+            ?.classList.remove(
+                "show"
+            );
+
+    };
+
+
+document
+    .querySelectorAll(".modal")
+    .forEach(
+        modal => {
+
+            modal.addEventListener(
+                "click",
+                e => {
+
+                    if (
+                        e.target === modal
+                    ) {
+
+                        modal.classList.remove(
+                            "show"
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+let toastTimer;
+
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    document
+        .getElementById(
+            "toastText"
+        )
+        .textContent =
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            2800
+        );
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHTML(value) {
 
     const div =
         document.createElement(
@@ -1218,53 +3778,103 @@ function escapeHTML(value){
         );
 
     div.textContent =
-        String(value);
+        String(value ?? "");
 
     return div.innerHTML;
 
 }
 
 
-/* ==============================
-   AUTO SESSION CHECK
-============================== */
+/* =====================================================
+   INIT
+===================================================== */
+
+waitForFirebase();
+
+
+/*
+ * Re-check session every 60 seconds.
+ * If Admin changes sessionVersion,
+ * assistant gets logged out.
+ */
 
 setInterval(
-    checkSession,
-    15000
-);
+    async () => {
 
-</script>
+        if (
+            !currentUser ||
+            !fb
+        ) return;
 
 
-<script>
+        try {
 
-function toggleMenu(){
+            const snap =
+                await fb.getDoc(
+                    fb.doc(
+                        fb.db,
+                        "users",
+                        currentUser.uid
+                    )
+                );
 
-    document
-        .getElementById("dropdown")
-        .classList
-        .toggle("hidden");
 
-}
+            if (!snap.exists()) {
 
-document.addEventListener(
-    "click",
-    function(e){
+                await logoutUser();
 
-        if(
-            !e.target.closest(".menu") &&
-            !e.target.closest(".dropdown")
-        ){
+                return;
 
-            document
-                .getElementById("dropdown")
-                .classList
-                .add("hidden");
+            }
+
+
+            const serverVersion =
+                Number(
+                    snap.data().sessionVersion ||
+                    1
+                );
+
+
+            const localVersion =
+                Number(
+                    localStorage.getItem(
+                        "assistant_session_version"
+                    ) || "0"
+                );
+
+
+            if (
+                localVersion !==
+                serverVersion
+            ) {
+
+                await fb.signOut(
+                    fb.auth
+                );
+
+                localStorage.removeItem(
+                    "assistant_session_version"
+                );
+
+                showLogin();
+
+                showToast(
+                    "Your session has been revoked."
+                );
+
+            }
+
+        } catch(error) {
+
+            console.error(
+                "Session check:",
+                error
+            );
 
         }
 
-    }
+    },
+    60000
 );
 
 </script>
