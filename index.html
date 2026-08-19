@@ -18,10 +18,18 @@
 
     <!-- Firebase SDK -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-        // ---- Firebase Config ----
+        import {
+            getFirestore,
+            collection,
+            getDocs,
+            doc,
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
             authDomain: "my-mess-17fbc.firebaseapp.com",
@@ -31,10 +39,12 @@
             appId: "1:848426874799:web:0722af59e7504da847e15a",
             measurementId: "G-RWHJKGV5LS"
         };
-        // ---- Firebase Config ----
 
         const app = initializeApp(firebaseConfig);
+
         window.db = getFirestore(app);
+
+        console.log("Firebase initialized successfully");
     </script>
 
     <style>
@@ -42,44 +52,80 @@
             --font-primary: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             --font-bengali: 'Noto Sans Bengali', sans-serif;
             --font-emoji: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+
             --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
             --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-            --radius-sm: 10px; --radius-md: 16px; --radius-lg: 22px; --radius-xl: 30px; --radius-full: 9999px;
+
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 22px;
+            --radius-xl: 30px;
+            --radius-full: 9999px;
+
             --transition: 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
-        /* Premium Dark Theme */
         [data-theme="dark"] {
             --bg-primary: #05050c;
-            --bg-gradient: radial-gradient(ellipse 90% 70% at 50% -30%, #1c1148 0%, #0d0d20 40%, #05050c 70%);
+
+            --bg-gradient:
+                radial-gradient(
+                    ellipse 90% 70% at 50% -30%,
+                    #1c1148 0%,
+                    #0d0d20 40%,
+                    #05050c 70%
+                );
+
             --glass-bg: rgba(16, 16, 34, 0.42);
             --glass-bg-light: rgba(20, 20, 42, 0.32);
             --glass-bg-hover: rgba(28, 28, 54, 0.5);
+
             --glass-border: rgba(255, 255, 255, 0.07);
             --glass-border-strong: rgba(255, 255, 255, 0.13);
-            --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.07);
-            --glass-shadow-lg: 0 26px 65px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+            --glass-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.07);
+
+            --glass-shadow-lg:
+                0 26px 65px rgba(0, 0, 0, 0.55),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.65);
             --text-tertiary: rgba(255, 255, 255, 0.4);
+
             --accent-purple: #a78bfa;
             --accent-purple-light: #c4b5fd;
+
             --accent-blue: #60a5fa;
             --accent-blue-light: #93c5fd;
+
             --accent-green: #34d399;
             --accent-green-light: #6ee7b7;
+
             --accent-red: #f87171;
+
             --logo-border: #34d399;
             --logo-glow: 0 0 25px rgba(52, 211, 153, 0.5);
+
             --divider: rgba(255, 255, 255, 0.04);
             --table-hover: rgba(255, 255, 255, 0.015);
+
             --scrollbar-thumb: rgba(255, 255, 255, 0.08);
             --scrollbar-track: rgba(255, 255, 255, 0.02);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
 
         body {
             font-family: var(--font-primary);
@@ -88,19 +134,28 @@
             min-height: 100vh;
             padding: 20px;
             color: var(--text-primary);
-            transition: background var(--transition);
             position: relative;
             overflow-x: hidden;
             line-height: 1.5;
         }
 
-        /* Animated Background Orbs */
         body::after {
             content: '';
             position: fixed;
             inset: 0;
-            background: radial-gradient(circle at 20% 60%, var(--accent-purple) 0%, transparent 35%),
-                        radial-gradient(circle at 75% 25%, var(--accent-blue) 0%, transparent 35%);
+
+            background:
+                radial-gradient(
+                    circle at 20% 60%,
+                    var(--accent-purple) 0%,
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 75% 25%,
+                    var(--accent-blue) 0%,
+                    transparent 35%
+                );
+
             opacity: 0.15;
             filter: blur(80px);
             animation: orbs 20s ease-in-out infinite;
@@ -109,25 +164,45 @@
         }
 
         @keyframes orbs {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -40px) scale(1.05); }
-            66% { transform: translate(-20px, 20px) scale(0.95); }
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -40px) scale(1.05);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.95);
+            }
         }
 
-        /* Liquid Glass Effects */
-        .glass, .glass-card {
+        .glass,
+        .glass-card {
             position: relative;
             overflow: hidden;
             z-index: 1;
             transition: all var(--transition);
         }
-        .glass::after, .glass-card::after {
+
+        .glass::after,
+        .glass-card::after {
             content: '';
-            position: absolute; inset: 0;
-            opacity: 0.025; mix-blend-mode: overlay; pointer-events: none; z-index: 1;
+            position: absolute;
+            inset: 0;
+            opacity: 0.025;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+            z-index: 1;
+
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
         }
-        .glass > *, .glass-card > * { position: relative; z-index: 2; }
+
+        .glass > *,
+        .glass-card > * {
+            position: relative;
+            z-index: 2;
+        }
 
         .glass {
             background: var(--glass-bg);
@@ -154,103 +229,629 @@
             transform: translateY(-2px);
         }
 
-        /* Logo Design */
         .logo-circle {
-            width: 68px; height: 68px; border-radius: 50%;
-            background: var(--glass-bg); backdrop-filter: blur(30px);
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+
             border: 2px solid var(--logo-border);
-            box-shadow: var(--logo-glow), inset 0 1px 0 rgba(255,255,255,0.22);
-            display: flex; align-items: center; justify-content: center;
+
+            box-shadow:
+                var(--logo-glow),
+                inset 0 1px 0 rgba(255,255,255,0.22);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
             animation: logoPulse 3s ease-in-out infinite;
-            overflow: hidden; flex-shrink: 0;
+
+            overflow: hidden;
+            flex-shrink: 0;
         }
 
         @keyframes logoPulse {
-            0%, 100% { box-shadow: var(--logo-glow), inset 0 1px 0 rgba(255,255,255,0.22); }
-            50% { box-shadow: 0 0 40px rgba(52, 211, 153, 0.6), 0 0 80px rgba(52, 211, 153, 0.25), inset 0 1px 0 rgba(255,255,255,0.3); }
+            0%, 100% {
+                box-shadow:
+                    var(--logo-glow),
+                    inset 0 1px 0 rgba(255,255,255,0.22);
+            }
+
+            50% {
+                box-shadow:
+                    0 0 40px rgba(52, 211, 153, 0.6),
+                    0 0 80px rgba(52, 211, 153, 0.25),
+                    inset 0 1px 0 rgba(255,255,255,0.3);
+            }
         }
 
-        .logo-text { display: flex; flex-direction: column; align-items: center; text-align: center; font-family: var(--font-bengali); }
-        .logo-text .logo-bn { font-size: 11px; font-weight: 800; letter-spacing: 0.3px; }
-        .logo-text .logo-en { font-size: 8px; font-weight: 700; color: var(--text-tertiary); letter-spacing: 1px; font-family: var(--font-primary); text-transform: uppercase; }
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            font-family: var(--font-bengali);
+        }
 
-        /* Premium Manager Pill */
+        .logo-text .logo-bn {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+        }
+
+        .logo-text .logo-en {
+            font-size: 8px;
+            font-weight: 700;
+            color: var(--text-tertiary);
+            letter-spacing: 1px;
+            font-family: var(--font-primary);
+            text-transform: uppercase;
+        }
+
         .manager-pill {
             background: var(--glass-bg-light);
             backdrop-filter: blur(30px) saturate(180%);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-full);
             padding: 10px 22px;
-            display: flex; flex-direction: column; align-items: center;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
             box-shadow: var(--glass-shadow);
-            position: relative; overflow: hidden; white-space: nowrap;
+
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
         }
+
         .manager-pill::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent-blue), var(--accent-purple-light), transparent);
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    var(--accent-blue),
+                    var(--accent-purple-light),
+                    transparent
+                );
+
             opacity: 0.5;
         }
-        .manager-pill .month-text { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
-        .manager-pill .manager-label { font-size: 10px; font-weight: 500; color: var(--text-tertiary); letter-spacing: 0.6px; text-transform: uppercase; }
-        .manager-pill .manager-name { font-size: 13px; font-weight: 700; background: linear-gradient(135deg, var(--accent-blue-light), var(--accent-purple-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* Stat Cards */
-        .stat-card { padding: 16px 10px; text-align: center; cursor: default; }
-        .stat-icon { font-size: 24px; margin-bottom: 6px; display: block; font-family: var(--font-emoji); }
-        .stat-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-tertiary); margin-bottom: 3px; }
-        .stat-value { font-size: 24px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; white-space: nowrap; transition: font-size 0.2s ease-in-out; }
-
-        /* Menu Button */
-        .menu-btn {
-            width: 46px; height: 46px; background: var(--glass-bg-light);
-            border: 1px solid var(--glass-border); border-radius: 16px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; transition: all var(--transition);
+        .manager-pill .month-text {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
         }
-        .menu-btn:hover { background: var(--glass-bg-hover); border-color: var(--glass-border-strong); box-shadow: var(--glass-shadow); }
-        .menu-btn span { width: 18px; height: 2px; background: var(--text-primary); border-radius: 3px; transition: all var(--transition); }
-        .menu-btn:hover span { background: var(--accent-purple-light); }
 
-        .dropdown-menu { background: var(--glass-bg); backdrop-filter: blur(40px); border: 1px solid var(--glass-border-strong); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow-lg); padding: 6px; min-width: 200px; animation: dropdownIn 0.3s var(--ease-bounce); }
-        @keyframes dropdownIn { from { opacity: 0; transform: translateY(-8px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: var(--radius-md); color: var(--text-primary); text-decoration: none; font-size: 13px; font-weight: 500; transition: all 0.2s; }
-        .dropdown-item:hover { background: var(--glass-bg-hover); color: var(--accent-purple-light); }
+        .manager-pill .manager-label {
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+        }
 
-        /* Data Tables for other sections */
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table th { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-tertiary); padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--divider); white-space: nowrap; }
-        .data-table td { padding: 12px 14px; font-size: 13px; color: var(--text-secondary); border-bottom: 1px solid var(--divider); }
-        .data-table tbody tr:hover { background: var(--table-hover); }
-        .data-table tbody tr:last-child td { border-bottom: none; }
-        .data-table td:first-child, .data-table th:first-child { font-family: var(--font-bengali); font-weight: 600; color: var(--text-primary); }
+        .manager-pill .manager-name {
+            font-size: 13px;
+            font-weight: 700;
 
-        .spinner { width: 40px; height: 40px; border: 3px solid var(--divider); border-top: 3px solid var(--accent-purple); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--accent-blue-light),
+                    var(--accent-purple-light)
+                );
 
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--glass-border-strong); }
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-card {
+            padding: 16px 10px;
+            text-align: center;
+            cursor: default;
+        }
+
+        .stat-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+            display: block;
+            font-family: var(--font-emoji);
+        }
+
+        .stat-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--text-tertiary);
+            margin-bottom: 3px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+            white-space: nowrap;
+            transition: font-size 0.2s ease-in-out;
+        }
+
+        .menu-btn {
+            width: 46px;
+            height: 46px;
+            background: var(--glass-bg-light);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            gap: 5px;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .menu-btn:hover {
+            background: var(--glass-bg-hover);
+            border-color: var(--glass-border-strong);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .menu-btn span {
+            width: 18px;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 3px;
+            transition: all var(--transition);
+        }
+
+        .menu-btn:hover span {
+            background: var(--accent-purple-light);
+        }
+
+        .dropdown-menu {
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+
+            border: 1px solid var(--glass-border-strong);
+            border-radius: var(--radius-lg);
+
+            box-shadow: var(--glass-shadow-lg);
+
+            padding: 6px;
+            min-width: 200px;
+
+            animation: dropdownIn 0.3s var(--ease-bounce);
+        }
+
+        @keyframes dropdownIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            padding: 12px 16px;
+
+            border-radius: var(--radius-md);
+
+            color: var(--text-primary);
+            text-decoration: none;
+
+            font-size: 13px;
+            font-weight: 500;
+
+            transition: all 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: var(--glass-bg-hover);
+            color: var(--accent-purple-light);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-tertiary);
+
+            padding: 12px 14px;
+
+            text-align: left;
+
+            border-bottom: 1px solid var(--divider);
+
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 12px 14px;
+
+            font-size: 13px;
+
+            color: var(--text-secondary);
+
+            border-bottom: 1px solid var(--divider);
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--table-hover);
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table td:first-child,
+        .data-table th:first-child {
+            font-family: var(--font-bengali);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* ================================
+           MONTHLY DAILY MEAL TABLE
+        ================================= */
+
+        .monthly-wrapper {
+            overflow-x: auto;
+            overflow-y: hidden;
+            border-radius: 18px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .monthly-table {
+            border-collapse: separate;
+            border-spacing: 0;
+
+            min-width: max-content;
+            width: 100%;
+        }
+
+        .monthly-table th,
+        .monthly-table td {
+            border-right: 1px solid rgba(255,255,255,0.045);
+            border-bottom: 1px solid rgba(255,255,255,0.045);
+
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .monthly-table th {
+            padding: 10px 8px;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            color: var(--text-tertiary);
+
+            background: rgba(255,255,255,0.025);
+
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .monthly-table th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 8;
+
+            min-width: 130px;
+
+            text-align: left;
+
+            background: rgba(20,20,42,0.95);
+        }
+
+        .monthly-table th:last-child {
+            position: sticky;
+            right: 0;
+            z-index: 8;
+
+            background: rgba(20,20,42,0.95);
+        }
+
+        .monthly-table td {
+            min-width: 40px;
+            height: 42px;
+
+            padding: 6px 7px;
+
+            font-size: 11px;
+            font-weight: 600;
+
+            color: var(--text-secondary);
+
+            background: rgba(255,255,255,0.008);
+        }
+
+        .monthly-table td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 4;
+
+            min-width: 130px;
+
+            text-align: left;
+
+            background: rgba(12,12,28,0.97);
+
+            color: #fff;
+
+            font-family: var(--font-bengali);
+        }
+
+        .monthly-table td:last-child {
+            position: sticky;
+            right: 0;
+            z-index: 4;
+
+            min-width: 70px;
+
+            background: rgba(18,18,38,0.98);
+
+            color: var(--accent-purple-light);
+
+            font-weight: 800;
+        }
+
+        .monthly-table tbody tr:hover td {
+            background: rgba(167,139,250,0.045);
+        }
+
+        .monthly-table tbody tr:hover td:first-child,
+        .monthly-table tbody tr:hover td:last-child {
+            background: rgba(25,25,50,0.98);
+        }
+
+        .meal-number {
+            display: inline-flex;
+
+            min-width: 27px;
+            height: 27px;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 9px;
+
+            background: rgba(167,139,250,0.08);
+
+            color: rgba(255,255,255,0.75);
+
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .meal-number.has-meal {
+            background: rgba(52,211,153,0.10);
+            color: var(--accent-green-light);
+        }
+
+        .meal-number.has-guest {
+            box-shadow:
+                inset 0 0 0 1px rgba(96,165,250,0.22),
+                0 0 12px rgba(96,165,250,0.08);
+        }
+
+        .daily-total-row td {
+            background: rgba(167,139,250,0.08) !important;
+            color: var(--accent-purple-light) !important;
+            font-weight: 800;
+        }
+
+        .daily-total-row td:first-child {
+            background: rgba(25,18,52,0.98) !important;
+            color: #fff !important;
+        }
+
+        .month-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            background: rgba(255,255,255,0.035);
+
+            border: 1px solid var(--glass-border);
+
+            border-radius: 14px;
+
+            padding: 5px 8px;
+        }
+
+        .month-control button {
+            width: 32px;
+            height: 32px;
+
+            border: 1px solid var(--glass-border);
+
+            border-radius: 10px;
+
+            background: rgba(255,255,255,0.04);
+
+            color: white;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .month-control button:hover {
+            background: rgba(167,139,250,0.15);
+            border-color: rgba(167,139,250,0.3);
+        }
+
+        .month-control select {
+            background: transparent;
+            border: none;
+            outline: none;
+
+            color: white;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        .month-control select option {
+            background: #151329;
+            color: white;
+        }
+
+        .guest-legend {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+
+            font-size: 10px;
+            color: var(--text-tertiary);
+        }
+
+        .guest-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+
+            background: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(96,165,250,0.5);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+
+            border: 3px solid var(--divider);
+            border-top: 3px solid var(--accent-purple);
+
+            border-radius: 50%;
+
+            animation: spin 0.8s linear infinite;
+
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--scrollbar-track);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--glass-border-strong);
+        }
 
         @media (max-width: 768px) {
-            body { padding: 14px 10px; }
-            .logo-circle { width: 52px; height: 52px; }
-            .logo-text .logo-bn { font-size: 9px; }
-            .logo-text .logo-en { font-size: 7px; }
-            .manager-pill { padding: 8px 14px; white-space: normal; }
-            .manager-pill .month-text { font-size: 11px; }
-            .manager-pill .manager-name { font-size: 11px; }
-            .stat-card { padding: 12px 6px; }
-            .stat-icon { font-size: 20px; }
-            .stat-value { font-size: 18px; }
+
+            body {
+                padding: 14px 10px;
+            }
+
+            .logo-circle {
+                width: 52px;
+                height: 52px;
+            }
+
+            .logo-text .logo-bn {
+                font-size: 9px;
+            }
+
+            .logo-text .logo-en {
+                font-size: 7px;
+            }
+
+            .manager-pill {
+                padding: 8px 14px;
+                white-space: normal;
+            }
+
+            .manager-pill .month-text {
+                font-size: 11px;
+            }
+
+            .manager-pill .manager-name {
+                font-size: 11px;
+            }
+
+            .stat-card {
+                padding: 12px 6px;
+            }
+
+            .stat-icon {
+                font-size: 20px;
+            }
+
+            .stat-value {
+                font-size: 18px;
+            }
+
+            .monthly-table th:first-child,
+            .monthly-table td:first-child {
+                min-width: 105px;
+            }
+
+            .monthly-table td {
+                min-width: 38px;
+            }
         }
     </style>
 </head>
+
 <body>
 
 <div class="max-w-2xl mx-auto relative z-10">
 
-    <!-- Header (Restored Premium Design) -->
+    <!-- Header -->
     <div class="flex items-center justify-between mb-6 gap-3">
+
         <div class="logo-circle">
             <div class="logo-text">
                 <span class="logo-bn">মা আছিয়া</span>
@@ -260,231 +861,1641 @@
 
         <div class="flex-1 flex justify-center">
             <div class="manager-pill">
-                <span class="month-text" id="currentMonthYear">Month Year</span>
+                <span class="month-text" id="currentMonthYear">
+                    Month Year
+                </span>
+
                 <span class="manager-label">
-                    👤 Manager — <strong class="manager-name" id="managerName">Loading…</strong>
+                    👤 Manager —
+                    <strong class="manager-name" id="managerName">
+                        Loading…
+                    </strong>
                 </span>
             </div>
         </div>
 
         <div class="relative">
-            <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">
-                <span></span><span></span><span></span>
+
+            <button
+                class="menu-btn"
+                onclick="toggleMenu()"
+                aria-label="Menu"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
             </button>
-            <div id="menuDropdown" class="dropdown-menu hidden absolute right-0 mt-3 z-50">
-                <a href="login.html" class="dropdown-item">
-                    <span style="font-family:var(--font-emoji);">🔑</span> Staff Login
+
+            <div
+                id="menuDropdown"
+                class="dropdown-menu hidden absolute right-0 mt-3 z-50"
+            >
+
+                <a
+                    href="login.html"
+                    class="dropdown-item"
+                >
+                    <span style="font-family:var(--font-emoji);">
+                        🔑
+                    </span>
+
+                    Staff Login
                 </a>
+
             </div>
+
         </div>
+
     </div>
+
 
     <!-- Stats -->
     <div class="grid grid-cols-3 gap-2 sm:gap-3 mb-6">
+
         <div class="glass-card stat-card">
+
             <span class="stat-icon">💰</span>
-            <div class="stat-label">Meal Rate</div>
-            <div class="stat-value" style="color: var(--accent-purple-light);" id="currentMealRate">—</div>
+
+            <div class="stat-label">
+                Meal Rate
+            </div>
+
+            <div
+                class="stat-value"
+                style="color: var(--accent-purple-light);"
+                id="currentMealRate"
+            >
+                —
+            </div>
+
         </div>
+
+
         <div class="glass-card stat-card">
+
             <span class="stat-icon">🍽️</span>
-            <div class="stat-label">Total Meals</div>
-            <div class="stat-value" style="color: var(--accent-blue-light);" id="totalMeals">—</div>
+
+            <div class="stat-label">
+                Total Meals
+            </div>
+
+            <div
+                class="stat-value"
+                style="color: var(--accent-blue-light);"
+                id="totalMeals"
+            >
+                —
+            </div>
+
         </div>
+
+
         <div class="glass-card stat-card">
+
             <span class="stat-icon">🛒</span>
-            <div class="stat-label">Total Bazar</div>
-            <div class="stat-value" style="color: var(--accent-green-light);" id="totalBazar">—</div>
+
+            <div class="stat-label">
+                Total Bazar
+            </div>
+
+            <div
+                class="stat-value"
+                style="color: var(--accent-green-light);"
+                id="totalBazar"
+            >
+                —
+            </div>
+
         </div>
+
     </div>
 
-    <!-- Members Balance (Premium List Design) -->
+
+    <!-- Members Balance -->
     <div class="glass p-4 sm:p-5 mb-5">
+
         <h2 class="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2">
-            <span style="font-family:var(--font-emoji);">👥</span> Members Balance
+
+            <span style="font-family:var(--font-emoji);">
+                👥
+            </span>
+
+            Members Balance
+
         </h2>
-        <div id="membersList" class="flex flex-col gap-2.5">
-            <div class="py-8"><div class="spinner"></div></div>
+
+        <div
+            id="membersList"
+            class="flex flex-col gap-2.5"
+        >
+            <div class="py-8">
+                <div class="spinner"></div>
+            </div>
         </div>
+
     </div>
+
 
     <!-- Bazar History -->
     <div class="glass p-4 sm:p-5 mb-5">
+
         <h2 class="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2">
-            <span style="font-family:var(--font-emoji);">🧾</span> Bazar History
+
+            <span style="font-family:var(--font-emoji);">
+                🧾
+            </span>
+
+            Bazar History
+
         </h2>
+
         <div class="overflow-x-auto">
+
             <table class="data-table">
-                <thead><tr><th>Date</th><th>Purchaser</th><th class="text-right">Total Cost</th></tr></thead>
+
+                <thead>
+
+                    <tr>
+                        <th>Date</th>
+                        <th>Purchaser</th>
+                        <th class="text-right">
+                            Total Cost
+                        </th>
+                    </tr>
+
+                </thead>
+
                 <tbody id="bazarList">
-                    <tr><td colspan="3"><div class="py-6"><div class="spinner"></div></div></td></tr>
+
+                    <tr>
+
+                        <td colspan="3">
+
+                            <div class="py-6">
+                                <div class="spinner"></div>
+                            </div>
+
+                        </td>
+
+                    </tr>
+
                 </tbody>
+
             </table>
+
         </div>
+
     </div>
+
+
+    <!-- =========================================
+         NEW MONTHLY DAILY MEAL SUMMARY
+    ========================================== -->
+
+    <div class="glass p-4 sm:p-5 mb-5">
+
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+
+            <div>
+
+                <h2 class="text-lg sm:text-xl font-bold flex items-center gap-2">
+
+                    <span style="font-family:var(--font-emoji);">
+                        📅
+                    </span>
+
+                    Daily Meal Summary
+
+                </h2>
+
+                <p class="text-[10px] text-gray-500 mt-1">
+                    Border-wise daily meal record
+                </p>
+
+            </div>
+
+
+            <!-- Month Selector -->
+
+            <div class="month-control">
+
+                <button
+                    type="button"
+                    onclick="changeSummaryMonth(-1)"
+                    title="Previous month"
+                >
+                    ‹
+                </button>
+
+                <select
+                    id="summaryMonth"
+                    onchange="loadMonthlyMealSummary()"
+                ></select>
+
+                <button
+                    type="button"
+                    onclick="changeSummaryMonth(1)"
+                    title="Next month"
+                >
+                    ›
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="flex justify-between items-center mb-3">
+
+            <div
+                id="summaryMonthTitle"
+                class="text-xs font-semibold text-gray-300"
+            >
+                Loading...
+            </div>
+
+            <div class="guest-legend">
+                <span class="guest-dot"></span>
+                Guest included
+            </div>
+
+        </div>
+
+
+        <div class="monthly-wrapper">
+
+            <table class="monthly-table">
+
+                <thead id="monthlyMealHead">
+                </thead>
+
+                <tbody id="monthlyMealBody">
+
+                    <tr>
+
+                        <td colspan="10">
+
+                            <div class="py-8">
+                                <div class="spinner"></div>
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="mt-3 text-[10px] text-gray-500">
+            Main meal:
+            Breakfast = 0.5,
+            Lunch = 1,
+            Dinner = 1
+            <span class="mx-1">•</span>
+            Guest quantity is added when present.
+        </div>
+
+    </div>
+
 
     <!-- Master Meal Sheet -->
     <div class="glass p-4 sm:p-5 mb-5">
+
         <h2 class="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2">
-            <span style="font-family:var(--font-emoji);">📋</span> Master Meal Sheet
-            <span class="text-[0.7rem] font-normal text-gray-400 ml-auto" id="mealSheetDate"></span>
+
+            <span style="font-family:var(--font-emoji);">
+                📋
+            </span>
+
+            Master Meal Sheet
+
+            <span
+                class="text-[0.7rem] font-normal text-gray-400 ml-auto"
+                id="mealSheetDate"
+            ></span>
+
         </h2>
+
         <div class="overflow-x-auto">
+
             <table class="data-table text-center">
-                <thead><tr><th class="text-left">Border</th><th class="text-center">B.Fast</th><th class="text-center">Lunch</th><th class="text-center">Dinner</th></tr></thead>
+
+                <thead>
+
+                    <tr>
+
+                        <th class="text-left">
+                            Border
+                        </th>
+
+                        <th class="text-center">
+                            B.Fast
+                        </th>
+
+                        <th class="text-center">
+                            Lunch
+                        </th>
+
+                        <th class="text-center">
+                            Dinner
+                        </th>
+
+                    </tr>
+
+                </thead>
+
                 <tbody id="mealSheetBody">
-                    <tr><td colspan="4"><div class="py-6"><div class="spinner"></div></div></td></tr>
+
+                    <tr>
+
+                        <td colspan="4">
+
+                            <div class="py-6">
+                                <div class="spinner"></div>
+                            </div>
+
+                        </td>
+
+                    </tr>
+
                 </tbody>
+
             </table>
+
         </div>
+
     </div>
 
 </div>
 
+
 <script>
-    (function() {
-        const menuDropdown = document.getElementById('menuDropdown');
-        const monthYearEl = document.getElementById('currentMonthYear');
-        let isMenuOpen = false;
 
-        window.toggleMenu = () => {
-            isMenuOpen = !isMenuOpen;
-            menuDropdown.classList.toggle('hidden', !isMenuOpen);
-        };
-        document.addEventListener('click', e => {
-            if (isMenuOpen && !e.target.closest('.menu-btn') && !e.target.closest('#menuDropdown')) {
-                isMenuOpen = false;
-                menuDropdown.classList.add('hidden');
+(function() {
+
+    const menuDropdown =
+        document.getElementById('menuDropdown');
+
+    const monthYearEl =
+        document.getElementById('currentMonthYear');
+
+    let isMenuOpen = false;
+
+    let membersArray = [];
+
+    /*
+     * Selected monthly summary
+     */
+    let summaryDate = new Date();
+
+    window.toggleMenu = () => {
+
+        isMenuOpen = !isMenuOpen;
+
+        menuDropdown.classList.toggle(
+            'hidden',
+            !isMenuOpen
+        );
+    };
+
+
+    document.addEventListener('click', e => {
+
+        if (
+            isMenuOpen &&
+            !e.target.closest('.menu-btn') &&
+            !e.target.closest('#menuDropdown')
+        ) {
+
+            isMenuOpen = false;
+
+            menuDropdown.classList.add('hidden');
+        }
+
+    });
+
+
+    monthYearEl.textContent =
+        new Date().toLocaleDateString(
+            'en-US',
+            {
+                month: 'long',
+                year: 'numeric'
             }
-        });
+        );
 
-        monthYearEl.textContent = new Date().toLocaleDateString('en-US', { month:'long', year:'numeric' });
 
-        // Auto-Shrink Text Function
-        function autoFitText() {
-            document.querySelectorAll('.stat-value').forEach(el => {
-                const parent = el.parentElement;
-                let fontSize = 24; // Default max font size
-                el.style.fontSize = fontSize + 'px';
-                
-                while (el.scrollWidth > (parent.clientWidth - 10) && fontSize > 10) {
+    /* =========================================
+       AUTO FIT
+    ========================================== */
+
+    function autoFitText() {
+
+        document
+            .querySelectorAll('.stat-value')
+            .forEach(el => {
+
+                const parent =
+                    el.parentElement;
+
+                let fontSize = 24;
+
+                el.style.fontSize =
+                    fontSize + 'px';
+
+                while (
+                    el.scrollWidth >
+                    (parent.clientWidth - 10) &&
+                    fontSize > 10
+                ) {
+
                     fontSize--;
-                    el.style.fontSize = fontSize + 'px';
+
+                    el.style.fontSize =
+                        fontSize + 'px';
                 }
+
             });
+    }
+
+
+    /* =========================================
+       MANAGER
+    ========================================== */
+
+    async function loadManagerName() {
+
+        if (!window.db) return;
+
+        try {
+
+            const {
+                doc,
+                getDoc
+            } = await import(
+                "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
+            );
+
+            const snap =
+                await getDoc(
+                    doc(
+                        window.db,
+                        'settings',
+                        'manager'
+                    )
+                );
+
+            document.getElementById(
+                'managerName'
+            ).textContent =
+                snap.exists()
+                    ? snap.data().name
+                    : 'Shahan';
+
+        } catch(e) {
+
+            console.error(
+                'Manager loading error:',
+                e
+            );
+
         }
 
-        async function loadManagerName() {
-            if (!window.db) return;
-            try {
-                const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-                const snap = await getDoc(doc(window.db, 'settings', 'manager'));
-                document.getElementById('managerName').textContent = snap.exists() ? snap.data().name : 'Shahan';
-            } catch(e) {}
+    }
+
+
+    /* =========================================
+       MONTH SELECTOR
+    ========================================== */
+
+    function initializeMonthSelector() {
+
+        const select =
+            document.getElementById(
+                'summaryMonth'
+            );
+
+        select.innerHTML = '';
+
+        /*
+         * Current month + previous 11 months
+         */
+        for (let i = 0; i < 12; i++) {
+
+            const d = new Date();
+
+            d.setMonth(
+                d.getMonth() - i
+            );
+
+            const year =
+                d.getFullYear();
+
+            const month =
+                d.getMonth();
+
+            const value =
+                `${year}-${String(month + 1).padStart(2,'0')}`;
+
+            const label =
+                d.toLocaleDateString(
+                    'en-US',
+                    {
+                        month: 'long',
+                        year: 'numeric'
+                    }
+                );
+
+            const option =
+                document.createElement('option');
+
+            option.value = value;
+
+            option.textContent = label;
+
+            select.appendChild(option);
         }
 
-        async function loadAllData() {
-            if (!window.db) { setTimeout(loadAllData, 500); return; }
-            try {
-                const { doc, getDoc, collection, getDocs } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-                
-                const rateSnap = await getDoc(doc(window.db, 'settings', 'mealRate'));
-                const mealRate = rateSnap.exists() ? rateSnap.data().rate : 0;
-                document.getElementById('currentMealRate').textContent = '৳' + mealRate.toFixed(2); 
+        setSelectedMonth();
 
-                const membersSnap = await getDocs(collection(window.db, 'members'));
-                let totalMealsCount = 0, memberRows = '';
-                const membersArray = [];
-                
-                if (membersSnap.empty) {
-                    memberRows = '<div class="text-center py-6 text-gray-500 text-sm">No members found</div>';
-                } else {
-                    membersSnap.forEach(docSnap => {
-                        const m = docSnap.data();
-                        membersArray.push({ id: docSnap.id, ...m });
-                        const deposit = m.totalDeposit || 0;
-                        const meals = m.totalMeals || 0;
-                        const balance = deposit - (meals * mealRate);
-                        totalMealsCount += meals;
-                        
-                        const isPositive = balance >= 0;
-                        const balanceStr = isPositive ? `+৳${balance.toFixed(0)}` : `-৳${Math.abs(balance).toFixed(0)}`;
-                        const statusStr = isPositive ? 'In Advance' : 'Overdue';
-                        const colorClass = isPositive ? 'text-[#34d399]' : 'text-[#f87171]'; 
+    }
 
-                        // Premium List Card Design
-                        memberRows += `
-                        <div class="p-4 rounded-[18px] bg-[var(--glass-bg-light)] border border-[var(--glass-border)] hover:border-[var(--glass-border-strong)] hover:bg-[var(--glass-bg-hover)] shadow-[var(--glass-shadow)] transition-all duration-300 flex justify-between items-center">
+
+    function setSelectedMonth() {
+
+        const year =
+            summaryDate.getFullYear();
+
+        const month =
+            summaryDate.getMonth() + 1;
+
+        document.getElementById(
+            'summaryMonth'
+        ).value =
+            `${year}-${String(month).padStart(2,'0')}`;
+
+    }
+
+
+    window.changeSummaryMonth = function(direction) {
+
+        summaryDate.setMonth(
+            summaryDate.getMonth() + direction
+        );
+
+        setSelectedMonth();
+
+        loadMonthlyMealSummary();
+
+    };
+
+
+    window.loadMonthlyMealSummary =
+        async function() {
+
+        const selected =
+            document.getElementById(
+                'summaryMonth'
+            ).value;
+
+        if (!selected) return;
+
+        const parts =
+            selected.split('-');
+
+        summaryDate =
+            new Date(
+                Number(parts[0]),
+                Number(parts[1]) - 1,
+                1
+            );
+
+        await buildMonthlySummary();
+
+    };
+
+
+    /* =========================================
+       MEAL VALUE
+    ========================================== */
+
+    function getMainMealValue(meal) {
+
+        if (!meal) return 0;
+
+        let total = 0;
+
+        if (
+            meal.breakfast === true ||
+            meal.breakfast === 1
+        ) {
+            total += 0.5;
+        }
+
+        if (
+            meal.lunch === true ||
+            meal.lunch === 1
+        ) {
+            total += 1;
+        }
+
+        if (
+            meal.dinner === true ||
+            meal.dinner === 1
+        ) {
+            total += 1;
+        }
+
+        return total;
+    }
+
+
+    /*
+     * Guest support
+     *
+     * Supports:
+     * guest
+     * guests
+     * guestMeals
+     * guestMeal
+     * guestCount
+     */
+
+    function getGuestValue(meal) {
+
+        if (!meal) return 0;
+
+        const possibleKeys = [
+            'guest',
+            'guests',
+            'guestMeals',
+            'guestMeal',
+            'guestCount'
+        ];
+
+        for (const key of possibleKeys) {
+
+            if (
+                meal[key] !== undefined &&
+                meal[key] !== null &&
+                meal[key] !== ''
+            ) {
+
+                const value =
+                    Number(meal[key]);
+
+                if (
+                    Number.isFinite(value) &&
+                    value > 0
+                ) {
+                    return value;
+                }
+
+            }
+
+        }
+
+        return 0;
+    }
+
+
+    function getDailyMealValue(meal) {
+
+        return (
+            getMainMealValue(meal) +
+            getGuestValue(meal)
+        );
+
+    }
+
+
+    function formatMealNumber(number) {
+
+        if (!number) return '—';
+
+        return Number.isInteger(number)
+            ? String(number)
+            : Number(number).toFixed(1);
+
+    }
+
+
+    /* =========================================
+       MONTHLY SUMMARY
+    ========================================== */
+
+    async function buildMonthlySummary() {
+
+        const head =
+            document.getElementById(
+                'monthlyMealHead'
+            );
+
+        const body =
+            document.getElementById(
+                'monthlyMealBody'
+            );
+
+        const title =
+            document.getElementById(
+                'summaryMonthTitle'
+            );
+
+
+        head.innerHTML = '';
+
+        body.innerHTML = `
+            <tr>
+                <td colspan="10">
+                    <div class="py-8">
+                        <div class="spinner"></div>
+                    </div>
+                </td>
+            </tr>
+        `;
+
+
+        const year =
+            summaryDate.getFullYear();
+
+        const month =
+            summaryDate.getMonth();
+
+        const daysInMonth =
+            new Date(
+                year,
+                month + 1,
+                0
+            ).getDate();
+
+
+        title.textContent =
+            summaryDate.toLocaleDateString(
+                'en-US',
+                {
+                    month: 'long',
+                    year: 'numeric'
+                }
+            );
+
+
+        try {
+
+            const {
+                doc,
+                getDoc
+            } = await import(
+                "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
+            );
+
+
+            /*
+             * Load all dates of selected month
+             */
+
+            const monthlyData = {};
+
+            const requests = [];
+
+            for (
+                let day = 1;
+                day <= daysInMonth;
+                day++
+            ) {
+
+                const dateString =
+                    `${year}-${String(month + 1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+
+                requests.push(
+
+                    getDoc(
+                        doc(
+                            window.db,
+                            'meals',
+                            dateString
+                        )
+                    ).then(snap => {
+
+                        monthlyData[dateString] =
+                            snap.exists()
+                                ? (
+                                    snap.data().members ||
+                                    {}
+                                )
+                                : {};
+
+                    }).catch(() => {
+
+                        monthlyData[dateString] = {};
+
+                    })
+
+                );
+
+            }
+
+
+            await Promise.all(requests);
+
+
+            /* =================================
+               HEADER
+            ================================== */
+
+            let headerHTML = `
+                <tr>
+
+                    <th>
+                        👤 Border
+                    </th>
+            `;
+
+
+            for (
+                let day = 1;
+                day <= daysInMonth;
+                day++
+            ) {
+
+                headerHTML += `
+                    <th>
+                        ${day}
+                    </th>
+                `;
+
+            }
+
+
+            headerHTML += `
+                    <th>
+                        Month<br>Total
+                    </th>
+
+                </tr>
+            `;
+
+
+            head.innerHTML =
+                headerHTML;
+
+
+            /* =================================
+               BODY
+            ================================== */
+
+            let bodyHTML = '';
+
+            const dailyTotals =
+                Array(daysInMonth).fill(0);
+
+
+            membersArray.forEach(member => {
+
+                let memberMonthTotal = 0;
+
+                bodyHTML += `
+                    <tr>
+
+                        <td>
+                            ${escapeHTML(
+                                member.name ||
+                                'Unnamed'
+                            )}
+                        </td>
+                `;
+
+
+                for (
+                    let day = 1;
+                    day <= daysInMonth;
+                    day++
+                ) {
+
+                    const dateString =
+                        `${year}-${String(month + 1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+
+                    const mealData =
+                        monthlyData[dateString] || {};
+
+                    const meal =
+                        mealData[member.id] || {};
+
+                    const mainValue =
+                        getMainMealValue(meal);
+
+                    const guestValue =
+                        getGuestValue(meal);
+
+                    const total =
+                        mainValue +
+                        guestValue;
+
+
+                    memberMonthTotal += total;
+
+                    dailyTotals[day - 1] += total;
+
+
+                    const hasGuest =
+                        guestValue > 0;
+
+                    const hasMeal =
+                        total > 0;
+
+
+                    bodyHTML += `
+                        <td>
+
+                            <span
+                                class="meal-number
+                                ${hasMeal ? 'has-meal' : ''}
+                                ${hasGuest ? 'has-guest' : ''}"
+                                title="${
+                                    hasGuest
+                                    ? `Main: ${formatMealNumber(mainValue)} + Guest: ${formatMealNumber(guestValue)}`
+                                    : `Main: ${formatMealNumber(mainValue)}`
+                                }"
+                            >
+                                ${formatMealNumber(total)}
+                            </span>
+
+                        </td>
+                    `;
+
+                }
+
+
+                bodyHTML += `
+                        <td>
+                            ${formatMealNumber(
+                                memberMonthTotal
+                            )}
+                        </td>
+
+                    </tr>
+                `;
+
+            });
+
+
+            /*
+             * Daily total row
+             */
+
+            bodyHTML += `
+                <tr class="daily-total-row">
+
+                    <td>
+                        📊 Daily Total
+                    </td>
+            `;
+
+
+            for (
+                let day = 1;
+                day <= daysInMonth;
+                day++
+            ) {
+
+                bodyHTML += `
+                    <td>
+                        ${formatMealNumber(
+                            dailyTotals[day - 1]
+                        )}
+                    </td>
+                `;
+
+            }
+
+
+            const monthGrandTotal =
+                dailyTotals.reduce(
+                    (sum, value) =>
+                        sum + value,
+                    0
+                );
+
+
+            bodyHTML += `
+                    <td>
+                        ${formatMealNumber(
+                            monthGrandTotal
+                        )}
+                    </td>
+
+                </tr>
+            `;
+
+
+            if (!membersArray.length) {
+
+                bodyHTML = `
+                    <tr>
+
+                        <td
+                            colspan="${daysInMonth + 2}"
+                            class="text-center py-8 text-gray-500"
+                        >
+                            No members found
+                        </td>
+
+                    </tr>
+                `;
+
+            }
+
+
+            body.innerHTML =
+                bodyHTML;
+
+
+        } catch(error) {
+
+            console.error(
+                'Monthly summary error:',
+                error
+            );
+
+            body.innerHTML = `
+                <tr>
+
+                    <td
+                        colspan="10"
+                        class="text-center py-8 text-red-400"
+                    >
+                        Failed to load monthly meal data.
+                    </td>
+
+                </tr>
+            `;
+
+        }
+
+    }
+
+
+    /* =========================================
+       LOAD ALL DATA
+    ========================================== */
+
+    async function loadAllData() {
+
+        if (!window.db) {
+
+            setTimeout(
+                loadAllData,
+                500
+            );
+
+            return;
+        }
+
+
+        try {
+
+            const {
+                doc,
+                getDoc,
+                collection,
+                getDocs
+            } = await import(
+                "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
+            );
+
+
+            /* ===============================
+               MEAL RATE
+            ================================ */
+
+            const rateSnap =
+                await getDoc(
+                    doc(
+                        window.db,
+                        'settings',
+                        'mealRate'
+                    )
+                );
+
+            const mealRate =
+                rateSnap.exists()
+                    ? Number(
+                        rateSnap.data().rate || 0
+                    )
+                    : 0;
+
+
+            document.getElementById(
+                'currentMealRate'
+            ).textContent =
+                '৳' + mealRate.toFixed(2);
+
+
+            /* ===============================
+               MEMBERS
+            ================================ */
+
+            const membersSnap =
+                await getDocs(
+                    collection(
+                        window.db,
+                        'members'
+                    )
+                );
+
+
+            let totalMealsCount = 0;
+
+            let memberRows = '';
+
+            membersArray = [];
+
+
+            if (membersSnap.empty) {
+
+                memberRows = `
+                    <div class="text-center py-6 text-gray-500 text-sm">
+                        No members found
+                    </div>
+                `;
+
+            } else {
+
+                membersSnap.forEach(docSnap => {
+
+                    const m =
+                        docSnap.data();
+
+
+                    membersArray.push({
+                        id: docSnap.id,
+                        ...m
+                    });
+
+
+                    const deposit =
+                        Number(
+                            m.totalDeposit || 0
+                        );
+
+
+                    const meals =
+                        Number(
+                            m.totalMeals || 0
+                        );
+
+
+                    const balance =
+                        deposit -
+                        (
+                            meals *
+                            mealRate
+                        );
+
+
+                    totalMealsCount +=
+                        meals;
+
+
+                    const isPositive =
+                        balance >= 0;
+
+
+                    const balanceStr =
+                        isPositive
+                            ? `+৳${balance.toFixed(0)}`
+                            : `-৳${Math.abs(balance).toFixed(0)}`;
+
+
+                    const statusStr =
+                        isPositive
+                            ? 'In Advance'
+                            : 'Overdue';
+
+
+                    const colorClass =
+                        isPositive
+                            ? 'text-[#34d399]'
+                            : 'text-[#f87171]';
+
+
+                    memberRows += `
+
+                        <div
+                            class="p-4 rounded-[18px]
+                            bg-[var(--glass-bg-light)]
+                            border border-[var(--glass-border)]
+                            hover:border-[var(--glass-border-strong)]
+                            hover:bg-[var(--glass-bg-hover)]
+                            shadow-[var(--glass-shadow)]
+                            transition-all duration-300
+                            flex justify-between items-center"
+                        >
+
                             <div class="overflow-hidden">
-                                <div class="text-[16px] sm:text-[17px] font-bold text-white mb-1 whitespace-nowrap overflow-hidden text-ellipsis font-bengali">${escapeHTML(m.name || 'Unnamed')}</div>
-                                <div class="text-[12px] text-gray-400">
-                                    Deposit: <span class="text-[#34d399] font-medium">৳${deposit.toFixed(0)}</span> <span class="opacity-50 mx-1">•</span> 
-                                    Meals: <span class="text-[#60a5fa] font-medium">${meals}</span>
+
+                                <div
+                                    class="text-[16px] sm:text-[17px]
+                                    font-bold text-white mb-1
+                                    whitespace-nowrap
+                                    overflow-hidden
+                                    text-ellipsis
+                                    font-bengali"
+                                >
+                                    ${escapeHTML(
+                                        m.name ||
+                                        'Unnamed'
+                                    )}
                                 </div>
-                            </div>
-                            <div class="text-right flex-shrink-0 ml-2">
-                                <div class="stat-value font-bold ${colorClass} mb-0.5" style="font-size: 20px;">${balanceStr}</div>
-                                <div class="text-[10px] ${colorClass} opacity-80 uppercase tracking-widest font-semibold">${statusStr}</div>
-                            </div>
-                        </div>`;
-                    });
-                }
-                document.getElementById('membersList').innerHTML = memberRows;
-                document.getElementById('totalMeals').textContent = totalMealsCount;
 
-                const bazarSnap = await getDocs(collection(window.db, 'bazar'));
-                let totalBazarAmount = 0, bazarRows = '';
-                const bazarArray = [];
-                bazarSnap.forEach(d => bazarArray.push(d.data()));
-                bazarArray.sort((a,b) => b.date && a.date ? b.date.localeCompare(a.date) : 0);
-                
-                bazarArray.forEach(b => {
-                    totalBazarAmount += (b.amount || 0);
-                    bazarRows += `<tr><td>${b.date||'—'}</td><td>${b.purchaser||'—'}</td><td class="text-right font-semibold">৳${(b.amount||0).toFixed(0)}</td></tr>`;
+                                <div class="text-[12px] text-gray-400">
+
+                                    Deposit:
+                                    <span class="text-[#34d399] font-medium">
+                                        ৳${deposit.toFixed(0)}
+                                    </span>
+
+                                    <span class="opacity-50 mx-1">
+                                        •
+                                    </span>
+
+                                    Meals:
+                                    <span class="text-[#60a5fa] font-medium">
+                                        ${meals}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="text-right
+                                flex-shrink-0
+                                ml-2"
+                            >
+
+                                <div
+                                    class="stat-value
+                                    font-bold
+                                    ${colorClass}
+                                    mb-0.5"
+                                    style="font-size:20px;"
+                                >
+                                    ${balanceStr}
+                                </div>
+
+                                <div
+                                    class="text-[10px]
+                                    ${colorClass}
+                                    opacity-80
+                                    uppercase
+                                    tracking-widest
+                                    font-semibold"
+                                >
+                                    ${statusStr}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    `;
+
                 });
-                document.getElementById('bazarList').innerHTML = bazarRows || '<tr><td colspan="3" class="text-center py-4">No records</td></tr>';
-                document.getElementById('totalBazar').textContent = '৳' + totalBazarAmount.toFixed(0);
 
-                const today = new Date().toISOString().split('T')[0];
-                document.getElementById('mealSheetDate').textContent = `(${today})`;
-                const mealSnap = await getDoc(doc(window.db, 'meals', today));
-                let mealRows = '';
-                
-                if (mealSnap.exists() && mealSnap.data().members) {
-                    const mealData = mealSnap.data().members;
-                    membersArray.forEach(member => {
-                        const m = mealData[member.id] || {};
-                        mealRows += `<tr><td class="text-left font-semibold">${member.name}</td>
-                            <td>${m.breakfast ? '✅' : '—'}</td>
-                            <td>${m.lunch ? '✅' : '—'}</td>
-                            <td>${m.dinner ? '✅' : '—'}</td></tr>`;
-                    });
-                } else {
-                    mealRows = '<tr><td colspan="4" class="text-center py-6 text-gray-500">No meal record for today</td></tr>';
-                }
-                document.getElementById('mealSheetBody').innerHTML = mealRows;
+            }
 
-                // Auto-fit stat text
-                setTimeout(autoFitText, 100);
 
-            } catch(e) { console.error(e); }
+            document.getElementById(
+                'membersList'
+            ).innerHTML =
+                memberRows;
+
+
+            document.getElementById(
+                'totalMeals'
+            ).textContent =
+                totalMealsCount;
+
+
+            /* ===============================
+               BAZAR
+            ================================ */
+
+            const bazarSnap =
+                await getDocs(
+                    collection(
+                        window.db,
+                        'bazar'
+                    )
+                );
+
+
+            let totalBazarAmount = 0;
+
+            let bazarRows = '';
+
+            const bazarArray = [];
+
+
+            bazarSnap.forEach(d => {
+
+                bazarArray.push(
+                    d.data()
+                );
+
+            });
+
+
+            bazarArray.sort(
+                (a, b) =>
+                    b.date &&
+                    a.date
+                        ? b.date.localeCompare(
+                            a.date
+                        )
+                        : 0
+            );
+
+
+            bazarArray.forEach(b => {
+
+                totalBazarAmount +=
+                    Number(
+                        b.amount || 0
+                    );
+
+
+                bazarRows += `
+
+                    <tr>
+
+                        <td>
+                            ${escapeHTML(
+                                b.date ||
+                                '—'
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(
+                                b.purchaser ||
+                                '—'
+                            )}
+                        </td>
+
+                        <td class="text-right font-semibold">
+                            ৳${Number(
+                                b.amount || 0
+                            ).toFixed(0)}
+                        </td>
+
+                    </tr>
+
+                `;
+
+            });
+
+
+            document.getElementById(
+                'bazarList'
+            ).innerHTML =
+                bazarRows ||
+                `
+                    <tr>
+                        <td
+                            colspan="3"
+                            class="text-center py-4"
+                        >
+                            No records
+                        </td>
+                    </tr>
+                `;
+
+
+            document.getElementById(
+                'totalBazar'
+            ).textContent =
+                '৳' +
+                totalBazarAmount.toFixed(0);
+
+
+            /* ===============================
+               TODAY MASTER MEAL SHEET
+            ================================ */
+
+            const today =
+                new Date()
+                    .toISOString()
+                    .split('T')[0];
+
+
+            document.getElementById(
+                'mealSheetDate'
+            ).textContent =
+                `(${today})`;
+
+
+            const mealSnap =
+                await getDoc(
+                    doc(
+                        window.db,
+                        'meals',
+                        today
+                    )
+                );
+
+
+            let mealRows = '';
+
+
+            if (
+                mealSnap.exists() &&
+                mealSnap.data().members
+            ) {
+
+                const mealData =
+                    mealSnap.data().members;
+
+
+                membersArray.forEach(
+                    member => {
+
+                        const m =
+                            mealData[
+                                member.id
+                            ] || {};
+
+
+                        mealRows += `
+
+                            <tr>
+
+                                <td class="text-left font-semibold">
+                                    ${escapeHTML(
+                                        member.name
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${
+                                        m.breakfast
+                                            ? '✅'
+                                            : '—'
+                                    }
+                                </td>
+
+                                <td>
+                                    ${
+                                        m.lunch
+                                            ? '✅'
+                                            : '—'
+                                    }
+                                </td>
+
+                                <td>
+                                    ${
+                                        m.dinner
+                                            ? '✅'
+                                            : '—'
+                                    }
+                                </td>
+
+                            </tr>
+
+                        `;
+
+                    }
+                );
+
+            } else {
+
+                mealRows = `
+                    <tr>
+
+                        <td
+                            colspan="4"
+                            class="text-center py-6 text-gray-500"
+                        >
+                            No meal record for today
+                        </td>
+
+                    </tr>
+                `;
+
+            }
+
+
+            document.getElementById(
+                'mealSheetBody'
+            ).innerHTML =
+                mealRows;
+
+
+            /* ===============================
+               MONTHLY SUMMARY
+            ================================ */
+
+            await buildMonthlySummary();
+
+
+            setTimeout(
+                autoFitText,
+                100
+            );
+
+
+        } catch(e) {
+
+            console.error(
+                'Dashboard loading error:',
+                e
+            );
+
         }
 
-        function escapeHTML(str) {
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
+    }
+
+
+    /* =========================================
+       ESCAPE HTML
+    ========================================== */
+
+    function escapeHTML(str) {
+
+        const div =
+            document.createElement(
+                'div'
+            );
+
+        div.textContent =
+            String(str);
+
+        return div.innerHTML;
+
+    }
+
+
+    /* =========================================
+       INIT
+    ========================================== */
+
+    function init() {
+
+        if (window.db) {
+
+            initializeMonthSelector();
+
+            loadManagerName();
+
+            loadAllData();
+
+        } else {
+
+            setTimeout(
+                init,
+                400
+            );
+
         }
 
-        function init() {
-            if (window.db) { loadManagerName(); loadAllData(); } 
-            else setTimeout(init, 400);
+    }
+
+
+    window.addEventListener(
+        'load',
+        init
+    );
+
+
+    window.addEventListener(
+        'resize',
+        autoFitText
+    );
+
+
+    /*
+     * Auto refresh every 35 seconds
+     */
+
+    setInterval(() => {
+
+        if (window.db) {
+
+            loadAllData();
+
         }
-        
-        window.addEventListener('load', init);
-        window.addEventListener('resize', autoFitText);
-        setInterval(() => { if (window.db) loadAllData(); }, 35000);
-    })();
+
+    }, 35000);
+
+
+})();
+
 </script>
+
 </body>
 </html>
