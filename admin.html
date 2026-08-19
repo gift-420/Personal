@@ -1,1053 +1,1536 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Manager Console — Ma Achiya Villa</title>
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1.0">
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<title>Admin Manager — Ma Achiya Villa</title>
 
-    <style>
-        :root {
-            --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
-            --font-bengali: 'Noto Sans Bengali', sans-serif;
-            --font-emoji: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
-            --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-            --radius-lg: 22px;
-            --radius-xl: 30px;
-            --radius-full: 9999px;
-            --transition: 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
+<script src="https://cdn.tailwindcss.com"></script>
 
-        [data-theme="dark"] {
-            --bg-primary: #05050c;
-            --bg-gradient: radial-gradient(ellipse 90% 70% at 50% -30%, #1c1148 0%, #0d0d20 40%, #05050c 70%);
-            --glass-bg: rgba(16, 16, 34, 0.42);
-            --glass-bg-light: rgba(20, 20, 42, 0.32);
-            --glass-bg-hover: rgba(28, 28, 54, 0.5);
-            --glass-border: rgba(255, 255, 255, 0.07);
-            --glass-border-strong: rgba(255, 255, 255, 0.13);
-            --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.07);
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.65);
-            --text-tertiary: rgba(255, 255, 255, 0.4);
-            --accent-purple: #a78bfa;
-            --accent-purple-light: #c4b5fd;
-            --accent-blue: #60a5fa;
-            --accent-green: #34d399;
-            --accent-red: #f87171;
-            --logo-border: #34d399;
-            --logo-glow: 0 0 25px rgba(52, 211, 153, 0.5);
-            --divider: rgba(255, 255, 255, 0.04);
-        }
+<link rel="preconnect"
+      href="https://fonts.googleapis.com">
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
 
-        html {
-            scroll-behavior: smooth;
-            -webkit-tap-highlight-color: transparent;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet">
 
-        body {
-            font-family: var(--font-primary);
-            background: var(--bg-primary);
-            background-image: var(--bg-gradient);
-            min-height: 100vh;
-            padding: 20px;
-            color: var(--text-primary);
-            position: relative;
-            overflow-x: hidden;
-            line-height: 1.5;
-        }
 
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background:
-                radial-gradient(circle at 20% 60%, var(--accent-purple) 0%, transparent 35%),
-                radial-gradient(circle at 75% 25%, var(--accent-blue) 0%, transparent 35%);
-            opacity: 0.15;
-            filter: blur(80px);
-            animation: orbs 20s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
+<script type="module">
 
-        @keyframes orbs {
-            0%, 100% {
-                transform: translate(0, 0) scale(1);
-            }
-            33% {
-                transform: translate(30px, -40px) scale(1.05);
-            }
-            66% {
-                transform: translate(-20px, 20px) scale(0.95);
-            }
-        }
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-        .glass,
-        .stat-card {
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            transition: all var(--transition);
-        }
 
-        .glass::after,
-        .stat-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            opacity: 0.025;
-            mix-blend-mode: overlay;
-            pointer-events: none;
-            z-index: 1;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-        }
+import {
+    getFirestore,
+    collection,
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    deleteDoc,
+    getDocs
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        .glass > *,
-        .stat-card > * {
-            position: relative;
-            z-index: 2;
-        }
 
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(42px) saturate(200%) contrast(105%);
-            -webkit-backdrop-filter: blur(42px) saturate(200%) contrast(105%);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--glass-shadow);
-        }
+import {
+    getAuth,
+    onAuthStateChanged,
+    EmailAuthProvider,
+    reauthenticateWithCredential
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        .logo-circle {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            border: 2px solid var(--logo-border);
-            box-shadow: var(--logo-glow), inset 0 1px 0 rgba(255,255,255,0.22);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
 
-        .logo-text {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            font-family: var(--font-bengali);
-        }
+const firebaseConfig = {
 
-        .logo-text .logo-bn {
-            font-size: 10px;
-            font-weight: 800;
-        }
+    apiKey:
+        "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
 
-        .logo-text .logo-en {
-            font-size: 7px;
-            font-weight: 700;
-            color: var(--text-tertiary);
-            letter-spacing: 0.5px;
-            font-family: var(--font-primary);
-        }
+    authDomain:
+        "my-mess-17fbc.firebaseapp.com",
 
-        .section-heading {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 14px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
+    projectId:
+        "my-mess-17fbc",
 
-        .section-icon {
-            font-family: var(--font-emoji);
-            font-size: 18px;
-        }
+    storageBucket:
+        "my-mess-17fbc.firebasestorage.app",
 
-        .input-glass {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.045);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 14px;
-            padding: 12px 14px;
-            color: var(--text-primary);
-            font-size: 14px;
-            margin-bottom: 10px;
-            outline: none;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
-            transition: all 0.3s;
-        }
+    messagingSenderId:
+        "848426874799",
 
-        .input-glass:focus {
-            border-color: var(--accent-purple);
-            background: rgba(255, 255, 255, 0.09);
-            box-shadow:
-                0 0 0 4px rgba(167, 139, 250, 0.12),
-                inset 0 1px 0 rgba(255,255,255,0.1);
-        }
+    appId:
+        "1:848426874799:web:0722af59e7504da847e15a",
 
-        select.input-glass option {
-            background: #1a103c;
-            color: #fff;
-        }
+    measurementId:
+        "G-RWHJKGV5LS"
+};
 
-        .btn-push {
-            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-            border: none;
-            padding: 12px 18px;
-            border-radius: 30px;
-            color: #fff;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            width: 100%;
-            box-shadow:
-                0 5px 0 #4c1d95,
-                0 10px 22px rgba(139, 92, 246, 0.4),
-                inset 0 1px 0 rgba(255,255,255,0.25);
-            transition: all 0.1s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
 
-        .btn-push:active {
-            box-shadow:
-                0 2px 0 #4c1d95,
-                0 5px 14px rgba(139, 92, 246, 0.35),
-                inset 0 1px 0 rgba(255,255,255,0.25);
-            transform: translateY(4px);
-        }
+const app =
+    initializeApp(firebaseConfig);
 
-        .btn-success {
-            background: linear-gradient(135deg, #34d399, #059669) !important;
-            box-shadow:
-                0 5px 0 #047857,
-                0 10px 22px rgba(52, 211, 153, 0.4) !important;
-        }
 
-        .btn-push:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
+const db =
+    getFirestore(app);
 
-        .stat-card {
-            background: var(--glass-bg-light);
-            backdrop-filter: blur(26px) saturate(180%) contrast(105%);
-            -webkit-backdrop-filter: blur(26px) saturate(180%) contrast(105%);
-            border: 1px solid var(--glass-border);
-            border-radius: 18px;
-            padding: 14px 8px;
-            text-align: center;
-            box-shadow: var(--glass-shadow);
-        }
 
-        .stat-value {
-            white-space: nowrap;
-            transition: font-size 0.2s;
-        }
+const auth =
+    getAuth(app);
 
-        .btn-home,
-        .btn-logout {
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            border: 1px solid;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            transition: all 0.2s;
-        }
 
-        .btn-home {
-            background: rgba(96, 165, 250, 0.1);
-            border-color: rgba(96, 165, 250, 0.3);
-            color: #60a5fa;
-            margin-right: 6px;
-        }
+window.db = db;
+window.auth = auth;
 
-        .btn-logout {
-            background: rgba(248, 113, 113, 0.1);
-            border-color: rgba(248, 113, 113, 0.3);
-            color: #f87171;
-        }
 
-        .btn-home:hover {
-            background: rgba(96, 165, 250, 0.2);
-        }
+window.F =
+{
+    collection,
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    deleteDoc,
+    getDocs,
 
-        .btn-logout:hover {
-            background: rgba(248, 113, 113, 0.2);
-        }
+    onAuthStateChanged,
 
-        ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
-        }
+    EmailAuthProvider,
+    reauthenticateWithCredential
+};
 
-        ::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.02);
-        }
 
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.08);
-            border-radius: 10px;
-        }
-    </style>
+window.firebaseReady = true;
+
+
+if (
+    typeof window.startAdminApp ===
+    "function"
+) {
+
+    window.startAdminApp();
+
+}
+
+</script>
+
+
+<style>
+
+:root {
+
+    --bg:#05050c;
+    --glass:rgba(16,16,34,.48);
+    --border:rgba(255,255,255,.08);
+    --purple:#a78bfa;
+    --blue:#60a5fa;
+    --green:#34d399;
+    --red:#f87171;
+
+}
+
+* {
+    box-sizing:border-box;
+}
+
+body {
+
+    margin:0;
+    padding:18px;
+    min-height:100vh;
+
+    color:white;
+
+    font-family:
+        Inter,
+        'Noto Sans Bengali',
+        sans-serif;
+
+    background:
+        radial-gradient(
+            ellipse 90% 70% at 50% -30%,
+            #241456 0%,
+            #0d0d20 45%,
+            #05050c 75%
+        );
+
+}
+
+.glass {
+
+    background:var(--glass);
+
+    backdrop-filter:
+        blur(35px)
+        saturate(180%);
+
+    -webkit-backdrop-filter:
+        blur(35px)
+        saturate(180%);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:24px;
+
+    box-shadow:
+        0 20px 50px
+        rgba(0,0,0,.45);
+
+}
+
+.input {
+
+    width:100%;
+
+    padding:12px;
+
+    border-radius:13px;
+
+    color:white;
+
+    background:
+        rgba(255,255,255,.05);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    outline:none;
+
+}
+
+.input:focus {
+
+    border-color:
+        var(--purple);
+
+}
+
+.btn {
+
+    border:0;
+
+    border-radius:14px;
+
+    padding:
+        11px 16px;
+
+    color:white;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+}
+
+.purple {
+
+    background:
+        linear-gradient(
+            135deg,
+            #8b5cf6,
+            #6d28d9
+        );
+
+}
+
+.green {
+
+    background:
+        linear-gradient(
+            135deg,
+            #34d399,
+            #059669
+        );
+
+}
+
+.blue {
+
+    background:
+        linear-gradient(
+            135deg,
+            #60a5fa,
+            #2563eb
+        );
+
+}
+
+.red {
+
+    background:
+        linear-gradient(
+            135deg,
+            #f87171,
+            #dc2626
+        );
+
+}
+
+.member {
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:10px;
+
+    padding:14px;
+
+    margin-bottom:8px;
+
+    border-radius:16px;
+
+    background:
+        rgba(255,255,255,.035);
+
+    border:
+        1px solid rgba(255,255,255,.06);
+
+}
+
+.modal {
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:100;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    background:
+        rgba(0,0,0,.78);
+
+    backdrop-filter:
+        blur(10px);
+
+}
+
+.modal-box {
+
+    width:100%;
+
+    max-width:500px;
+
+    padding:22px;
+
+}
+
+.hidden {
+
+    display:none!important;
+
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-<div class="max-w-md mx-auto relative z-10">
 
-    <!-- Header -->
-    <div class="glass p-4 mb-5 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-            <div class="logo-circle">
-                <div class="logo-text">
-                    <span class="logo-bn">মা আছিয়া</span>
-                    <span class="logo-en">VILLA</span>
-                </div>
+<div class="max-w-5xl mx-auto relative z-10">
+
+
+<!-- HEADER -->
+
+<div class="glass p-5 mb-5">
+
+    <div class="flex flex-wrap
+                justify-between
+                items-center gap-3">
+
+        <div>
+
+            <div class="text-2xl
+                        font-black">
+
+                👑 Main Manager
+
             </div>
 
-            <div>
-                <h1 class="text-base font-bold">Manager Console</h1>
-                <p id="userEmail" class="text-xs text-gray-400 truncate max-w-[160px]"></p>
+            <div class="text-xs
+                        text-gray-400">
+
+                Ma Achiya Villa
+                Management Console
+
             </div>
+
+            <div id="managerEmail"
+                 class="text-xs
+                        text-purple-300
+                        mt-1">
+
+            </div>
+
         </div>
 
-        <div class="flex items-center gap-1">
-            <a href="index.html" class="btn-home">
-                <span>🏠</span> Home
+
+        <div class="flex gap-2">
+
+            <a href="index.html"
+               class="btn blue">
+
+                🏠 Dashboard
+
             </a>
 
-            <button class="btn-logout" onclick="window.AppConsole.handleLogout()">
-                🚪 Logout
-            </button>
-        </div>
-    </div>
+            <a href="assistant.html"
+               class="btn purple">
 
-    <!-- Stats -->
-    <div class="grid grid-cols-3 gap-2 mb-5">
+                👨‍💼 Assistant
 
-        <div class="stat-card">
-            <div class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">
-                Meal Rate
-            </div>
+            </a>
 
-            <div
-                class="text-base font-bold stat-value"
-                style="color:var(--accent-purple);"
-                id="mealRate"
-            >
-                ৳0.00
-            </div>
         </div>
 
-        <div class="stat-card">
-            <div class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">
-                Total Meals
-            </div>
-
-            <div
-                class="text-base font-bold stat-value"
-                style="color:var(--accent-blue);"
-                id="totalMeals"
-            >
-                0
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">
-                Total Bazar
-            </div>
-
-            <div
-                class="text-base font-bold stat-value"
-                style="color:var(--accent-green);"
-                id="totalBazar"
-            >
-                ৳0
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Manager Designation -->
-    <div class="glass p-4 mb-4">
-        <div class="section-heading">
-            <span class="section-icon">✏️</span>
-            Manager Designation
-        </div>
-
-        <input
-            type="text"
-            id="managerNameInput"
-            class="input-glass"
-            placeholder="Enter manager name"
-        >
-
-        <button
-            id="btnManagerName"
-            class="btn-push"
-            onclick="window.AppConsole.updateManagerName()"
-        >
-            <span>💾</span> Save Name
-        </button>
-    </div>
-
-    <!-- Add New Border -->
-    <div class="glass p-4 mb-4">
-        <div class="section-heading">
-            <span class="section-icon">➕</span>
-            Add New Border
-        </div>
-
-        <input
-            type="text"
-            id="newMemberName"
-            class="input-glass"
-            placeholder="Member full name"
-        >
-
-        <input
-            type="number"
-            id="newMemberDeposit"
-            class="input-glass"
-            placeholder="Initial deposit (৳)"
-        >
-
-        <button
-            id="btnAddMember"
-            class="btn-push"
-            onclick="window.AppConsole.addMember()"
-        >
-            <span>✅</span> Register Border
-        </button>
-    </div>
-
-    <!-- Deposit Ledger -->
-    <div class="glass p-4 mb-4">
-        <div class="section-heading">
-            <span class="section-icon">💳</span>
-            Deposit Ledger Entry
-        </div>
-
-        <select id="memberSelect" class="input-glass">
-            <option value="">Select border...</option>
-        </select>
-
-        <input
-            type="number"
-            id="depositAmount"
-            class="input-glass"
-            placeholder="Amount (৳)"
-        >
-
-        <button
-            id="btnDeposit"
-            class="btn-push"
-            onclick="window.AppConsole.addDeposit()"
-        >
-            <span>💰</span> Record Payment
-        </button>
-    </div>
-
-    <!-- Bazar Expense Log -->
-    <div class="glass p-4 mb-4">
-        <div class="section-heading">
-            <span class="section-icon">🛍️</span>
-            Bazar Expense Log
-        </div>
-
-        <input
-            type="date"
-            id="bazarDate"
-            class="input-glass"
-            style="color-scheme: dark;"
-        >
-
-        <input
-            type="text"
-            id="purchaser"
-            class="input-glass"
-            placeholder="Purchaser name"
-        >
-
-        <input
-            type="number"
-            id="bazarAmount"
-            class="input-glass"
-            placeholder="Total cost (৳)"
-        >
-
-        <button
-            id="btnBazar"
-            class="btn-push"
-            onclick="window.AppConsole.addBazar()"
-        >
-            <span>🧾</span> Commit Expense
-        </button>
-    </div>
-
-    <!-- Security -->
-    <div class="glass p-4 mb-4">
-        <div class="section-heading">
-            <span class="section-icon">🔒</span>
-            Change Password
-        </div>
-
-        <input
-            type="password"
-            id="oldPassword"
-            class="input-glass"
-            placeholder="Current password"
-        >
-
-        <input
-            type="password"
-            id="newPassword"
-            class="input-glass"
-            placeholder="New password"
-        >
-
-        <button
-            id="btnPassword"
-            class="btn-push"
-            onclick="window.AppConsole.changePassword()"
-        >
-            <span>🔑</span> Update Password
-        </button>
     </div>
 
 </div>
 
 
-<!-- =========================================================
-     FIREBASE + APP CODE
-========================================================= -->
+<!-- MEMBERS -->
 
-<script type="module">
+<div class="glass p-5 mb-5">
 
-    import {
-        initializeApp
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    <div class="flex
+                justify-between
+                items-center mb-4">
 
-    import {
-        getFirestore,
-        collection,
-        addDoc,
-        updateDoc,
-        doc,
-        getDoc,
-        getDocs,
-        setDoc,
-        serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        <h2 class="text-xl
+                   font-bold">
 
-    import {
-        getAuth,
-        setPersistence,
-        browserLocalPersistence,
-        onAuthStateChanged,
-        signOut,
-        updatePassword,
-        EmailAuthProvider,
-        reauthenticateWithCredential
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+            👥 Members
+
+        </h2>
+
+        <button
+            class="btn green"
+            onclick="openAddMember()">
+
+            + Add Member
+
+        </button>
+
+    </div>
 
 
-    // =========================================================
-    // FIREBASE CONFIG
-    // =========================================================
+    <div id="membersList">
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
-        authDomain: "my-mess-17fbc.firebaseapp.com",
-        projectId: "my-mess-17fbc",
-        storageBucket: "my-mess-17fbc.firebasestorage.app",
-        messagingSenderId: "848426874799",
-        appId: "1:848426874799:web:0722af59e7504da847e15a",
-        measurementId: "G-RWHJKGV5LS"
-    };
+        Loading...
+
+    </div>
+
+</div>
 
 
-    // =========================================================
-    // INITIALIZE FIREBASE & PERSISTENCE
-    // =========================================================
+<!-- DATA MANAGEMENT -->
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
+<div class="glass p-5 mb-5">
 
-    // Ensure session stays active across reloads/browser close
-    setPersistence(auth, browserLocalPersistence).catch((error) => {
-        console.error("Persistence error:", error);
+    <h2 class="text-xl
+               font-bold mb-2">
+
+        🗄️ Data Management
+
+    </h2>
+
+    <p class="text-sm
+              text-gray-400 mb-4">
+
+        Meal and bazar records older
+        than two months can be removed.
+        Member names will remain.
+
+    </p>
+
+
+    <div class="grid md:grid-cols-2 gap-3">
+
+        <button
+            class="btn blue"
+            onclick="runOldDataCleanup()">
+
+            🧹 Clean Data Older Than 2 Months
+
+        </button>
+
+
+        <button
+            class="btn red"
+            onclick="openClearModal()">
+
+            ⚠️ Clear Old Meal/Bazar Data
+
+        </button>
+
+    </div>
+
+
+    <div id="cleanupStatus"
+         class="text-sm
+                text-green-400
+                mt-3">
+
+    </div>
+
+</div>
+
+
+<!-- MANAGER SETTINGS -->
+
+<div class="glass p-5 mb-5">
+
+    <h2 class="text-xl
+               font-bold mb-4">
+
+        ⚙️ Manager Settings
+
+    </h2>
+
+
+    <label class="text-xs
+                  text-gray-400">
+
+        Manager Name
+
+    </label>
+
+    <input
+        id="managerName"
+        class="input mt-1 mb-3"
+        placeholder="Manager name">
+
+
+    <button
+        class="btn purple w-full"
+        onclick="saveManagerName()">
+
+        💾 Save Manager Name
+
+    </button>
+
+</div>
+
+
+</div>
+
+
+<!-- ADD MEMBER MODAL -->
+
+<div id="memberModal"
+     class="modal hidden">
+
+    <div class="glass modal-box">
+
+        <h2 class="text-xl
+                   font-bold mb-4">
+
+            👤 Add Member
+
+        </h2>
+
+
+        <input
+            id="newMemberName"
+            class="input mb-3"
+            placeholder="Member name">
+
+
+        <input
+            id="newMemberDeposit"
+            type="number"
+            class="input mb-4"
+            placeholder="Initial deposit">
+
+
+        <div class="flex gap-2">
+
+            <button
+                class="btn green flex-1"
+                onclick="addMember()">
+
+                Add
+
+            </button>
+
+
+            <button
+                class="btn red flex-1"
+                onclick="closeMemberModal()">
+
+                Cancel
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- CLEAR MODAL -->
+
+<div id="clearModal"
+     class="modal hidden">
+
+    <div class="glass modal-box">
+
+        <h2 class="text-xl
+                   font-bold text-red-400">
+
+            ⚠️ Confirm Data Clear
+
+        </h2>
+
+
+        <p class="text-sm
+                  text-gray-400 mt-2 mb-5">
+
+            This will delete meal and bazar
+            records older than two months.
+            Member names will NOT be deleted.
+
+            <br><br>
+
+            Both Manager password and
+            Assistant Manager password
+            are required.
+
+        </p>
+
+
+        <input
+            id="managerPassword"
+            type="password"
+            class="input mb-3"
+            placeholder="Main Manager password">
+
+
+        <input
+            id="assistantPassword"
+            type="password"
+            class="input mb-4"
+            placeholder="Assistant Manager password">
+
+
+        <div id="clearError"
+             class="text-red-400
+                    text-sm mb-3">
+
+        </div>
+
+
+        <div class="flex gap-2">
+
+            <button
+                class="btn red flex-1"
+                onclick="confirmClearData()">
+
+                🔥 Confirm Clear
+
+            </button>
+
+
+            <button
+                class="btn blue flex-1"
+                onclick="closeClearModal()">
+
+                Cancel
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+const MANAGER_EMAIL =
+    "spi@gmail.com";
+
+
+const ASSISTANT_EMAIL =
+    "spi1@gmail.com";
+
+
+/*
+ * IMPORTANT:
+ * Change MANAGER_EMAIL above to the
+ * actual Firebase Auth email of your
+ * main manager.
+ */
+
+
+window.startAdminApp =
+function() {
+
+    if (
+        !window.firebaseReady ||
+        !window.auth
+    ) return;
+
+
+    window.F.onAuthStateChanged(
+        window.auth,
+        async user => {
+
+            if (!user) {
+
+                location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            /*
+             * Main manager only
+             */
+
+            if (
+                user.email.toLowerCase() !==
+                MANAGER_EMAIL.toLowerCase()
+            ) {
+
+                alert(
+                    "Unauthorized manager account."
+                );
+
+                location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            document.getElementById(
+                "managerEmail"
+            ).textContent =
+                user.email;
+
+
+            await loadMembers();
+            await loadManagerSettings();
+
+            /*
+             * Automatic cleanup when
+             * main manager opens admin.
+             */
+
+            await runOldDataCleanup(
+                true
+            );
+
+        }
+    );
+
+};
+
+
+/* =========================
+   MEMBERS
+========================= */
+
+async function loadMembers() {
+
+    const snap =
+        await window.F.getDocs(
+            window.F.collection(
+                window.db,
+                "members"
+            )
+        );
+
+
+    const box =
+        document.getElementById(
+            "membersList"
+        );
+
+
+    box.innerHTML = "";
+
+
+    snap.forEach(d => {
+
+        const m = d.data();
+
+
+        box.innerHTML += `
+
+        <div class="member">
+
+            <div>
+
+                <div class="font-bold">
+
+                    ${escapeHTML(
+                        m.name ||
+                        "Unnamed"
+                    )}
+
+                </div>
+
+                <div class="text-xs
+                            text-gray-400">
+
+                    Deposit:
+                    ৳${Number(
+                        m.totalDeposit || 0
+                    ).toFixed(0)}
+
+                    • Meals:
+                    ${Number(
+                        m.totalMeals || 0
+                    )}
+
+                </div>
+
+            </div>
+
+
+            <div class="flex gap-2">
+
+                <button
+                    class="btn blue"
+                    onclick="
+                        editDeposit(
+                            '${d.id}',
+                            ${Number(
+                                m.totalDeposit || 0
+                            )}
+                        )
+                    ">
+
+                    💰 Deposit
+
+                </button>
+
+
+                <button
+                    class="btn red"
+                    onclick="
+                        removeMember(
+                            '${d.id}'
+                        )
+                    ">
+
+                    Remove
+
+                </button>
+
+            </div>
+
+        </div>
+
+        `;
+
     });
 
 
-    // =========================================================
-    // MAKE FIREBASE AVAILABLE TO APP
-    // =========================================================
-
-    window.db = db;
-    window.auth = auth;
-    window.FirebaseSDK = {
-        collection,
-        addDoc,
-        updateDoc,
-        doc,
-        getDoc,
-        getDocs,
-        setDoc,
-        serverTimestamp,
-        onAuthStateChanged,
-        signOut,
-        updatePassword,
-        EmailAuthProvider,
-        reauthenticateWithCredential
-    };
-
-
-    // =========================================================
-    // MANAGER CONSOLE
-    // =========================================================
-
-    class EnterpriseConsole {
-
-        constructor() {
-            this.db = db;
-            this.auth = auth;
-            this.currentUser = null;
-            this.init();
-        }
-
-
-        // =====================================================
-        // AUTH CHECK WITH STRICT SECURITY & LOCALSTORAGE LOCK
-        // =====================================================
-
-        init() {
-            // Strict check: if local storage flag is missing, force redirect immediately
-            if (localStorage.getItem("adminLoggedIn") !== "true") {
-                window.location.href = "login.html";
-                return;
-            }
-
-            onAuthStateChanged(this.auth, async (user) => {
-                console.log("Auth state changed:", user);
-
-                // No user found
-                if (!user) {
-                    localStorage.removeItem("adminLoggedIn");
-                    window.location.href = "login.html";
-                    return;
-                }
-
-                // Only admin email allowed
-                if (user.email !== "spi@gmail.com") {
-                    console.log("Unauthorized email:", user.email);
-                    await signOut(this.auth);
-                    localStorage.removeItem("adminLoggedIn");
-                    window.location.href = "login.html";
-                    return;
-                }
-
-                // Authorized admin session active
-                console.log("Authorized admin logged in:", user.email);
-                localStorage.setItem("adminLoggedIn", "true");
-                this.currentUser = user;
-
-                const emailElement = document.getElementById("userEmail");
-                if (emailElement) {
-                    emailElement.textContent = user.email;
-                }
-
-                try {
-                    await this.loadAllData();
-                } catch (error) {
-                    console.error("Error loading admin data:", error);
-                }
-            });
-        }
-
-
-        // =====================================================
-        // AUTO FIT STATS
-        // =====================================================
-
-        autoFitStats() {
-            document.querySelectorAll(".stat-value").forEach((el) => {
-                const parent = el.parentElement;
-                let fontSize = 16;
-                el.style.fontSize = fontSize + "px";
-
-                while (
-                    el.scrollWidth > (parent.clientWidth - 8) &&
-                    fontSize > 10
-                ) {
-                    fontSize--;
-                    el.style.fontSize = fontSize + "px";
-                }
-            });
-        }
+    if (!snap.size) {
 
+        box.innerHTML =
+            `<div class="text-center
+                        text-gray-400
+                        py-8">
+                No members found.
+             </div>`;
 
-        // =====================================================
-        // LOAD EVERYTHING
-        // =====================================================
+    }
 
-        async loadAllData() {
-            await this.loadMemberDropdown();
-            await this.refreshStats();
-            await this.loadManagerName();
-        }
+}
 
 
-        // =====================================================
-        // LOAD MEMBERS
-        // =====================================================
+/* =========================
+   ADD MEMBER
+========================= */
 
-        async loadMemberDropdown() {
-            const membersCollection = collection(this.db, "members");
-            const snap = await getDocs(membersCollection);
-            const select = document.getElementById("memberSelect");
-            let options = '<option value="">Select border...</option>';
+window.openAddMember =
+function() {
 
-            snap.forEach((memberDoc) => {
-                const data = memberDoc.data();
-                options += `
-                    <option value="${memberDoc.id}">
-                        ${data.name || "Unnamed"} (৳${data.totalDeposit || 0})
-                    </option>
-                `;
-            });
+    document.getElementById(
+        "memberModal"
+    ).classList.remove("hidden");
 
-            select.innerHTML = options;
-        }
+};
 
 
-        // =====================================================
-        // LOAD MANAGER NAME
-        // =====================================================
+window.closeMemberModal =
+function() {
 
-        async loadManagerName() {
-            const managerRef = doc(this.db, "settings", "manager");
-            const snap = await getDoc(managerRef);
+    document.getElementById(
+        "memberModal"
+    ).classList.add("hidden");
 
-            if (snap.exists()) {
-                const data = snap.data();
-                document.getElementById("managerNameInput").value = data.name || "";
-            }
-        }
+};
 
 
-        // =====================================================
-        // REFRESH STATS
-        // =====================================================
+window.addMember =
+async function() {
 
-        async refreshStats() {
-            const membersSnap = await getDocs(collection(this.db, "members"));
-            let totalMeals = 0;
+    const name =
+        document.getElementById(
+            "newMemberName"
+        ).value.trim();
 
-            membersSnap.forEach((memberDoc) => {
-                const data = memberDoc.data();
-                totalMeals += Number(data.totalMeals || 0);
-            });
 
-            document.getElementById("totalMeals").textContent = totalMeals;
+    const deposit =
+        Number(
+            document.getElementById(
+                "newMemberDeposit"
+            ).value || 0
+        );
 
-            const bazarSnap = await getDocs(collection(this.db, "bazar"));
-            let totalBazar = 0;
 
-            bazarSnap.forEach((bazarDoc) => {
-                const data = bazarDoc.data();
-                totalBazar += Number(data.amount || 0);
-            });
+    if (!name) {
 
-            document.getElementById("totalBazar").textContent = "৳" + totalBazar;
+        alert(
+            "Enter member name."
+        );
 
-            const rate = totalMeals > 0 ? totalBazar / totalMeals : 0;
-            document.getElementById("mealRate").textContent = "৳" + rate.toFixed(2);
-
-            await setDoc(
-                doc(this.db, "settings", "mealRate"),
-                { rate: rate },
-                { merge: true }
-            );
-
-            setTimeout(() => this.autoFitStats(), 50);
-        }
-
-
-        // =====================================================
-        // SUCCESS BUTTON
-        // =====================================================
-
-        showSuccess(buttonId) {
-            const btn = document.getElementById(buttonId);
-            if (!btn) return;
-
-            btn.classList.add("btn-success");
-            setTimeout(() => {
-                btn.classList.remove("btn-success");
-            }, 1500);
-        }
-
-
-        // =====================================================
-        // ADD MEMBER
-        // =====================================================
-
-        async addMember() {
-            try {
-                const name = document.getElementById("newMemberName").value.trim();
-                const deposit = parseFloat(document.getElementById("newMemberDeposit").value) || 0;
-
-                if (!name) {
-                    alert("Enter member name");
-                    return;
-                }
-
-                await addDoc(collection(this.db, "members"), {
-                    name: name,
-                    totalDeposit: deposit,
-                    totalMeals: 0,
-                    createdAt: serverTimestamp()
-                });
-
-                document.getElementById("newMemberName").value = "";
-                document.getElementById("newMemberDeposit").value = "";
-
-                this.showSuccess("btnAddMember");
-                await this.loadAllData();
-                alert("✅ Border registered");
-
-            } catch (error) {
-                console.error("Add member error:", error);
-                alert("Member add করতে সমস্যা হয়েছে: " + error.message);
-            }
-        }
-
-
-        // =====================================================
-        // ADD DEPOSIT
-        // =====================================================
-
-        async addDeposit() {
-            try {
-                const memberId = document.getElementById("memberSelect").value;
-                const amount = parseFloat(document.getElementById("depositAmount").value);
-
-                if (!memberId || isNaN(amount) || amount <= 0) {
-                    alert("Select border and amount");
-                    return;
-                }
-
-                const memberRef = doc(this.db, "members", memberId);
-                const snap = await getDoc(memberRef);
-
-                if (!snap.exists()) {
-                    alert("Member not found");
-                    return;
-                }
-
-                const currentDeposit = Number(snap.data().totalDeposit || 0);
-
-                await updateDoc(memberRef, {
-                    totalDeposit: currentDeposit + amount
-                });
-
-                document.getElementById("depositAmount").value = "";
-                this.showSuccess("btnDeposit");
-                await this.loadAllData();
-                alert("✅ Payment recorded");
-
-            } catch (error) {
-                console.error("Deposit error:", error);
-                alert("Payment update করতে সমস্যা হয়েছে: " + error.message);
-            }
-        }
-
-
-        // =====================================================
-        // ADD BAZAR
-        // =====================================================
-
-        async addBazar() {
-            try {
-                const date = document.getElementById("bazarDate").value;
-                const purchaser = document.getElementById("purchaser").value.trim();
-                const amount = parseFloat(document.getElementById("bazarAmount").value);
-
-                if (!date || !purchaser || isNaN(amount) || amount <= 0) {
-                    alert("Fill all fields");
-                    return;
-                }
-
-                await addDoc(collection(this.db, "bazar"), {
-                    date: date,
-                    purchaser: purchaser,
-                    amount: amount,
-                    timestamp: serverTimestamp()
-                });
-
-                document.getElementById("bazarDate").value = "";
-                document.getElementById("purchaser").value = "";
-                document.getElementById("bazarAmount").value = "";
-
-                this.showSuccess("btnBazar");
-                await this.loadAllData();
-                alert("✅ Expense logged");
-
-            } catch (error) {
-                console.error("Bazar error:", error);
-                alert("Bazar update করতে সমস্যা হয়েছে: " + error.message);
-            }
-        }
-
-
-        // =====================================================
-        // UPDATE MANAGER NAME
-        // =====================================================
-
-        async updateManagerName() {
-            try {
-                const newName = document.getElementById("managerNameInput").value.trim();
-
-                if (!newName) {
-                    alert("Enter name");
-                    return;
-                }
-
-                await setDoc(
-                    doc(this.db, "settings", "manager"),
-                    { name: newName },
-                    { merge: true }
-                );
-
-                this.showSuccess("btnManagerName");
-                alert("✅ Manager name updated");
-
-            } catch (error) {
-                console.error("Manager name error:", error);
-                alert("Manager name update করতে সমস্যা হয়েছে: " + error.message);
-            }
-        }
-
-
-        // =====================================================
-        // CHANGE PASSWORD
-        // =====================================================
-
-        async changePassword() {
-            try {
-                const oldPass = document.getElementById("oldPassword").value;
-                const newPass = document.getElementById("newPassword").value;
-
-                if (!oldPass || !newPass) {
-                    alert("Enter both passwords");
-                    return;
-                }
-
-                if (newPass.length < 6) {
-                    alert("Min 6 characters");
-                    return;
-                }
-
-                if (!this.currentUser) {
-                    alert("User session not found");
-                    return;
-                }
-
-                const credential = EmailAuthProvider.credential(
-                    this.currentUser.email,
-                    oldPass
-                );
-
-                await reauthenticateWithCredential(this.currentUser, credential);
-                await updatePassword(this.currentUser, newPass);
-
-                document.getElementById("oldPassword").value = "";
-                document.getElementById("newPassword").value = "";
-
-                this.showSuccess("btnPassword");
-                alert("✅ Password changed");
-
-            } catch (error) {
-                console.error("Password change error:", error);
-
-                if (error.code === "auth/wrong-password") {
-                    alert("Current password is incorrect.");
-                } else {
-                    let errorMessage = error.message;
-                    // Provide a cleaner fallback if error messages are verbose
-                    if (errorMessage.includes("auth/")) {
-                        errorMessage = "Invalid credential or network error.";
-                    }
-                    alert("Password change failed: " + errorMessage);
-                }
-            }
-        }
-
-
-        // =====================================================
-        // LOGOUT
-        // =====================================================
-
-        async handleLogout() {
-            try {
-                await signOut(this.auth);
-                localStorage.removeItem("adminLoggedIn");
-                window.location.href = "login.html";
-            } catch (error) {
-                console.error("Logout error:", error);
-                alert("Logout failed: " + error.message);
-            }
-        }
+        return;
 
     }
 
 
-    // =========================================================
-    // CREATE APP INSTANCE
-    // =========================================================
-
-    window.AppConsole = new EnterpriseConsole();
+    const id =
+        "member_" +
+        Date.now();
 
 
-    // =========================================================
-    // RESIZE EVENT
-    // =========================================================
-
-    window.addEventListener("resize", () => {
-        if (window.AppConsole) {
-            window.AppConsole.autoFitStats();
+    await window.F.setDoc(
+        window.F.doc(
+            window.db,
+            "members",
+            id
+        ),
+        {
+            name,
+            totalDeposit:
+                deposit,
+            totalMeals:0,
+            active:true,
+            createdAt:
+                new Date()
+                .toISOString()
         }
-    });
+    );
+
+
+    closeMemberModal();
+
+    document.getElementById(
+        "newMemberName"
+    ).value = "";
+
+
+    document.getElementById(
+        "newMemberDeposit"
+    ).value = "";
+
+
+    await loadMembers();
+
+};
+
+
+/* =========================
+   DEPOSIT
+========================= */
+
+window.editDeposit =
+async function(id,current) {
+
+    const value =
+        prompt(
+            "New total deposit:",
+            current
+        );
+
+
+    if (value === null)
+        return;
+
+
+    const deposit =
+        Number(value);
+
+
+    if (!Number.isFinite(deposit))
+        return;
+
+
+    await window.F.updateDoc(
+        window.F.doc(
+            window.db,
+            "members",
+            id
+        ),
+        {
+            totalDeposit:
+                deposit
+        }
+    );
+
+
+    await loadMembers();
+
+};
+
+
+/* =========================
+   REMOVE MEMBER
+========================= */
+
+window.removeMember =
+async function(id) {
+
+    const ok =
+        confirm(
+            "Remove this member from active members?"
+        );
+
+
+    if (!ok)
+        return;
+
+
+    /*
+     * Soft remove.
+     * Name/history remains in Firestore.
+     */
+
+    await window.F.updateDoc(
+        window.F.doc(
+            window.db,
+            "members",
+            id
+        ),
+        {
+            active:false
+        }
+    );
+
+
+    await loadMembers();
+
+};
+
+
+/* =========================
+   MANAGER SETTINGS
+========================= */
+
+async function loadManagerSettings() {
+
+    const snap =
+        await window.F.getDoc(
+            window.F.doc(
+                window.db,
+                "settings",
+                "manager"
+            )
+        );
+
+
+    if (snap.exists()) {
+
+        document.getElementById(
+            "managerName"
+        ).value =
+            snap.data().name || "";
+
+    }
+
+}
+
+
+window.saveManagerName =
+async function() {
+
+    const name =
+        document.getElementById(
+            "managerName"
+        ).value.trim();
+
+
+    if (!name)
+        return;
+
+
+    await window.F.setDoc(
+        window.F.doc(
+            window.db,
+            "settings",
+            "manager"
+        ),
+        {
+            name
+        },
+        {
+            merge:true
+        }
+    );
+
+
+    alert(
+        "✅ Manager name saved."
+    );
+
+};
+
+
+/* =========================
+   TWO MONTH CLEANUP
+========================= */
+
+function getCutoffDate() {
+
+    const d =
+        new Date();
+
+    /*
+     * Two calendar months before today.
+     */
+
+    d.setMonth(
+        d.getMonth() - 2
+    );
+
+    return d;
+
+}
+
+
+function isOlderThanTwoMonths(
+    dateString
+) {
+
+    if (!dateString)
+        return false;
+
+
+    const d =
+        new Date(
+            dateString +
+            "T23:59:59"
+        );
+
+
+    return d <
+        getCutoffDate();
+
+}
+
+
+/*
+ * This deletes ONLY:
+ *
+ * meals/YYYY-MM-DD
+ * bazar documents
+ *
+ * It NEVER deletes members.
+ */
+
+window.runOldDataCleanup =
+async function(silent=false) {
+
+    try {
+
+        let removedMeals = 0;
+        let removedBazar = 0;
+
+
+        /*
+         * MEALS
+         */
+
+        const mealSnap =
+            await window.F.getDocs(
+                window.F.collection(
+                    window.db,
+                    "meals"
+                )
+            );
+
+
+        for (
+            const d
+            of mealSnap.docs
+        ) {
+
+            const id =
+                d.id;
+
+
+            if (
+                /^\d{4}-\d{2}-\d{2}$/
+                    .test(id) &&
+                isOlderThanTwoMonths(id)
+            ) {
+
+                await window.F.deleteDoc(
+                    d.ref
+                );
+
+                removedMeals++;
+
+            }
+
+        }
+
+
+        /*
+         * BAZAR
+         */
+
+        const bazarSnap =
+            await window.F.getDocs(
+                window.F.collection(
+                    window.db,
+                    "bazar"
+                )
+            );
+
+
+        for (
+            const d
+            of bazarSnap.docs
+        ) {
+
+            const data =
+                d.data();
+
+
+            if (
+                data.date &&
+                isOlderThanTwoMonths(
+                    data.date
+                )
+            ) {
+
+                await window.F.deleteDoc(
+                    d.ref
+                );
+
+                removedBazar++;
+
+            }
+
+        }
+
+
+        const message =
+            `Meals removed: ${removedMeals}
+             | Bazar removed: ${removedBazar}`;
+
+
+        document.getElementById(
+            "cleanupStatus"
+        ).textContent =
+            "✓ " + message;
+
+
+        if (!silent) {
+
+            alert(
+                "✅ Old data cleanup completed.\n\n" +
+                message
+            );
+
+        }
+
+    } catch(error) {
+
+        console.error(error);
+
+        if (!silent) {
+
+            alert(
+                "❌ Cleanup failed:\n" +
+                error.message
+            );
+
+        }
+
+    }
+
+};
+
+
+/* =========================
+   CLEAR MODAL
+========================= */
+
+window.openClearModal =
+function() {
+
+    document.getElementById(
+        "clearModal"
+    ).classList.remove("hidden");
+
+};
+
+
+window.closeClearModal =
+function() {
+
+    document.getElementById(
+        "clearModal"
+    ).classList.add("hidden");
+
+};
+
+
+/* =========================
+   DOUBLE PASSWORD CLEAR
+========================= */
+
+window.confirmClearData =
+async function() {
+
+    const managerPassword =
+        document.getElementById(
+            "managerPassword"
+        ).value;
+
+
+    const assistantPassword =
+        document.getElementById(
+            "assistantPassword"
+        ).value;
+
+
+    const error =
+        document.getElementById(
+            "clearError"
+        );
+
+
+    error.textContent = "";
+
+
+    if (
+        !managerPassword ||
+        !assistantPassword
+    ) {
+
+        error.textContent =
+            "Both passwords are required.";
+
+        return;
+
+    }
+
+
+    try {
+
+        /*
+         * 1. Verify MAIN MANAGER password
+         */
+
+        const manager =
+            window.auth.currentUser;
+
+
+        if (!manager) {
+
+            throw new Error(
+                "Manager session expired."
+            );
+
+        }
+
+
+        const managerCredential =
+            window.F.EmailAuthProvider
+                .credential(
+                    manager.email,
+                    managerPassword
+                );
+
+
+        await window.F
+            .reauthenticateWithCredential(
+                manager,
+                managerCredential
+            );
+
+
+        /*
+         * 2. Verify ASSISTANT password
+         *
+         * A second Firebase App/Auth is used
+         * so manager session is not replaced.
+         */
+
+        const {
+            initializeApp,
+            getApps
+        } = await import(
+            "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"
+        );
+
+
+        const {
+            getAuth,
+            signInWithEmailAndPassword,
+            signOut
+        } = await import(
+            "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"
+        );
+
+
+        let secondaryApp;
+
+
+        const apps =
+            getApps();
+
+
+        secondaryApp =
+            apps.find(
+                a =>
+                    a.name ===
+                    "AssistantVerification"
+            );
+
+
+        if (!secondaryApp) {
+
+            secondaryApp =
+                initializeApp(
+                    {
+                        apiKey:
+                            "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
+
+                        authDomain:
+                            "my-mess-17fbc.firebaseapp.com",
+
+                        projectId:
+                            "my-mess-17fbc",
+
+                        storageBucket:
+                            "my-mess-17fbc.firebasestorage.app",
+
+                        messagingSenderId:
+                            "848426874799",
+
+                        appId:
+                            "1:848426874799:web:0722af59e7504da847e15a"
+                    },
+                    "AssistantVerification"
+                );
+
+        }
+
+
+        const secondaryAuth =
+            getAuth(
+                secondaryApp
+            );
+
+
+        await signInWithEmailAndPassword(
+            secondaryAuth,
+            ASSISTANT_EMAIL,
+            assistantPassword
+        );
+
+
+        /*
+         * Both passwords verified.
+         */
+
+        await signOut(
+            secondaryAuth
+        );
+
+
+        /*
+         * Now clear OLD data.
+         * Members stay.
+         */
+
+        await runOldDataCleanup(
+            true
+        );
+
+
+        alert(
+            "✅ Both passwords verified.\n\n" +
+            "Old meal and bazar data cleared.\n" +
+            "Member names were kept."
+        );
+
+
+        document.getElementById(
+            "managerPassword"
+        ).value = "";
+
+
+        document.getElementById(
+            "assistantPassword"
+        ).value = "";
+
+
+        closeClearModal();
+
+
+    } catch(error) {
+
+        console.error(error);
+
+        error.textContent =
+            "Verification failed: " +
+            error.message;
+
+    }
+
+};
+
+
+/* =========================
+   HELPER
+========================= */
+
+function escapeHTML(str) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        String(str);
+
+    return div.innerHTML;
+
+}
 
 </script>
 
