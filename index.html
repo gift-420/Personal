@@ -3,26 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#070711">
+<meta name="theme-color" content="#070812">
 <meta name="description" content="Ma Achiya Villa Premium Mess Dashboard">
 <title>Ma Achiya Villa — Dashboard</title>
 
+<!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
 
+<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root{
-    --bg:#06060d;
-    --card:rgba(18,18,34,.72);
-    --card2:rgba(24,24,45,.58);
-    --border:rgba(255,255,255,.075);
+    --bg:#05060c;
+    --panel:rgba(18,20,35,.72);
+    --panel2:rgba(255,255,255,.045);
+    --border:rgba(255,255,255,.085);
     --border2:rgba(255,255,255,.14);
     --text:#fff;
     --muted:rgba(255,255,255,.58);
-    --dim:rgba(255,255,255,.36);
+    --dim:rgba(255,255,255,.35);
 
     --purple:#a78bfa;
     --blue:#60a5fa;
@@ -30,10 +32,8 @@
     --red:#f87171;
 
     --shadow:
-        0 18px 45px rgba(0,0,0,.40),
-        inset 0 1px 0 rgba(255,255,255,.055);
-
-    --radius:22px;
+        0 18px 50px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.06);
 }
 
 *{
@@ -48,827 +48,569 @@ html{
 }
 
 body{
-    min-height:100vh;
-    padding:14px 10px 30px;
+    font-family:Inter,system-ui,sans-serif;
     color:var(--text);
     background:
         radial-gradient(
-            circle at 50% -15%,
-            rgba(110,76,190,.25),
-            transparent 38%
+            700px 380px at 50% -100px,
+            rgba(111,76,255,.22),
+            transparent 70%
         ),
-        linear-gradient(180deg,#080811 0%,#05050b 100%);
-    font-family:Inter,system-ui,sans-serif;
+        radial-gradient(
+            500px 350px at 100% 30%,
+            rgba(50,120,255,.08),
+            transparent 70%
+        ),
+        var(--bg);
+    /* Optimization: Prevent background repaints */
+    background-attachment: fixed;
+    min-height:100vh;
     overflow-x:hidden;
 }
 
-.font-bengali{
-    font-family:"Noto Sans Bengali",sans-serif;
-}
-
-/* ===============================
-   MAIN CONTAINER
-================================ */
-
-.app{
-    width:100%;
-    max-width:760px;
-    margin:auto;
-    position:relative;
-    z-index:2;
-}
-
-/* ===============================
-   GLASS
-================================ */
+/* =========================
+   PREMIUM GLASS
+========================= */
 
 .glass{
-    background:linear-gradient(
-        145deg,
-        rgba(25,25,46,.76),
-        rgba(11,11,23,.72)
-    );
-
+    background:var(--panel);
     border:1px solid var(--border);
     box-shadow:var(--shadow);
-
     backdrop-filter:blur(18px);
     -webkit-backdrop-filter:blur(18px);
-
-    border-radius:var(--radius);
+    border-radius:24px;
+    
+    /* Optimization: GPU Hardware Acceleration */
+    transform: translateZ(0);
+    will-change: backdrop-filter;
 }
 
-.card{
+.glass-card{
+    background:var(--panel2);
+    border:1px solid var(--border);
+    box-shadow:0 12px 35px rgba(0,0,0,.22);
+    border-radius:20px;
     transition:
-        transform .22s ease,
-        border-color .22s ease,
-        background .22s ease;
+        transform .2s ease,
+        border-color .2s ease,
+        background .2s ease;
+        
+    /* Optimization: GPU Hardware Acceleration */
+    transform: translateZ(0);
+    will-change: transform, background-color;
 }
 
-.card:hover{
+.glass-card:hover{
     border-color:var(--border2);
-    background:rgba(25,25,47,.78);
-    transform:translateY(-1px);
+    background:rgba(255,255,255,.06);
+    transform:translateY(-1px) translateZ(0);
 }
 
-/* ===============================
+/* =========================
    HEADER
-================================ */
-
-.header{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-bottom:18px;
-}
+========================= */
 
 .logo{
-    width:56px;
-    height:56px;
-    flex:none;
-
+    width:58px;
+    height:58px;
+    border-radius:50%;
     display:flex;
     align-items:center;
     justify-content:center;
-
-    border-radius:50%;
-
-    background:
-        radial-gradient(
-            circle at 30% 25%,
-            rgba(255,255,255,.12),
-            transparent 38%
-        ),
-        rgba(17,17,32,.8);
-
+    background:rgba(20,22,38,.7);
     border:1.5px solid rgba(52,211,153,.75);
-
     box-shadow:
-        0 0 22px rgba(52,211,153,.20),
-        inset 0 1px rgba(255,255,255,.12);
+        0 0 24px rgba(52,211,153,.2),
+        inset 0 1px 0 rgba(255,255,255,.15);
+    flex-shrink:0;
 }
 
-.logoText{
+.logo-text{
     text-align:center;
-    line-height:1.1;
+    font-family:"Noto Sans Bengali",sans-serif;
+    line-height:1.05;
 }
 
-.logoBn{
+.logo-bn{
     display:block;
-    font-family:"Noto Sans Bengali",sans-serif;
     font-size:10px;
     font-weight:800;
 }
 
-.logoEn{
+.logo-en{
     display:block;
     margin-top:3px;
+    font-family:Inter,sans-serif;
     font-size:7px;
-    letter-spacing:1.5px;
+    letter-spacing:1.4px;
     color:var(--dim);
+    font-weight:700;
 }
 
-.manager{
-    flex:1;
-    min-width:0;
-
-    text-align:center;
-
-    padding:8px 13px;
-    border-radius:18px;
-
-    background:rgba(255,255,255,.035);
+.manager-pill{
+    min-width:150px;
+    padding:8px 16px;
+    border-radius:999px;
+    background:rgba(255,255,255,.045);
     border:1px solid var(--border);
+    text-align:center;
+    box-shadow:0 10px 28px rgba(0,0,0,.2);
 }
 
-.month{
+.month-text{
+    display:block;
     font-size:12px;
     font-weight:800;
     letter-spacing:.5px;
 }
 
-.managerLabel{
-    margin-top:2px;
-    color:var(--dim);
-    font-size:9px;
-    letter-spacing:.4px;
-}
-
-.managerName{
-    color:#c4b5fd;
-    font-weight:700;
-}
-
-.menuWrap{
-    position:relative;
-    flex:none;
-}
-
-.menuBtn{
-    width:46px;
-    height:46px;
-
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:4px;
-
-    border-radius:15px;
-
-    background:rgba(255,255,255,.045);
-    border:1px solid var(--border);
-
-    cursor:pointer;
-}
-
-.menuBtn span{
-    width:17px;
-    height:2px;
-    border-radius:4px;
-    background:#fff;
-}
-
-.menuBtn:active{
-    transform:scale(.95);
-}
-
-/* ===============================
-   DROPDOWN
-================================ */
-
-.dropdown{
-    position:absolute;
-    right:0;
-    top:54px;
-
-    width:215px;
-    padding:6px;
-
-    border-radius:18px;
-
-    background:rgba(14,14,27,.96);
-    border:1px solid var(--border2);
-
-    box-shadow:
-        0 20px 55px rgba(0,0,0,.55);
-
-    z-index:100;
-
-    animation:drop .18s ease;
-}
-
-@keyframes drop{
-    from{
-        opacity:0;
-        transform:translateY(-5px) scale(.98);
-    }
-    to{
-        opacity:1;
-        transform:none;
-    }
-}
-
-.dropdown.hidden{
-    display:none;
-}
-
-.menuItem{
-    width:100%;
-    display:flex;
-    align-items:center;
-    gap:11px;
-
-    padding:12px 13px;
-
-    color:#fff;
-    text-decoration:none;
-
-    border-radius:13px;
-    font-size:13px;
-    font-weight:600;
-
-    background:transparent;
-    border:0;
-    cursor:pointer;
-    text-align:left;
-}
-
-.menuItem:hover{
-    background:rgba(167,139,250,.09);
-}
-
-.menuItem small{
+.manager-label{
     display:block;
-    color:var(--dim);
-    font-size:9px;
     margin-top:2px;
-    font-weight:400;
+    font-size:9px;
+    color:var(--dim);
+    text-transform:uppercase;
+    letter-spacing:.6px;
 }
 
-/* ===============================
+.manager-name{
+    color:var(--purple);
+}
+
+/* =========================
    STATS
-================================ */
+========================= */
 
-.stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:8px;
-    margin-bottom:14px;
-}
-
-.stat{
-    padding:14px 7px;
+.stat-card{
+    padding:16px 8px;
     text-align:center;
 }
 
-.statIcon{
+.stat-icon{
     font-size:21px;
-    line-height:1;
+    display:block;
+    margin-bottom:5px;
 }
 
-.statLabel{
-    margin-top:7px;
-    font-size:8px;
-    letter-spacing:1px;
-    color:var(--dim);
-    text-transform:uppercase;
+.stat-label{
+    font-size:9px;
     font-weight:700;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:var(--dim);
 }
 
-.statValue{
+.stat-value{
     margin-top:3px;
-    font-size:19px;
+    font-size:21px;
+    line-height:1.1;
     font-weight:800;
-    white-space:nowrap;
 }
 
-.purple{color:#c4b5fd}
-.blue{color:#93c5fd}
-.green{color:#6ee7b7}
+/* =========================
+   SECTION TITLE
+========================= */
 
-/* ===============================
-   SECTION
-================================ */
-
-.section{
-    padding:16px;
-    margin-bottom:13px;
-}
-
-.sectionTitle{
+.section-title{
+    font-size:18px;
+    font-weight:800;
     display:flex;
     align-items:center;
     gap:8px;
-
-    font-size:17px;
-    font-weight:800;
-
-    margin-bottom:13px;
 }
 
-.sectionIcon{
-    font-size:19px;
-}
-
-.subText{
+.section-subtitle{
+    font-size:10px;
     color:var(--dim);
-    font-size:9px;
-    margin-top:-8px;
+    margin-top:3px;
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+.search-box{
+    position:relative;
     margin-bottom:12px;
 }
 
-/* ===============================
-   SEARCH
-================================ */
-
-.searchBox{
-    position:relative;
-    margin-bottom:11px;
-}
-
-.searchBox input{
+.search-box input{
     width:100%;
-    height:43px;
-
-    padding:0 42px 0 40px;
-
-    color:#fff;
-    outline:none;
-
-    background:rgba(255,255,255,.035);
+    height:44px;
+    border-radius:15px;
     border:1px solid var(--border);
-
-    border-radius:14px;
-
-    font-size:12px;
-
+    outline:none;
+    background:rgba(255,255,255,.045);
+    color:white;
+    padding:0 42px 0 42px;
+    font-size:13px;
     transition:.2s;
+    /* Optimization for smoother focus */
+    will-change: border-color, box-shadow;
 }
 
-.searchBox input:focus{
-    border-color:rgba(167,139,250,.38);
-    background:rgba(167,139,250,.035);
+.search-box input:focus{
+    border-color:rgba(167,139,250,.45);
+    background:rgba(255,255,255,.06);
+    box-shadow:0 0 0 3px rgba(167,139,250,.07);
 }
 
-.searchIcon{
+.search-icon{
     position:absolute;
     left:14px;
     top:50%;
     transform:translateY(-50%);
-    opacity:.55;
+    color:var(--dim);
+    pointer-events:none;
 }
 
-.clearSearch{
+.clear-search{
     position:absolute;
     right:10px;
     top:50%;
     transform:translateY(-50%);
-
-    width:25px;
-    height:25px;
-
-    border:0;
+    width:26px;
+    height:26px;
+    border:none;
     border-radius:50%;
-
-    background:rgba(255,255,255,.06);
-    color:#fff;
-
+    background:rgba(255,255,255,.08);
+    color:white;
     cursor:pointer;
     display:none;
 }
 
-/* ===============================
-   MEMBER
-================================ */
+/* =========================
+   MEMBER CARD
+========================= */
 
-.members{
-    display:flex;
-    flex-direction:column;
-    gap:7px;
-}
-
-.member{
+.member-card{
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap:10px;
-
-    padding:12px 13px;
-
-    border-radius:16px;
-
-    background:rgba(255,255,255,.027);
+    padding:13px 14px;
+    border-radius:17px;
+    background:rgba(255,255,255,.035);
     border:1px solid rgba(255,255,255,.055);
-
-    transition:.2s;
+    transition:.18s ease;
+    
+    /* Optimization: Contains DOM repaints to just this card */
+    contain: content;
 }
 
-.member:hover{
-    background:rgba(255,255,255,.045);
-    border-color:rgba(255,255,255,.10);
+.member-card:hover{
+    background:rgba(255,255,255,.055);
+    border-color:var(--border2);
 }
 
-.memberName{
-    font-family:"Noto Sans Bengali",sans-serif;
-    font-size:14px;
-    font-weight:700;
-
+.member-name{
+    font-family:"Noto Sans Bengali",Inter,sans-serif;
+    font-size:15px;
+    font-weight:800;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
 }
 
-.memberMeta{
+.member-info{
     margin-top:3px;
-    color:var(--dim);
     font-size:10px;
+    color:var(--muted);
 }
 
 .balance{
-    flex:none;
     text-align:right;
+    flex-shrink:0;
 }
 
-.balanceValue{
-    font-size:17px;
+.balance-value{
+    font-size:18px;
     font-weight:800;
 }
 
-.balanceStatus{
-    margin-top:2px;
+.balance-status{
     font-size:8px;
-    letter-spacing:1px;
     text-transform:uppercase;
+    letter-spacing:1px;
     font-weight:700;
+    opacity:.8;
 }
 
-.positive{
-    color:var(--green);
-}
-
-.negative{
-    color:var(--red);
-}
-
-/* ===============================
+/* =========================
    TABLE
-================================ */
+========================= */
 
-.tableWrap{
+.table-wrap{
     width:100%;
-    overflow-x:auto;
+    overflow:auto;
     -webkit-overflow-scrolling:touch;
-    border-radius:14px;
+    border-radius:16px;
 }
 
-table{
+.data-table{
     width:100%;
     border-collapse:collapse;
 }
 
-th{
-    padding:10px 9px;
+.data-table th{
+    padding:10px 12px;
     text-align:left;
-
-    color:var(--dim);
-    font-size:8px;
-    letter-spacing:1px;
+    font-size:9px;
     text-transform:uppercase;
-
+    letter-spacing:1.2px;
+    color:var(--dim);
     border-bottom:1px solid var(--border);
     white-space:nowrap;
 }
 
-td{
-    padding:10px 9px;
-
+.data-table td{
+    padding:11px 12px;
+    font-size:12px;
     color:var(--muted);
-    font-size:11px;
-
     border-bottom:1px solid rgba(255,255,255,.035);
+    white-space:nowrap;
 }
 
-tr:last-child td{
-    border-bottom:0;
+.data-table tbody tr:last-child td{
+    border-bottom:none;
 }
 
-td:first-child{
-    color:#fff;
-    font-weight:600;
+.data-table td:first-child{
+    color:white;
+    font-weight:700;
 }
 
-.textRight{
-    text-align:right;
-}
-
-/* ===============================
+/* =========================
    MONTH CONTROL
-================================ */
+========================= */
 
-.monthTop{
+.month-control{
     display:flex;
     align-items:center;
-    justify-content:space-between;
-    gap:8px;
-    margin-bottom:11px;
-}
-
-.monthControl{
-    display:flex;
-    align-items:center;
-    gap:4px;
-
+    gap:5px;
     padding:4px;
-
+    border:1px solid var(--border);
     border-radius:13px;
     background:rgba(255,255,255,.035);
-    border:1px solid var(--border);
 }
 
-.monthControl button{
-    width:28px;
-    height:28px;
-
-    border:0;
+.month-control button{
+    width:30px;
+    height:30px;
+    border:none;
     border-radius:9px;
-
-    color:#fff;
-    background:rgba(255,255,255,.045);
-
+    background:rgba(255,255,255,.05);
+    color:white;
     cursor:pointer;
+    font-size:18px;
 }
 
-.monthControl select{
+.month-control button:active{
+    transform:scale(.94);
+}
+
+.month-control select{
+    height:30px;
     max-width:125px;
-
-    border:0;
-    outline:0;
-
-    color:#fff;
+    border:none;
+    outline:none;
     background:transparent;
-
+    color:white;
     font-size:10px;
     font-weight:700;
 }
 
-/* ===============================
-   MONTHLY TABLE
-================================ */
+.month-control option{
+    background:#151629;
+    color:white;
+}
 
-.monthlyWrap{
+/* =========================
+   MONTHLY TABLE
+========================= */
+
+.monthly-wrapper{
     overflow:auto;
-    border-radius:14px;
+    border-radius:16px;
     -webkit-overflow-scrolling:touch;
 }
 
-.monthly{
-    min-width:max-content;
+.monthly-table{
     border-collapse:separate;
     border-spacing:0;
+    min-width:max-content;
+    width:100%;
 }
 
-.monthly th,
-.monthly td{
-    min-width:38px;
-    padding:7px 6px;
+.monthly-table th,
+.monthly-table td{
     text-align:center;
-    border-right:1px solid rgba(255,255,255,.04);
-    border-bottom:1px solid rgba(255,255,255,.04);
+    white-space:nowrap;
+    border-right:1px solid rgba(255,255,255,.035);
+    border-bottom:1px solid rgba(255,255,255,.035);
 }
 
-.monthly th{
+.monthly-table th{
+    padding:9px 7px;
+    font-size:9px;
+    color:var(--dim);
+    background:rgba(255,255,255,.025);
     position:sticky;
     top:0;
-    z-index:4;
-    background:#151526;
+    z-index:5;
 }
 
-.monthly th:first-child,
-.monthly td:first-child{
+.monthly-table td{
+    min-width:39px;
+    height:40px;
+    padding:5px;
+    font-size:10px;
+    font-weight:700;
+    color:var(--muted);
+}
+
+.monthly-table th:first-child,
+.monthly-table td:first-child{
     position:sticky;
     left:0;
-    z-index:5;
-    min-width:105px;
+    z-index:7;
+    min-width:110px;
     text-align:left;
+    background:#111321;
 }
 
-.monthly th:first-child{
-    background:#151526;
-}
-
-.monthly td:first-child{
-    background:#0e0e1d;
-    color:#fff;
-    font-family:"Noto Sans Bengali",sans-serif;
-}
-
-.monthly th:last-child,
-.monthly td:last-child{
+.monthly-table th:last-child,
+.monthly-table td:last-child{
     position:sticky;
     right:0;
-    z-index:5;
+    z-index:7;
     min-width:65px;
+    background:#151629;
 }
 
-.monthly th:last-child{
-    background:#151526;
+.monthly-table td:first-child{
+    color:white;
+    font-family:"Noto Sans Bengali",Inter,sans-serif;
 }
 
-.monthly td:last-child{
-    background:#111123;
-    color:#c4b5fd;
-    font-weight:800;
-}
-
-.mealNumber{
+.meal-number{
     min-width:25px;
     height:25px;
-
     display:inline-flex;
     align-items:center;
     justify-content:center;
-
     border-radius:8px;
-
-    color:rgba(255,255,255,.52);
-    background:rgba(255,255,255,.035);
-
-    font-size:9px;
-    font-weight:700;
+    background:rgba(255,255,255,.045);
+    color:var(--dim);
 }
 
-.mealNumber.hasMeal{
+.meal-number.has-meal{
+    background:rgba(52,211,153,.10);
     color:#6ee7b7;
-    background:rgba(52,211,153,.09);
 }
 
-.mealNumber.hasGuest{
-    box-shadow:inset 0 0 0 1px rgba(96,165,250,.28);
+.meal-number.has-guest{
+    box-shadow:
+        inset 0 0 0 1px rgba(96,165,250,.35),
+        0 0 10px rgba(96,165,250,.08);
 }
 
-.totalRow td{
+.daily-total-row td{
     background:rgba(167,139,250,.08)!important;
     color:#c4b5fd!important;
     font-weight:800;
 }
 
-/* ===============================
-   LEGEND
-================================ */
-
-.legend{
-    display:flex;
-    align-items:center;
-    gap:5px;
-
-    color:var(--dim);
-    font-size:9px;
+.daily-total-row td:first-child{
+    color:white!important;
 }
 
-.dot{
-    width:7px;
-    height:7px;
-    border-radius:50%;
-    background:var(--blue);
-}
-
-/* ===============================
+/* =========================
    LOADER
-================================ */
+========================= */
 
 .loader{
-    width:28px;
-    height:28px;
-
-    margin:22px auto;
-
-    border:2px solid rgba(255,255,255,.08);
+    width:32px;
+    height:32px;
+    border:3px solid rgba(255,255,255,.07);
     border-top-color:var(--purple);
-
     border-radius:50%;
-
     animation:spin .7s linear infinite;
+    margin:auto;
 }
 
 @keyframes spin{
-    to{transform:rotate(360deg)}
+    to{
+        transform:rotate(360deg);
+    }
 }
+
+/* =========================
+   EMPTY
+========================= */
 
 .empty{
-    padding:22px;
     text-align:center;
+    padding:25px 10px;
     color:var(--dim);
-    font-size:11px;
+    font-size:12px;
 }
 
-/* ===============================
-   ACCESS BADGE
-================================ */
-
-.accessBadge{
-    display:inline-flex;
-    align-items:center;
-    gap:5px;
-
-    padding:5px 9px;
-
-    border-radius:999px;
-
-    color:#a7f3d0;
-    background:rgba(52,211,153,.07);
-    border:1px solid rgba(52,211,153,.12);
-
-    font-size:8px;
-    font-weight:700;
-    letter-spacing:.6px;
-}
-
-/* ===============================
+/* =========================
    MOBILE
-================================ */
+========================= */
 
-@media(max-width:600px){
-
+@media(max-width:640px){
     body{
-        padding:
-            max(10px,env(safe-area-inset-top))
-            8px
-            max(25px,env(safe-area-inset-bottom));
+        padding:10px;
     }
-
-    .header{
-        gap:7px;
+    .glass{
+        border-radius:20px;
     }
-
     .logo{
         width:50px;
         height:50px;
     }
-
-    .manager{
-        padding:7px 8px;
+    .manager-pill{
+        min-width:0;
+        padding:7px 10px;
     }
-
-    .month{
+    .month-text{
         font-size:10px;
     }
-
-    .managerLabel{
-        font-size:8px;
+    .manager-label{
+        font-size:7px;
     }
-
-    .menuBtn{
-        width:43px;
-        height:43px;
+    .stat-card{
+        padding:13px 5px;
     }
-
-    .section{
-        padding:13px;
-    }
-
-    .sectionTitle{
-        font-size:16px;
-    }
-
-    .stat{
-        padding:12px 4px;
-    }
-
-    .statIcon{
+    .stat-icon{
         font-size:18px;
     }
-
-    .statValue{
-        font-size:16px;
+    .stat-value{
+        font-size:18px;
     }
-
-    .statLabel{
+    .stat-label{
         font-size:7px;
         letter-spacing:.7px;
     }
-
-    .member{
-        padding:11px;
+    .member-name{
+        font-size:14px;
     }
-
-    .memberName{
-        font-size:13px;
-    }
-
-    .balanceValue{
-        font-size:15px;
+    .balance-value{
+        font-size:16px;
     }
 }
 
-/* Disable expensive visual effects on low power devices */
+/* Reduce motion */
 @media(prefers-reduced-motion:reduce){
     *,
     *::before,
     *::after{
         animation-duration:.01ms!important;
-        transition-duration:.01ms!important;
+        animation-iteration-count:1!important;
         scroll-behavior:auto!important;
+        transition:none!important;
     }
 }
 </style>
@@ -876,1751 +618,729 @@ td:first-child{
 
 <body>
 
-<div class="app">
+<div class="max-w-2xl mx-auto">
 
-<!-- ================= HEADER ================= -->
+<!-- =========================
+     HEADER
+========================= -->
 
-<header class="header">
+<header class="flex items-center justify-between gap-3 mb-5">
 
     <div class="logo">
-        <div class="logoText">
-            <span class="logoBn">মা আছিয়া</span>
-            <span class="logoEn">VILLA</span>
+        <div class="logo-text">
+            <span class="logo-bn">মা আছিয়া</span>
+            <span class="logo-en">VILLA</span>
         </div>
     </div>
 
-    <div class="manager">
-        <div class="month" id="currentMonthYear">
-            Loading...
-        </div>
-
-        <div class="managerLabel">
-            👤 Manager —
-            <span class="managerName" id="managerName">
+    <div class="flex-1 flex justify-center">
+        <div class="manager-pill">
+            <span id="currentMonthYear" class="month-text">
                 Loading...
             </span>
+
+            <span class="manager-label">
+                👤 Manager —
+                <strong id="managerName" class="manager-name">
+                    Loading...
+                </strong>
+            </span>
         </div>
-    </div>
-
-    <div class="menuWrap">
-
-        <button
-            class="menuBtn"
-            id="menuBtn"
-            aria-label="Menu"
-            type="button"
-        >
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-
-        <div
-            id="menuDropdown"
-            class="dropdown hidden"
-        >
-
-            <a
-                href="assistant.html"
-                class="menuItem"
-            >
-                <span>🧑‍💼</span>
-
-                <div>
-                    Assistant Access
-                    <small>Assistant dashboard</small>
-                </div>
-            </a>
-
-            <a
-                href="admin.html"
-                class="menuItem"
-            >
-                <span>🛡️</span>
-
-                <div>
-                    Admin Access
-                    <small>Management panel</small>
-                </div>
-            </a>
-
-            <button
-                type="button"
-                class="menuItem"
-                id="logoutBtn"
-            >
-                <span>🚪</span>
-
-                <div>
-                    Logout
-                    <small>Sign out this browser</small>
-                </div>
-            </button>
-
-        </div>
-
     </div>
 
 </header>
 
 
-<!-- ================= STATS ================= -->
+<!-- =========================
+     STATS
+========================= -->
 
-<section class="stats">
+<div class="grid grid-cols-3 gap-2 sm:gap-3 mb-5">
 
-    <div class="glass card stat">
-        <div class="statIcon">💰</div>
-        <div class="statLabel">Meal Rate</div>
-        <div
-            id="currentMealRate"
-            class="statValue purple"
-        >—</div>
+    <div class="glass-card stat-card">
+        <span class="stat-icon">💰</span>
+        <div class="stat-label">Meal Rate</div>
+        <div id="currentMealRate" class="stat-value" style="color:var(--purple);">—</div>
     </div>
 
-    <div class="glass card stat">
-        <div class="statIcon">🍽️</div>
-        <div class="statLabel">Total Meals</div>
-        <div
-            id="totalMeals"
-            class="statValue blue"
-        >—</div>
+    <div class="glass-card stat-card">
+        <span class="stat-icon">🍽️</span>
+        <div class="stat-label">Total Meals</div>
+        <div id="totalMeals" class="stat-value" style="color:var(--blue);">—</div>
     </div>
 
-    <div class="glass card stat">
-        <div class="statIcon">🛒</div>
-        <div class="statLabel">Total Bazar</div>
-        <div
-            id="totalBazar"
-            class="statValue green"
-        >—</div>
+    <div class="glass-card stat-card">
+        <span class="stat-icon">🛒</span>
+        <div class="stat-label">Total Bazar</div>
+        <div id="totalBazar" class="stat-value" style="color:var(--green);">—</div>
     </div>
 
-</section>
+</div>
 
 
-<!-- ================= MEMBERS ================= -->
+<!-- =========================
+     MEMBERS
+========================= -->
 
-<section class="glass section">
+<section class="glass p-4 sm:p-5 mb-5">
 
-    <div class="sectionTitle">
-        <span class="sectionIcon">👥</span>
-        Members Balance
-
-        <span
-            id="memberCount"
-            class="accessBadge"
-            style="margin-left:auto"
-        >
-            0 Members
-        </span>
+    <div class="flex items-center justify-between gap-3 mb-4">
+        <div>
+            <h2 class="section-title">
+                <span>👥</span>
+                Members Balance
+            </h2>
+            <p class="section-subtitle">
+                Current member balance overview
+            </p>
+        </div>
+        <div id="memberCount" class="text-[10px] text-gray-500">—</div>
     </div>
 
-    <div class="searchBox">
 
-        <span class="searchIcon">🔎</span>
+    <!-- SEARCH -->
 
-        <input
-            id="memberSearch"
-            type="search"
-            autocomplete="off"
-            placeholder="Search member..."
-        >
-
-        <button
-            id="clearSearch"
-            class="clearSearch"
-            type="button"
-        >
-            ×
-        </button>
-
+    <div class="search-box">
+        <span class="search-icon">🔎</span>
+        <input id="memberSearch" type="search" autocomplete="off" placeholder="Search member...">
+        <button id="clearSearch" class="clear-search" type="button">×</button>
     </div>
 
-    <div
-        id="membersList"
-        class="members"
-    >
-        <div class="loader"></div>
+
+    <div id="membersList" class="flex flex-col gap-2">
+        <div class="py-8"><div class="loader"></div></div>
     </div>
 
 </section>
 
 
-<!-- ================= BAZAR ================= -->
+<!-- =========================
+     BAZAR
+========================= -->
 
-<section class="glass section">
+<section class="glass p-4 sm:p-5 mb-5">
 
-    <div class="sectionTitle">
-        <span class="sectionIcon">🧾</span>
+    <h2 class="section-title mb-4">
+        <span>🧾</span>
         Bazar History
-    </div>
+    </h2>
 
-    <div class="tableWrap">
-
-        <table>
-
+    <div class="table-wrap">
+        <table class="data-table">
             <thead>
                 <tr>
                     <th>Date</th>
                     <th>Purchaser</th>
-                    <th class="textRight">Total Cost</th>
+                    <th style="text-align:right">Total Cost</th>
                 </tr>
             </thead>
-
             <tbody id="bazarList">
-
                 <tr>
-                    <td colspan="3">
-                        <div class="loader"></div>
-                    </td>
+                    <td colspan="3"><div class="py-6"><div class="loader"></div></div></td>
                 </tr>
-
             </tbody>
-
         </table>
-
     </div>
 
 </section>
 
 
-<!-- ================= MONTHLY ================= -->
+<!-- =========================
+     MONTHLY SUMMARY
+========================= -->
 
-<section class="glass section">
+<section class="glass p-4 sm:p-5 mb-5">
 
-    <div class="monthTop">
-
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div>
-
-            <div class="sectionTitle" style="margin-bottom:0">
-                <span class="sectionIcon">📅</span>
+            <h2 class="section-title">
+                <span>📅</span>
                 Daily Meal Summary
-            </div>
-
-            <div
-                id="summaryMonthTitle"
-                class="subText"
-                style="margin:3px 0 0"
-            >
-                Loading...
-            </div>
-
+            </h2>
+            <p class="section-subtitle">
+                Border-wise daily meal record
+            </p>
         </div>
 
-        <div class="monthControl">
-
-            <button
-                type="button"
-                id="prevMonth"
-            >‹</button>
-
-            <select id="summaryMonth"></select>
-
-            <button
-                type="button"
-                id="nextMonth"
-            >›</button>
-
+        <div class="month-control">
+            <button type="button" onclick="changeSummaryMonth(-1)">‹</button>
+            <select id="summaryMonth" onchange="loadMonthlyMealSummary()"></select>
+            <button type="button" onclick="changeSummaryMonth(1)">›</button>
         </div>
-
     </div>
 
-    <div
-        class="legend"
-        style="margin-bottom:8px"
-    >
-        <span class="dot"></span>
-        Guest included
+
+    <div class="flex items-center justify-between mb-3">
+        <div id="summaryMonthTitle" class="text-xs font-semibold text-gray-300">Loading...</div>
+        <div class="text-[9px] text-gray-500">🔵 Guest</div>
     </div>
 
-    <div class="monthlyWrap">
 
-        <table class="monthly">
-
+    <div class="monthly-wrapper">
+        <table class="monthly-table">
             <thead id="monthlyMealHead"></thead>
-
             <tbody id="monthlyMealBody">
                 <tr>
-                    <td>
-                        <div class="loader"></div>
-                    </td>
+                    <td colspan="10"><div class="py-8"><div class="loader"></div></div></td>
                 </tr>
             </tbody>
-
         </table>
-
     </div>
 
-    <div
-        style="
-            margin-top:10px;
-            color:var(--dim);
-            font-size:9px;
-        "
-    >
-        Breakfast = 0.5 • Lunch = 1 • Dinner = 1 • Guest quantity added separately
+    <div class="mt-3 text-[9px] text-gray-500">
+        Breakfast = 0.5 • Lunch = 1 • Dinner = 1 •
+        Guest quantity included
     </div>
 
 </section>
 
 
-<!-- ================= MASTER SHEET ================= -->
+<!-- =========================
+     TODAY MEAL SHEET
+========================= -->
 
-<section class="glass section">
+<section class="glass p-4 sm:p-5 mb-5">
 
-    <div class="sectionTitle">
-
-        <span class="sectionIcon">📋</span>
-
-        Master Meal Sheet
-
-        <span
-            id="mealSheetDate"
-            style="
-                margin-left:auto;
-                color:var(--dim);
-                font-size:9px;
-                font-weight:500;
-            "
-        ></span>
-
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="section-title">
+            <span>📋</span>
+            Master Meal Sheet
+        </h2>
+        <span id="mealSheetDate" class="text-[9px] text-gray-500"></span>
     </div>
 
-    <div class="tableWrap">
 
-        <table>
-
+    <div class="table-wrap">
+        <table class="data-table">
             <thead>
                 <tr>
                     <th>Border</th>
-                    <th>Breakfast</th>
-                    <th>Lunch</th>
-                    <th>Dinner</th>
+                    <th style="text-align:center">B.Fast</th>
+                    <th style="text-align:center">Lunch</th>
+                    <th style="text-align:center">Dinner</th>
                 </tr>
             </thead>
-
             <tbody id="mealSheetBody">
-
                 <tr>
-                    <td colspan="4">
-                        <div class="loader"></div>
-                    </td>
+                    <td colspan="4"><div class="py-6"><div class="loader"></div></div></td>
                 </tr>
-
             </tbody>
-
         </table>
-
     </div>
 
 </section>
+
+
+<div class="text-center pb-5 text-[9px] text-gray-600">
+    Ma Achiya Villa • Public Dashboard
+</div>
 
 </div>
 
 
 <script type="module">
 
-/* =========================================
+/* =====================================================
    FIREBASE
-========================================= */
+===================================================== */
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
 import {
-    initializeApp
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
-import {
-    getAuth,
-    onAuthStateChanged,
-    signOut
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-import {
-    getFirestore,
-    collection,
-    getDocs,
-    doc,
-    getDoc
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    getFirestore, collection, getDocs, doc, getDoc
+}
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 
 const firebaseConfig = {
+    apiKey: "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
+    authDomain: "my-mess-17fbc.firebaseapp.com",
+    projectId: "my-mess-17fbc",
+    storageBucket: "my-mess-17fbc.firebasestorage.app",
+    messagingSenderId: "848426874799",
+    appId: "1:848426874799:web:0722af59e7504da847e15a",
+    measurementId: "G-RWHJKGV5LS"
+};
 
-    apiKey:
-        "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-    authDomain:
-        "my-mess-17fbc.firebaseapp.com",
 
-    projectId:
-        "my-mess-17fbc",
+/* =====================================================
+   GLOBAL STATE
+===================================================== */
 
-    storageBucket:
-        "my-mess-17fbc.firebasestorage.app",
+let membersArray = [];
+let filteredMembers = [];
+let summaryDate = new Date();
+let monthlyCache = new Map();
+let dashboardLoading = false;
 
-    messagingSenderId:
-        "848426874799",
 
-    appId:
-        "1:848426874799:web:0722af59e7504da847e15a",
+/* =====================================================
+   ELEMENTS
+===================================================== */
 
-    measurementId:
-        "G-RWHJKGV5LS"
+const $ = id => document.getElementById(id);
+
+
+/* =====================================================
+   ESCAPE
+===================================================== */
+
+function escapeHTML(value){
+    const div = document.createElement("div");
+    div.textContent = String(value ?? "");
+    return div.innerHTML;
+}
+
+
+/* =====================================================
+   FORMAT
+===================================================== */
+
+function formatMoney(value){
+    return "৳" + Number(value || 0).toFixed(0);
+}
+
+function formatMealNumber(value){
+    value = Number(value || 0);
+    if(!value) return "—";
+    return Number.isInteger(value) ? String(value) : value.toFixed(1);
+}
+
+
+/* =====================================================
+   DATE
+===================================================== */
+
+function todayString(){
+    const d = new Date();
+    return [
+        d.getFullYear(),
+        String(d.getMonth()+1).padStart(2,"0"),
+        String(d.getDate()).padStart(2,"0")
+    ].join("-");
+}
+
+
+/* =====================================================
+   MANAGER
+===================================================== */
+
+async function loadManager(){
+    try{
+        const snap = await getDoc(doc(db,"settings","manager"));
+        $("managerName").textContent = snap.exists() ? (snap.data().name || "Manager") : "Manager";
+    }catch(error){
+        console.error("Manager:",error);
+        $("managerName").textContent = "Manager";
+    }
+}
+
+
+/* =====================================================
+   MEAL VALUE
+===================================================== */
+
+function getMainMealValue(meal){
+    if(!meal) return 0;
+    let total = 0;
+    if(meal.breakfast === true || meal.breakfast === 1) total += .5;
+    if(meal.lunch === true || meal.lunch === 1) total += 1;
+    if(meal.dinner === true || meal.dinner === 1) total += 1;
+    return total;
+}
+
+function getGuestValue(meal){
+    if(!meal) return 0;
+    const keys = ["guest", "guests", "guestMeals", "guestMeal", "guestCount"];
+    for(const key of keys){
+        if(meal[key] !== undefined && meal[key] !== null && meal[key] !== ""){
+            const n = Number(meal[key]);
+            if(Number.isFinite(n) && n > 0) return n;
+        }
+    }
+    return 0;
+}
+
+
+/* =====================================================
+   MEMBERS
+===================================================== */
+
+function renderMembers(){
+    const container = $("membersList");
+    const list = filteredMembers;
+
+    $("memberCount").textContent = `${list.length} / ${membersArray.length}`;
+
+    if(!list.length){
+        container.innerHTML = `<div class="empty">No member found</div>`;
+        return;
+    }
+
+    // Optimization: Build string before setting innerHTML
+    let htmlString = "";
+    for(let i=0; i<list.length; i++) {
+        const member = list[i];
+        const deposit = Number(member.totalDeposit || 0);
+        const meals = Number(member.totalMeals || 0);
+        const rate = Number(member._mealRate || 0);
+        const balance = deposit - meals * rate;
+        const positive = balance >= 0;
+        const color = positive ? "var(--green)" : "var(--red)";
+        const status = positive ? "In Advance" : "Overdue";
+        const amount = positive ? `+৳${balance.toFixed(0)}` : `-৳${Math.abs(balance).toFixed(0)}`;
+
+        htmlString += `
+            <div class="member-card">
+                <div class="min-w-0">
+                    <div class="member-name">${escapeHTML(member.name || "Unnamed")}</div>
+                    <div class="member-info">
+                        Deposit: <span style="color:var(--green)">${formatMoney(deposit)}</span>
+                        <span class="mx-1 opacity-40">•</span>
+                        Meals: <span style="color:var(--blue)">${meals}</span>
+                    </div>
+                </div>
+                <div class="balance">
+                    <div class="balance-value" style="color:${color}">${amount}</div>
+                    <div class="balance-status" style="color:${color}">${status}</div>
+                </div>
+            </div>`;
+    }
+    container.innerHTML = htmlString;
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+function setupSearch(){
+    const input = $("memberSearch");
+    const clear = $("clearSearch");
+    let searchTimeout;
+
+    input.addEventListener("input",()=>{
+        const query = input.value.trim().toLowerCase();
+        clear.style.display = query ? "block" : "none";
+
+        // Optimization: Debounce search to prevent lag while typing
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            if(!query){
+                filteredMembers = [...membersArray];
+            }else{
+                filteredMembers = membersArray.filter(member =>
+                    String(member.name || "").toLowerCase().includes(query)
+                );
+            }
+            renderMembers();
+        }, 250); // 250ms delay
+    });
+
+    clear.addEventListener("click",()=>{
+        input.value = "";
+        clear.style.display = "none";
+        filteredMembers = [...membersArray];
+        renderMembers();
+        input.focus();
+    });
+}
+
+
+/* =====================================================
+   MONTH SELECTOR
+===================================================== */
+
+function initializeMonthSelector(){
+    const select = $("summaryMonth");
+    select.innerHTML = "";
+    for(let i=0;i<12;i++){
+        const d = new Date();
+        d.setMonth(d.getMonth() - i);
+        const year = d.getFullYear();
+        const month = d.getMonth();
+        const value = `${year}-${String(month+1).padStart(2,"0")}`;
+        const label = d.toLocaleDateString("en-US", {month:"long", year:"numeric"});
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = label;
+        select.appendChild(option);
+    }
+    setSelectedMonth();
+}
+
+function setSelectedMonth(){
+    const value = `${summaryDate.getFullYear()}-${String(summaryDate.getMonth()+1).padStart(2,"0")}`;
+    $("summaryMonth").value = value;
+}
+
+window.changeSummaryMonth = direction => {
+    summaryDate.setMonth(summaryDate.getMonth() + direction);
+    setSelectedMonth();
+    loadMonthlyMealSummary();
+};
+
+window.loadMonthlyMealSummary = async function(){
+    const value = $("summaryMonth").value;
+    if(!value) return;
+    const [year,month] = value.split("-").map(Number);
+    summaryDate = new Date(year,month-1,1);
+    await buildMonthlySummary();
 };
 
 
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-
-const db = getFirestore(app);
-
-window.db = db;
-
-
-/* =========================================
-   GLOBAL STATE
-========================================= */
-
-let membersArray = [];
-
-let summaryDate = new Date();
-
-let isMenuOpen = false;
-
-let sessionChecking = false;
-
-
-/* =========================================
-   ELEMENTS
-========================================= */
-
-const menuBtn =
-    document.getElementById("menuBtn");
-
-const menuDropdown =
-    document.getElementById("menuDropdown");
-
-const logoutBtn =
-    document.getElementById("logoutBtn");
-
-const searchInput =
-    document.getElementById("memberSearch");
-
-const clearSearch =
-    document.getElementById("clearSearch");
-
-
-/* =========================================
-   MENU
-========================================= */
-
-menuBtn.addEventListener("click", e => {
-
-    e.stopPropagation();
-
-    isMenuOpen = !isMenuOpen;
-
-    menuDropdown.classList.toggle(
-        "hidden",
-        !isMenuOpen
-    );
-
-});
-
-
-document.addEventListener("click", e => {
-
-    if(
-        isMenuOpen &&
-        !e.target.closest(".menuWrap")
-    ){
-
-        isMenuOpen = false;
-
-        menuDropdown.classList.add(
-            "hidden"
-        );
-
-    }
-
-});
-
-
-/* =========================================
-   LOGOUT
-========================================= */
-
-logoutBtn.addEventListener(
-    "click",
-    async () => {
-
-        try{
-
-            await signOut(auth);
-
-            window.location.href =
-                "login.html";
-
-        }catch(error){
-
-            console.error(error);
-
-        }
-
-    }
-);
-
-
-/* =========================================
-   AUTH + SESSION VERSION
-========================================= */
-
-onAuthStateChanged(
-    auth,
-    async user => {
-
-        if(!user){
-
-            window.location.replace(
-                "login.html"
-            );
-
-            return;
-
-        }
-
-        if(sessionChecking) return;
-
-        sessionChecking = true;
-
-        try{
-
-            /*
-             * Optional global session version.
-             *
-             * Admin password change code should
-             * update:
-             *
-             * settings/security
-             * {
-             *   sessionVersion: 2
-             * }
-             *
-             * and local login should store the
-             * current version.
-             */
-
-            const securitySnap =
-                await getDoc(
-                    doc(
-                        db,
-                        "settings",
-                        "security"
-                    )
-                );
-
-            const serverVersion =
-                securitySnap.exists()
-                    ? Number(
-                        securitySnap.data()
-                            .sessionVersion || 1
-                    )
-                    : 1;
-
-
-            const localVersion =
-                Number(
-                    localStorage.getItem(
-                        "messSessionVersion"
-                    ) || serverVersion
-                );
-
-
-            if(
-                localVersion !== serverVersion
-            ){
-
-                await signOut(auth);
-
-                localStorage.removeItem(
-                    "messSessionVersion"
-                );
-
-                window.location.replace(
-                    "login.html?reason=session_expired"
-                );
-
-                return;
-
-            }
-
-
-            await initializeDashboard();
-
-        }catch(error){
-
-            console.error(
-                "Session check error:",
-                error
-            );
-
-            /*
-             * Firebase Auth is still valid,
-             * so dashboard can continue.
-             */
-
-            await initializeDashboard();
-
-        }
-
-    }
-);
-
-
-/* =========================================
-   INITIALIZE
-========================================= */
-
-async function initializeDashboard(){
-
-    updateHeaderDate();
-
-    initializeMonthSelector();
-
-    await loadManagerName();
-
-    await loadAllData();
-
-}
-
-
-/* =========================================
-   DATE
-========================================= */
-
-function updateHeaderDate(){
-
-    document.getElementById(
-        "currentMonthYear"
-    ).textContent =
-        new Date().toLocaleDateString(
-            "en-US",
-            {
-                month:"long",
-                year:"numeric"
-            }
-        );
-
-}
-
-
-/* =========================================
-   MANAGER
-========================================= */
-
-async function loadManagerName(){
-
-    try{
-
-        const snap =
-            await getDoc(
-                doc(
-                    db,
-                    "settings",
-                    "manager"
-                )
-            );
-
-        document.getElementById(
-            "managerName"
-        ).textContent =
-            snap.exists()
-                ? (
-                    snap.data().name ||
-                    "Manager"
-                )
-                : "Manager";
-
-    }catch(error){
-
-        document.getElementById(
-            "managerName"
-        ).textContent =
-            "Manager";
-
-        console.error(error);
-
-    }
-
-}
-
-
-/* =========================================
-   MONTH SELECTOR
-========================================= */
-
-function initializeMonthSelector(){
-
-    const select =
-        document.getElementById(
-            "summaryMonth"
-        );
-
-    select.innerHTML = "";
-
-    for(
-        let i = 0;
-        i < 12;
-        i++
-    ){
-
-        const d = new Date();
-
-        d.setMonth(
-            d.getMonth() - i
-        );
-
-        const year =
-            d.getFullYear();
-
-        const month =
-            d.getMonth();
-
-        const value =
-            `${year}-${String(
-                month + 1
-            ).padStart(2,"0")}`;
-
-        const label =
-            d.toLocaleDateString(
-                "en-US",
-                {
-                    month:"short",
-                    year:"numeric"
-                }
-            );
-
-        const option =
-            document.createElement(
-                "option"
-            );
-
-        option.value = value;
-
-        option.textContent = label;
-
-        select.appendChild(option);
-
-    }
-
-    setSelectedMonth();
-
-}
-
-
-function setSelectedMonth(){
-
-    const year =
-        summaryDate.getFullYear();
-
-    const month =
-        summaryDate.getMonth() + 1;
-
-    document.getElementById(
-        "summaryMonth"
-    ).value =
-        `${year}-${String(
-            month
-        ).padStart(2,"0")}`;
-
-}
-
-
-document.getElementById(
-    "summaryMonth"
-).addEventListener(
-    "change",
-    loadMonthlyMealSummary
-);
-
-
-document.getElementById(
-    "prevMonth"
-).addEventListener(
-    "click",
-    () => changeSummaryMonth(-1)
-);
-
-
-document.getElementById(
-    "nextMonth"
-).addEventListener(
-    "click",
-    () => changeSummaryMonth(1)
-);
-
-
-function changeSummaryMonth(direction){
-
-    summaryDate.setMonth(
-        summaryDate.getMonth() +
-        direction
-    );
-
-    setSelectedMonth();
-
-    loadMonthlyMealSummary();
-
-}
-
-
-/* =========================================
-   MEAL HELPERS
-========================================= */
-
-function getMainMealValue(meal){
-
-    if(!meal) return 0;
-
-    let total = 0;
-
-    if(
-        meal.breakfast === true ||
-        meal.breakfast === 1
-    ){
-
-        total += .5;
-
-    }
-
-    if(
-        meal.lunch === true ||
-        meal.lunch === 1
-    ){
-
-        total += 1;
-
-    }
-
-    if(
-        meal.dinner === true ||
-        meal.dinner === 1
-    ){
-
-        total += 1;
-
-    }
-
-    return total;
-
-}
-
-
-function getGuestValue(meal){
-
-    if(!meal) return 0;
-
-    const keys = [
-        "guest",
-        "guests",
-        "guestMeals",
-        "guestMeal",
-        "guestCount"
-    ];
-
-    for(
-        const key of keys
-    ){
-
-        if(
-            meal[key] !== undefined &&
-            meal[key] !== null &&
-            meal[key] !== ""
-        ){
-
-            const value =
-                Number(meal[key]);
-
-            if(
-                Number.isFinite(value) &&
-                value > 0
-            ){
-
-                return value;
-
-            }
-
-        }
-
-    }
-
-    return 0;
-
-}
-
-
-function formatMealNumber(number){
-
-    if(!number) return "—";
-
-    return Number.isInteger(number)
-        ? String(number)
-        : Number(number).toFixed(1);
-
-}
-
-
-/* =========================================
+/* =====================================================
    MONTHLY SUMMARY
-========================================= */
-
-async function loadMonthlyMealSummary(){
-
-    const selected =
-        document.getElementById(
-            "summaryMonth"
-        ).value;
-
-    if(!selected) return;
-
-    const [
-        year,
-        month
-    ] = selected.split("-");
-
-    summaryDate =
-        new Date(
-            Number(year),
-            Number(month)-1,
-            1
-        );
-
-    await buildMonthlySummary();
-
-}
-
+===================================================== */
 
 async function buildMonthlySummary(){
+    const year = summaryDate.getFullYear();
+    const month = summaryDate.getMonth();
+    const days = new Date(year, month+1, 0).getDate();
 
-    const head =
-        document.getElementById(
-            "monthlyMealHead"
-        );
+    $("summaryMonthTitle").textContent = summaryDate.toLocaleDateString("en-US", {month:"long", year:"numeric"});
 
-    const body =
-        document.getElementById(
-            "monthlyMealBody"
-        );
-
-    const title =
-        document.getElementById(
-            "summaryMonthTitle"
-        );
-
-
-    const year =
-        summaryDate.getFullYear();
-
-    const month =
-        summaryDate.getMonth();
-
-    const days =
-        new Date(
-            year,
-            month + 1,
-            0
-        ).getDate();
-
-
-    title.textContent =
-        summaryDate.toLocaleDateString(
-            "en-US",
-            {
-                month:"long",
-                year:"numeric"
-            }
-        );
-
-
-    head.innerHTML = `
+    $("monthlyMealHead").innerHTML = `
         <tr>
             <th>👤 Border</th>
-            ${Array.from(
-                {length:days},
-                (_,i) =>
-                    `<th>${i+1}</th>`
-            ).join("")}
+            ${Array.from({length:days}, (_,i)=>`<th>${i+1}</th>`).join("")}
             <th>Month<br>Total</th>
         </tr>
     `;
 
+    const cacheKey = `${year}-${month+1}`;
+    let monthlyData = monthlyCache.get(cacheKey);
 
-    body.innerHTML = `
-        <tr>
-            <td colspan="${days+2}">
-                <div class="loader"></div>
-            </td>
-        </tr>
-    `;
+    if(!monthlyData){
+        monthlyData = {};
+        const promises = [];
 
-
-    const monthlyData = {};
-
-    const requests = [];
-
-
-    for(
-        let day=1;
-        day<=days;
-        day++
-    ){
-
-        const dateString =
-            `${year}-${String(
-                month+1
-            ).padStart(2,"0")}-${String(
-                day
-            ).padStart(2,"0")}`;
-
-
-        requests.push(
-
-            getDoc(
-                doc(
-                    db,
-                    "meals",
-                    dateString
-                )
-            )
-            .then(snap => {
-
-                monthlyData[
-                    dateString
-                ] =
-                    snap.exists()
-                        ? (
-                            snap.data().members ||
-                            {}
-                        )
-                        : {};
-
-            })
-            .catch(() => {
-
-                monthlyData[
-                    dateString
-                ] = {};
-
-            })
-
-        );
-
+        for(let day=1;day<=days;day++){
+            const date = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+            promises.push(
+                getDoc(doc(db,"meals",date)).then(snap=>{
+                    monthlyData[date] = snap.exists() ? (snap.data().members || {}) : {};
+                }).catch(()=>{
+                    monthlyData[date] = {};
+                })
+            );
+        }
+        await Promise.all(promises);
+        monthlyCache.set(cacheKey, monthlyData);
     }
 
+    const dailyTotals = Array(days).fill(0);
+    let rows = "";
 
-    await Promise.all(requests);
-
-
-    let html = "";
-
-    const dailyTotals =
-        Array(days).fill(0);
-
-
-    for(
-        const member of membersArray
-    ){
-
+    for(const member of membersArray){
         let memberTotal = 0;
+        rows += `<tr><td>${escapeHTML(member.name || "Unnamed")}</td>`;
 
-        html += `
-            <tr>
-
-                <td>
-                    ${escapeHTML(
-                        member.name ||
-                        "Unnamed"
-                    )}
-                </td>
-        `;
-
-
-        for(
-            let day=1;
-            day<=days;
-            day++
-        ){
-
-            const dateString =
-                `${year}-${String(
-                    month+1
-                ).padStart(2,"0")}-${String(
-                    day
-                ).padStart(2,"0")}`;
-
-
-            const meal =
-                (
-                    monthlyData[
-                        dateString
-                    ] || {}
-                )[
-                    member.id
-                ] || {};
-
-
-            const main =
-                getMainMealValue(meal);
-
-            const guest =
-                getGuestValue(meal);
-
-            const total =
-                main + guest;
-
+        for(let day=1;day<=days;day++){
+            const date = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+            const meal = monthlyData[date]?.[member.id] || {};
+            const main = getMainMealValue(meal);
+            const guest = getGuestValue(meal);
+            const total = main + guest;
 
             memberTotal += total;
+            dailyTotals[day-1] += total;
 
-            dailyTotals[
-                day-1
-            ] += total;
+            const hasMeal = total > 0;
+            const hasGuest = guest > 0;
 
-
-            html += `
+            rows += `
                 <td>
                     <span
-                        class="mealNumber
-                        ${total ? "hasMeal":""}
-                        ${guest ? "hasGuest":""}"
-                        title="Main: ${formatMealNumber(main)} | Guest: ${formatMealNumber(guest)}"
+                        class="meal-number ${hasMeal ? "has-meal":""} ${hasGuest ? "has-guest":""}"
+                        title="${hasGuest ? `Main: ${formatMealNumber(main)} + Guest: ${formatMealNumber(guest)}` : `Main: ${formatMealNumber(main)}`}"
                     >
                         ${formatMealNumber(total)}
                     </span>
                 </td>
             `;
-
         }
-
-
-        html += `
-                <td>
-                    ${formatMealNumber(
-                        memberTotal
-                    )}
-                </td>
-
-            </tr>
-        `;
-
+        rows += `<td>${formatMealNumber(memberTotal)}</td></tr>`;
     }
 
+    const grandTotal = dailyTotals.reduce((a,b)=>a+b, 0);
 
-    const grandTotal =
-        dailyTotals.reduce(
-            (a,b) => a+b,
-            0
-        );
-
-
-    html += `
-        <tr class="totalRow">
-
+    rows += `
+        <tr class="daily-total-row">
             <td>📊 Daily Total</td>
-
-            ${dailyTotals.map(
-                value =>
-                    `<td>${formatMealNumber(value)}</td>`
-            ).join("")}
-
-            <td>
-                ${formatMealNumber(
-                    grandTotal
-                )}
-            </td>
-
+            ${dailyTotals.map(value=>`<td>${formatMealNumber(value)}</td>`).join("")}
+            <td>${formatMealNumber(grandTotal)}</td>
         </tr>
     `;
 
-
     if(!membersArray.length){
+        rows = `<tr><td colspan="${days+2}" class="text-center py-8 text-gray-500">No members found</td></tr>`;
+    }
 
-        html = `
+    $("monthlyMealBody").innerHTML = rows;
+}
+
+
+/* =====================================================
+   BAZAR
+===================================================== */
+
+async function loadBazar(){
+    const snap = await getDocs(collection(db,"bazar"));
+    const records = [];
+    let total = 0;
+
+    snap.forEach(item=>{
+        const data = item.data();
+        records.push(data);
+        total += Number(data.amount || 0);
+    });
+
+    records.sort((a,b)=>{
+        const da = String(a.date || "");
+        const db = String(b.date || "");
+        return db.localeCompare(da);
+    });
+
+    $("totalBazar").textContent = formatMoney(total);
+
+    if(!records.length){
+        $("bazarList").innerHTML = `<tr><td colspan="3" class="text-center py-5">No records</td></tr>`;
+        return;
+    }
+
+    $("bazarList").innerHTML = records.map(item=>`
+        <tr>
+            <td>${escapeHTML(item.date || "—")}</td>
+            <td>${escapeHTML(item.purchaser || "—")}</td>
+            <td style="text-align:right;color:var(--green);font-weight:700;">${formatMoney(item.amount || 0)}</td>
+        </tr>
+    `).join("");
+}
+
+
+/* =====================================================
+   TODAY MEAL SHEET
+===================================================== */
+
+async function loadTodayMealSheet(){
+    const today = todayString();
+    $("mealSheetDate").textContent = `(${today})`;
+    const snap = await getDoc(doc(db,"meals",today));
+    const data = snap.exists() ? (snap.data().members || {}) : {};
+
+    if(!snap.exists()){
+        $("mealSheetBody").innerHTML = `<tr><td colspan="4" class="text-center py-5">No meal record for today</td></tr>`;
+        return;
+    }
+
+    const rows = membersArray.map(member=>{
+        const meal = data[member.id] || {};
+        return `
             <tr>
-                <td
-                    colspan="${days+2}"
-                    class="empty"
-                >
-                    No members found
-                </td>
+                <td>${escapeHTML(member.name || "Unnamed")}</td>
+                <td style="text-align:center">${meal.breakfast ? "✅" : "—"}</td>
+                <td style="text-align:center">${meal.lunch ? "✅" : "—"}</td>
+                <td style="text-align:center">${meal.dinner ? "✅" : "—"}</td>
             </tr>
         `;
+    }).join("");
 
-    }
-
-
-    body.innerHTML = html;
-
+    $("mealSheetBody").innerHTML = rows || `<tr><td colspan="4" class="text-center py-5">No members found</td></tr>`;
 }
 
 
-/* =========================================
-   LOAD DASHBOARD
-========================================= */
+/* =====================================================
+   LOAD MEMBERS
+===================================================== */
 
-async function loadAllData(){
+async function loadMembers(){
+    const [membersSnap, rateSnap] = await Promise.all([
+        getDocs(collection(db,"members")),
+        getDoc(doc(db,"settings","mealRate"))
+    ]);
 
+    const rate = rateSnap.exists() ? Number(rateSnap.data().rate || 0) : 0;
+    $("currentMealRate").textContent = formatMoney(rate);
+
+    membersArray = [];
+    let totalMeals = 0;
+
+    membersSnap.forEach(item=>{
+        const member = {id:item.id, ...item.data(), _mealRate:rate};
+        membersArray.push(member);
+        totalMeals += Number(member.totalMeals || 0);
+    });
+
+    membersArray.sort((a,b)=> String(a.name || "").localeCompare(String(b.name || ""), undefined, {sensitivity:"base"}));
+    filteredMembers = [...membersArray];
+    $("totalMeals").textContent = totalMeals;
+    renderMembers();
+}
+
+
+/* =====================================================
+   INITIAL DASHBOARD LOAD
+===================================================== */
+
+async function loadDashboard(){
+    if(dashboardLoading) return;
+    dashboardLoading = true;
     try{
-
-        /* ===============================
-           MEAL RATE
-        =============================== */
-
-        const rateSnap =
-            await getDoc(
-                doc(
-                    db,
-                    "settings",
-                    "mealRate"
-                )
-            );
-
-
-        const mealRate =
-            rateSnap.exists()
-                ? Number(
-                    rateSnap.data().rate || 0
-                )
-                : 0;
-
-
-        document.getElementById(
-            "currentMealRate"
-        ).textContent =
-            "৳" +
-            mealRate.toFixed(2);
-
-
-        /* ===============================
-           MEMBERS
-        =============================== */
-
-        const membersSnap =
-            await getDocs(
-                collection(
-                    db,
-                    "members"
-                )
-            );
-
-
-        membersArray = [];
-
-        let totalMeals = 0;
-
-
-        membersSnap.forEach(
-            snap => {
-
-                const member = {
-                    id:snap.id,
-                    ...snap.data()
-                };
-
-                membersArray.push(
-                    member
-                );
-
-                totalMeals += Number(
-                    member.totalMeals || 0
-                );
-
-            }
-        );
-
-
-        document.getElementById(
-            "totalMeals"
-        ).textContent =
-            totalMeals;
-
-
-        document.getElementById(
-            "memberCount"
-        ).textContent =
-            `${membersArray.length} Members`;
-
-
-        renderMembers(
-            mealRate
-        );
-
-
-        /* ===============================
-           BAZAR
-        =============================== */
-
-        const bazarSnap =
-            await getDocs(
-                collection(
-                    db,
-                    "bazar"
-                )
-            );
-
-
-        const bazarArray = [];
-
-        let totalBazar = 0;
-
-
-        bazarSnap.forEach(
-            snap => {
-
-                const data =
-                    snap.data();
-
-                bazarArray.push(
-                    data
-                );
-
-                totalBazar += Number(
-                    data.amount || 0
-                );
-
-            }
-        );
-
-
-        bazarArray.sort(
-            (a,b) =>
-                String(
-                    b.date || ""
-                ).localeCompare(
-                    String(
-                        a.date || ""
-                    )
-                )
-        );
-
-
-        document.getElementById(
-            "totalBazar"
-        ).textContent =
-            "৳" +
-            totalBazar.toFixed(0);
-
-
-        const bazarHTML =
-            bazarArray.map(
-                b => `
-                    <tr>
-
-                        <td>
-                            ${escapeHTML(
-                                b.date || "—"
-                            )}
-                        </td>
-
-                        <td>
-                            ${escapeHTML(
-                                b.purchaser || "—"
-                            )}
-                        </td>
-
-                        <td class="textRight">
-                            ৳${Number(
-                                b.amount || 0
-                            ).toFixed(0)}
-                        </td>
-
-                    </tr>
-                `
-            ).join("");
-
-
-        document.getElementById(
-            "bazarList"
-        ).innerHTML =
-            bazarHTML ||
-            `
-                <tr>
-                    <td
-                        colspan="3"
-                        class="empty"
-                    >
-                        No bazar records
-                    </td>
-                </tr>
-            `;
-
-
-        /* ===============================
-           TODAY MEAL SHEET
-        =============================== */
-
-        const today =
-            new Date()
-                .toISOString()
-                .split("T")[0];
-
-
-        document.getElementById(
-            "mealSheetDate"
-        ).textContent =
-            today;
-
-
-        const mealSnap =
-            await getDoc(
-                doc(
-                    db,
-                    "meals",
-                    today
-                )
-            );
-
-
-        let mealHTML = "";
-
-
-        if(
-            mealSnap.exists() &&
-            mealSnap.data().members
-        ){
-
-            const mealData =
-                mealSnap.data().members;
-
-
-            mealHTML =
-                membersArray.map(
-                    member => {
-
-                        const m =
-                            mealData[
-                                member.id
-                            ] || {};
-
-
-                        return `
-                            <tr>
-
-                                <td>
-                                    ${escapeHTML(
-                                        member.name ||
-                                        "Unnamed"
-                                    )}
-                                </td>
-
-                                <td>
-                                    ${m.breakfast
-                                        ? "✅"
-                                        : "—"}
-                                </td>
-
-                                <td>
-                                    ${m.lunch
-                                        ? "✅"
-                                        : "—"}
-                                </td>
-
-                                <td>
-                                    ${m.dinner
-                                        ? "✅"
-                                        : "—"}
-                                </td>
-
-                            </tr>
-                        `;
-
-                    }
-                ).join("");
-
-        }
-
-
-        document.getElementById(
-            "mealSheetBody"
-        ).innerHTML =
-            mealHTML ||
-            `
-                <tr>
-                    <td
-                        colspan="4"
-                        class="empty"
-                    >
-                        No meal record for today
-                    </td>
-                </tr>
-            `;
-
-
-        /* ===============================
-           MONTHLY
-        =============================== */
-
-        await buildMonthlySummary();
-
-
+        await Promise.all([loadManager(), loadMembers(), loadBazar()]);
+        await Promise.all([loadTodayMealSheet(), buildMonthlySummary()]);
     }catch(error){
-
-        console.error(
-            "Dashboard error:",
-            error
-        );
-
+        console.error("Dashboard error:",error);
+    }finally{
+        dashboardLoading = false;
     }
-
 }
 
 
-/* =========================================
-   MEMBERS RENDER
-========================================= */
+/* =====================================================
+   INIT
+===================================================== */
 
-function renderMembers(
-    mealRate
-){
+$("currentMonthYear").textContent = new Date().toLocaleDateString("en-US", {month:"long", year:"numeric"});
 
-    const list =
-        document.getElementById(
-            "membersList"
-        );
+initializeMonthSelector();
+setupSearch();
+loadDashboard();
 
 
-    const query =
-        searchInput.value
-            .trim()
-            .toLowerCase();
-
-
-    const filtered =
-        membersArray.filter(
-            member =>
-                String(
-                    member.name || ""
-                )
-                .toLowerCase()
-                .includes(query)
-        );
-
-
-    clearSearch.style.display =
-        query
-            ? "block"
-            : "none";
-
-
-    if(!filtered.length){
-
-        list.innerHTML = `
-            <div class="empty">
-                ${
-                    query
-                        ? "No member found"
-                        : "No members found"
-                }
-            </div>
-        `;
-
-        return;
-
+/*
+ * Optimization: Prevent massive battery and RAM usage.
+ * Only refresh lightweight sections (bazar, members, today's meal) every 60 seconds.
+ * We no longer wipe the entire monthly cache (30+ firebase reads) every minute.
+ */
+setInterval(async()=>{
+    if(document.visibilityState !== "visible") return;
+    try{
+        await Promise.all([
+            loadMembers(),
+            loadBazar(),
+            loadTodayMealSheet()
+        ]);
+        // Do not force buildMonthlySummary() here to save RAM
+    }catch(error){
+        console.error("Refresh error:",error);
     }
+},60000);
 
 
-    list.innerHTML =
-        filtered.map(
-            member => {
-
-                const deposit =
-                    Number(
-                        member.totalDeposit ||
-                        0
-                    );
-
-
-                const meals =
-                    Number(
-                        member.totalMeals ||
-                        0
-                    );
-
-
-                const balance =
-                    deposit -
-                    (
-                        meals *
-                        mealRate
-                    );
-
-
-                const positive =
-                    balance >= 0;
-
-
-                const balanceText =
-                    positive
-                        ? `+৳${balance.toFixed(0)}`
-                        : `-৳${Math.abs(
-                            balance
-                        ).toFixed(0)}`;
-
-
-                return `
-                    <div class="member">
-
-                        <div style="min-width:0">
-
-                            <div class="memberName">
-                                ${escapeHTML(
-                                    member.name ||
-                                    "Unnamed"
-                                )}
-                            </div>
-
-                            <div class="memberMeta">
-
-                                Deposit:
-                                <span class="positive">
-                                    ৳${deposit.toFixed(0)}
-                                </span>
-
-                                <span style="opacity:.35">
-                                    •
-                                </span>
-
-                                Meals:
-                                <span class="blue">
-                                    ${meals}
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="balance">
-
-                            <div
-                                class="balanceValue ${
-                                    positive
-                                        ? "positive"
-                                        : "negative"
-                                }"
-                            >
-                                ${balanceText}
-                            </div>
-
-                            <div
-                                class="balanceStatus ${
-                                    positive
-                                        ? "positive"
-                                        : "negative"
-                                }"
-                            >
-                                ${
-                                    positive
-                                        ? "In Advance"
-                                        : "Overdue"
-                                }
-                            </div>
-
-                        </div>
-
-                    </div>
-                `;
-
-            }
-        ).join("");
-
-}
-
-
-/* =========================================
-   SEARCH
-========================================= */
-
-searchInput.addEventListener(
-    "input",
-    () => {
-
-        const rateText =
-            document.getElementById(
-                "currentMealRate"
-            ).textContent
-            .replace("৳","");
-
-        const rate =
-            Number(rateText) || 0;
-
-        renderMembers(rate);
-
+/*
+ * When user comes back to the tab, just refresh without wiping cache.
+ */
+document.addEventListener("visibilitychange", ()=>{
+    if(document.visibilityState === "visible"){
+        // Optimization: Do NOT clear cache here. Let the user manually change month if needed.
+        loadDashboard();
     }
-);
-
-
-clearSearch.addEventListener(
-    "click",
-    () => {
-
-        searchInput.value = "";
-
-        searchInput.focus();
-
-        const rateText =
-            document.getElementById(
-                "currentMealRate"
-            ).textContent
-            .replace("৳","");
-
-        renderMembers(
-            Number(rate) || 0
-        );
-
-    }
-);
-
-
-/* =========================================
-   ESCAPE
-========================================= */
-
-function escapeHTML(value){
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-    div.textContent =
-        String(value);
-
-    return div.innerHTML;
-
-}
-
-
-/* =========================================
-   AUTO REFRESH
-=========================================
-
-   60 sec instead of 35 sec.
-   Less Firebase reads = better mobile
-   performance.
-========================================= */
-
-setInterval(
-    async () => {
-
-        if(auth.currentUser){
-
-            await loadAllData();
-
-        }
-
-    },
-    60000
-);
+});
 
 </script>
 
