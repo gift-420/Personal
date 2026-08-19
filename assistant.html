@@ -1,775 +1,442 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Ma Achiya Villa - Assistant Meal Console">
-    <meta name="theme-color" content="#0a0a0f">
-
-    <title>Assistant Console — Ma Achiya Villa</title>
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-    <!-- Firebase -->
-    <script type="module">
-
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
-        import {
-            getFirestore,
-            collection,
-            doc,
-            getDoc,
-            setDoc,
-            updateDoc,
-            getDocs,
-            query,
-            where
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        import {
-            getAuth,
-            onAuthStateChanged,
-            signOut,
-            EmailAuthProvider,
-            reauthenticateWithCredential,
-            updatePassword
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-
-        // ==============================
-        // FIREBASE CONFIG
-        // ==============================
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
-            authDomain: "my-mess-17fbc.firebaseapp.com",
-            projectId: "my-mess-17fbc",
-            storageBucket: "my-mess-17fbc.firebasestorage.app",
-            messagingSenderId: "848426874799",
-            appId: "1:848426874799:web:0722af59e7504da847e15a",
-            measurementId: "G-RWHJKGV5LS"
-        };
-
-
-        // ==============================
-        // INITIALIZE FIREBASE
-        // ==============================
-
-        const app = initializeApp(firebaseConfig);
-
-        const db = getFirestore(app);
-
-        const auth = getAuth(app);
-
-
-        // ==============================
-        // GLOBAL FIREBASE OBJECTS
-        // ==============================
-
-        window.db = db;
-
-        window.auth = auth;
-
-        window.FirebaseFunctions = {
-
-            // Firestore
-            collection,
-            doc,
-            getDoc,
-            setDoc,
-            updateDoc,
-            getDocs,
-            query,
-            where,
-
-            // Authentication
-            onAuthStateChanged,
-            signOut,
-            EmailAuthProvider,
-            reauthenticateWithCredential,
-            updatePassword
-        };
-
-
-        console.log("Firebase initialized successfully");
-
-        // Start app only after Firebase is ready
-        if (window.startAssistantApp) {
-            window.startAssistantApp();
-        }
-
-    </script>
-
-
-    <style>
-
-        :root {
-            --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
-            --font-bengali: 'Noto Sans Bengali', sans-serif;
-            --font-emoji: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
-
-            --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
-
-            --radius-xl: 30px;
-
-            --transition: 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-
-
-        [data-theme="dark"] {
-
-            --bg-primary: #05050c;
-
-            --bg-gradient:
-                radial-gradient(
-                    ellipse 90% 70% at 50% -30%,
-                    #1c1148 0%,
-                    #0d0d20 40%,
-                    #05050c 70%
-                );
-
-            --glass-bg: rgba(16, 16, 34, 0.42);
-
-            --glass-bg-light: rgba(20, 20, 42, 0.32);
-
-            --glass-bg-hover: rgba(28, 28, 54, 0.5);
-
-            --glass-border: rgba(255, 255, 255, 0.07);
-
-            --glass-border-strong: rgba(255, 255, 255, 0.13);
-
-            --glass-shadow:
-                0 20px 50px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.07);
-
-            --text-primary: #ffffff;
-
-            --text-secondary: rgba(255, 255, 255, 0.65);
-
-            --text-tertiary: rgba(255, 255, 255, 0.4);
-
-            --accent-purple: #a78bfa;
-
-            --accent-purple-light: #c4b5fd;
-
-            --accent-green: #34d399;
-
-            --accent-red: #f87171;
-
-            --logo-border: #34d399;
-
-            --logo-glow:
-                0 0 25px rgba(52, 211, 153, 0.5);
-
-            --divider: rgba(255, 255, 255, 0.04);
-
-            --table-hover: rgba(255, 255, 255, 0.015);
-        }
-
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-
-        html {
-            scroll-behavior: smooth;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-
-        body {
-
-            font-family: var(--font-primary);
-
-            background: var(--bg-primary);
-
-            background-image: var(--bg-gradient);
-
-            min-height: 100vh;
-
-            padding: 20px;
-
-            color: var(--text-primary);
-
-            position: relative;
-
-            overflow-x: hidden;
-
-            line-height: 1.5;
-        }
-
-
-        body::after {
-
-            content: '';
-
-            position: fixed;
-
-            inset: 0;
-
-            background:
-                radial-gradient(
-                    circle at 20% 60%,
-                    var(--accent-purple) 0%,
-                    transparent 35%
-                ),
-                radial-gradient(
-                    circle at 75% 25%,
-                    #60a5fa 0%,
-                    transparent 35%
-                );
-
-            opacity: 0.15;
-
-            filter: blur(80px);
-
-            animation: orbs 20s ease-in-out infinite;
-
-            pointer-events: none;
-
-            z-index: 0;
-        }
-
-
-        @keyframes orbs {
-
-            0%, 100% {
-                transform: translate(0, 0) scale(1);
-            }
-
-            33% {
-                transform: translate(30px, -40px) scale(1.05);
-            }
-
-            66% {
-                transform: translate(-20px, 20px) scale(0.95);
-            }
-        }
-
-
-        .glass {
-
-            position: relative;
-
-            overflow: hidden;
-
-            z-index: 1;
-
-            transition: all var(--transition);
-
-            background: var(--glass-bg);
-
-            backdrop-filter:
-                blur(42px)
-                saturate(200%)
-                contrast(105%);
-
-            -webkit-backdrop-filter:
-                blur(42px)
-                saturate(200%)
-                contrast(105%);
-
-            border: 1px solid var(--glass-border);
-
-            border-radius: var(--radius-xl);
-
-            box-shadow: var(--glass-shadow);
-        }
-
-
-        .glass::after {
-
-            content: '';
-
-            position: absolute;
-
-            inset: 0;
-
-            opacity: 0.025;
-
-            mix-blend-mode: overlay;
-
-            pointer-events: none;
-
-            z-index: 1;
-
-            background-image:
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-        }
-
-
-        .glass > * {
-            position: relative;
-            z-index: 2;
-        }
-
-
-        .logo-circle {
-
-            width: 56px;
-            height: 56px;
-
-            border-radius: 50%;
-
-            background: var(--glass-bg);
-
-            backdrop-filter: blur(30px);
-
-            border: 2px solid var(--logo-border);
-
-            box-shadow:
-                var(--logo-glow),
-                inset 0 1px 0 rgba(255,255,255,0.22);
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            flex-shrink: 0;
-        }
-
-
-        .logo-text {
-
-            display: flex;
-
-            flex-direction: column;
-
-            align-items: center;
-
-            text-align: center;
-
-            font-family: var(--font-bengali);
-        }
-
-
-        .logo-text .logo-bn {
-
-            font-size: 10px;
-
-            font-weight: 800;
-        }
-
-
-        .logo-text .logo-en {
-
-            font-size: 7px;
-
-            font-weight: 700;
-
-            color: var(--text-tertiary);
-
-            letter-spacing: 0.5px;
-
-            font-family: var(--font-primary);
-        }
-
-
-        .section-heading {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 8px;
-
-            margin-bottom: 14px;
-
-            font-size: 14px;
-
-            font-weight: 600;
-
-            color: var(--text-secondary);
-        }
-
-
-        .section-icon {
-
-            font-family: var(--font-emoji);
-
-            font-size: 18px;
-        }
-
-
-        .input-glass {
-
-            width: 100%;
-
-            background: rgba(255, 255, 255, 0.045);
-
-            border: 1px solid rgba(255,255,255,0.08);
-
-            border-radius: 14px;
-
-            padding: 12px 14px;
-
-            color: var(--text-primary);
-
-            font-size: 14px;
-
-            margin-bottom: 10px;
-
-            outline: none;
-
-            box-shadow:
-                inset 0 1px 0 rgba(255,255,255,0.06);
-
-            transition: all 0.3s;
-        }
-
-
-        .input-glass:focus {
-
-            border-color: var(--accent-purple);
-
-            background: rgba(255, 255, 255, 0.09);
-
-            box-shadow:
-                0 0 0 4px rgba(167, 139, 250, 0.12),
-                inset 0 1px 0 rgba(255,255,255,0.1);
-        }
-
-
-        .input-glass::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-
-        select.input-glass option {
-
-            background: #1a103c;
-
-            color: #fff;
-        }
-
-
-        .btn-push {
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #8b5cf6,
-                    #6d28d9
-                );
-
-            border: none;
-
-            padding: 12px 18px;
-
-            border-radius: 30px;
-
-            color: #fff;
-
-            font-weight: 700;
-
-            font-size: 14px;
-
-            cursor: pointer;
-
-            width: 100%;
-
-            box-shadow:
-                0 5px 0 #4c1d95,
-                0 10px 22px rgba(139, 92, 246, 0.4),
-                inset 0 1px 0 rgba(255,255,255,0.25);
-
-            transition: all 0.1s ease;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            gap: 6px;
-        }
-
-
-        .btn-push:active {
-
-            box-shadow:
-                0 2px 0 #4c1d95,
-                0 5px 14px rgba(139, 92, 246, 0.35),
-                inset 0 1px 0 rgba(255,255,255,0.25);
-
-            transform: translateY(4px);
-        }
-
-
-        .btn-home,
-        .btn-logout {
-
-            padding: 6px 14px;
-
-            border-radius: 20px;
-
-            font-size: 12px;
-
-            font-weight: 600;
-
-            cursor: pointer;
-
-            text-decoration: none;
-
-            border: 1px solid;
-
-            display: inline-flex;
-
-            align-items: center;
-
-            gap: 4px;
-
-            transition: all 0.2s;
-        }
-
-
-        .btn-home {
-
-            background: rgba(96, 165, 250, 0.1);
-
-            border-color: rgba(96, 165, 250, 0.3);
-
-            color: #60a5fa;
-
-            margin-right: 6px;
-        }
-
-
-        .btn-logout {
-
-            background: rgba(248, 113, 113, 0.1);
-
-            border-color: rgba(248, 113, 113, 0.3);
-
-            color: #f87171;
-        }
-
-
-        .btn-home:hover {
-            background: rgba(96, 165, 250, 0.2);
-        }
-
-
-        .btn-logout:hover {
-            background: rgba(248, 113, 113, 0.2);
-        }
-
-
-        .meal-checkbox {
-
-            width: 20px;
-
-            height: 20px;
-
-            accent-color: #8b5cf6;
-
-            cursor: pointer;
-
-            border-radius: 4px;
-        }
-
-
-        .meal-table {
-
-            width: 100%;
-
-            border-collapse: collapse;
-        }
-
-
-        .meal-table th {
-
-            text-align: left;
-
-            padding: 12px;
-
-            font-size: 10px;
-
-            text-transform: uppercase;
-
-            letter-spacing: 1px;
-
-            color: var(--text-tertiary);
-
-            border-bottom: 1px solid var(--divider);
-        }
-
-
-        .meal-table td {
-
-            padding: 12px;
-
-            border-bottom: 1px solid var(--divider);
-
-            color: var(--text-secondary);
-        }
-
-
-        .meal-table tbody tr:hover {
-
-            background: var(--table-hover);
-        }
-
-
-        ::-webkit-scrollbar {
-
-            width: 5px;
-
-            height: 5px;
-        }
-
-
-        ::-webkit-scrollbar-track {
-
-            background: rgba(255,255,255,0.02);
-        }
-
-
-        ::-webkit-scrollbar-thumb {
-
-            background: rgba(255,255,255,0.08);
-
-            border-radius: 10px;
-        }
-
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Ma Achiya Villa - Assistant Manager Console">
+<title>Assistant Console — Ma Achiya Villa</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+import {
+    getFirestore,
+    collection,
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    getDocs
+}
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+import {
+    getAuth,
+    onAuthStateChanged,
+    signOut,
+    EmailAuthProvider,
+    reauthenticateWithCredential,
+    updatePassword
+}
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
+    authDomain: "my-mess-17fbc.firebaseapp.com",
+    projectId: "my-mess-17fbc",
+    storageBucket: "my-mess-17fbc.firebasestorage.app",
+    messagingSenderId: "848426874799",
+    appId: "1:848426874799:web:0722af59e7504da847e15a",
+    measurementId: "G-RWHJKGV5LS"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+window.db = db;
+window.auth = auth;
+
+window.FirebaseFunctions = {
+    collection,
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    getDocs,
+    onAuthStateChanged,
+    signOut,
+    EmailAuthProvider,
+    reauthenticateWithCredential,
+    updatePassword
+};
+
+window.firebaseReady = true;
+
+console.log("Firebase initialized successfully");
+
+if (typeof window.startAssistantApp === "function") {
+    window.startAssistantApp();
+}
+
+</script>
+
+<style>
+
+:root {
+    --bg:#05050c;
+    --glass:rgba(16,16,34,.48);
+    --border:rgba(255,255,255,.08);
+    --text:#fff;
+    --muted:rgba(255,255,255,.55);
+    --purple:#a78bfa;
+    --blue:#60a5fa;
+    --green:#34d399;
+    --red:#f87171;
+}
+
+* {
+    box-sizing:border-box;
+}
+
+body {
+    margin:0;
+    padding:18px;
+    min-height:100vh;
+    color:var(--text);
+    font-family:Inter,'Noto Sans Bengali',sans-serif;
+    background:
+        radial-gradient(
+            ellipse 90% 70% at 50% -30%,
+            #1c1148 0%,
+            #0d0d20 42%,
+            #05050c 72%
+        );
+}
+
+body:after {
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:
+        radial-gradient(circle at 20% 60%,#8b5cf6,transparent 35%),
+        radial-gradient(circle at 80% 20%,#3b82f6,transparent 35%);
+    opacity:.12;
+    filter:blur(80px);
+}
+
+.glass {
+    position:relative;
+    z-index:2;
+    background:var(--glass);
+    backdrop-filter:blur(35px) saturate(180%);
+    -webkit-backdrop-filter:blur(35px) saturate(180%);
+    border:1px solid var(--border);
+    border-radius:25px;
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.45),
+        inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+.input {
+    width:100%;
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:13px;
+    padding:11px 13px;
+    color:#fff;
+    outline:none;
+}
+
+.input:focus {
+    border-color:var(--purple);
+    box-shadow:0 0 0 4px rgba(167,139,250,.1);
+}
+
+.btn {
+    border:0;
+    border-radius:14px;
+    padding:11px 16px;
+    color:white;
+    font-weight:700;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn:hover {
+    transform:translateY(-1px);
+}
+
+.btn-purple {
+    background:linear-gradient(135deg,#8b5cf6,#6d28d9);
+}
+
+.btn-green {
+    background:linear-gradient(135deg,#34d399,#059669);
+}
+
+.btn-blue {
+    background:linear-gradient(135deg,#60a5fa,#2563eb);
+}
+
+.btn-red {
+    background:linear-gradient(135deg,#f87171,#dc2626);
+}
+
+.meal-table {
+    width:100%;
+    border-collapse:collapse;
+    min-width:850px;
+}
+
+.meal-table th {
+    padding:12px 8px;
+    color:var(--muted);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    border-bottom:1px solid var(--border);
+}
+
+.meal-table td {
+    padding:11px 8px;
+    border-bottom:1px solid rgba(255,255,255,.04);
+    text-align:center;
+}
+
+.meal-table td:first-child {
+    text-align:left;
+    font-weight:700;
+}
+
+.meal-check {
+    width:21px;
+    height:21px;
+    accent-color:#8b5cf6;
+    cursor:pointer;
+}
+
+.guest-input {
+    width:70px;
+    text-align:center;
+}
+
+.total {
+    color:#c4b5fd;
+    font-weight:800;
+}
+
+.guest-total {
+    color:#34d399;
+    font-weight:700;
+}
+
+.daily-total {
+    color:#60a5fa;
+    font-weight:900;
+    font-size:16px;
+}
+
+.modal {
+    position:fixed;
+    inset:0;
+    z-index:100;
+    background:rgba(0,0,0,.7);
+    backdrop-filter:blur(10px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal-box {
+    width:100%;
+    max-width:480px;
+    padding:22px;
+}
+
+.hidden {
+    display:none!important;
+}
+
+.stat {
+    padding:15px;
+    text-align:center;
+}
+
+.stat-value {
+    font-size:24px;
+    font-weight:900;
+}
+
+.stat-label {
+    font-size:10px;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+@media(max-width:700px) {
+    body {
+        padding:10px;
+    }
+
+    .meal-table {
+        min-width:850px;
+    }
+}
+
+</style>
 </head>
-
 
 <body>
 
+<div class="max-w-6xl mx-auto relative z-10">
 
-<div class="max-w-4xl mx-auto relative z-10">
+<!-- HEADER -->
+
+<div class="glass p-4 mb-4 flex flex-wrap items-center justify-between gap-3">
+
+    <div>
+        <div class="text-xl font-black">
+            🏠 Ma Achiya Villa
+        </div>
+
+        <div class="text-xs text-gray-400">
+            Assistant Manager Console
+        </div>
+
+        <div id="userEmail"
+             class="text-xs text-purple-300 mt-1">
+        </div>
+    </div>
+
+    <div class="flex gap-2">
+
+        <a href="index.html"
+           class="btn btn-blue">
+            🏠 Home
+        </a>
+
+        <button
+            class="btn btn-red"
+            onclick="logout()">
+            🚪 Logout
+        </button>
+
+    </div>
+
+</div>
 
 
-    <!-- HEADER -->
+<!-- STATS -->
 
-    <div class="glass p-4 mb-5 flex items-center justify-between">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
 
-        <div class="flex items-center gap-3">
+    <div class="glass stat">
+        <div class="stat-label">Date</div>
+        <div id="statDate"
+             class="font-bold">
+        </div>
+    </div>
 
-            <div class="logo-circle">
+    <div class="glass stat">
+        <div class="stat-label">Members</div>
+        <div id="statMembers"
+             class="stat-value text-purple-300">
+            0
+        </div>
+    </div>
 
-                <div class="logo-text">
+    <div class="glass stat">
+        <div class="stat-label">Main Meals</div>
+        <div id="statMain"
+             class="stat-value text-blue-300">
+            0
+        </div>
+    </div>
 
-                    <span class="logo-bn">
-                        মা আছিয়া
-                    </span>
+    <div class="glass stat">
+        <div class="stat-label">Guest Meals</div>
+        <div id="statGuest"
+             class="stat-value text-green-300">
+            0
+        </div>
+    </div>
 
-                    <span class="logo-en">
-                        VILLA
-                    </span>
-
-                </div>
-
-            </div>
+</div>
 
 
-            <div>
+<!-- CONTROLS -->
 
-                <h1 class="text-base sm:text-lg font-bold">
-                    Assistant Meal Console
-                </h1>
+<div class="glass p-4 mb-4">
 
-                <p
-                    id="userEmail"
-                    class="text-xs text-gray-400 truncate max-w-[180px]"
-                ></p>
+    <div class="flex flex-wrap gap-3 items-end">
 
-            </div>
+        <div class="flex-1 min-w-[180px]">
+
+            <label class="text-xs text-gray-400">
+                📅 Select Date
+            </label>
+
+            <input
+                id="selectedDate"
+                type="date"
+                class="input mt-1"
+                onchange="changeDate()">
 
         </div>
 
+        <button
+            class="btn btn-blue"
+            onclick="copyYesterdayMeals()">
+            📋 Copy Yesterday
+        </button>
 
-        <div class="flex items-center gap-1">
+        <button
+            class="btn btn-green"
+            onclick="saveMeals()">
+            💾 Save Meals
+        </button>
 
-            <a
-                href="index.html"
-                class="btn-home"
-            >
-                🏠 Home
-            </a>
+        <button
+            class="btn btn-purple"
+            onclick="downloadPDF()">
+            📄 Download PDF
+        </button>
 
-            <button
-                class="btn-logout"
-                onclick="logout()"
-            >
-                🚪 Logout
-            </button>
+    </div>
 
+</div>
+
+
+<!-- MEAL SHEET -->
+
+<div class="glass p-4 mb-4">
+
+    <div class="flex justify-between items-center mb-4">
+
+        <div>
+            <h2 class="text-lg font-bold">
+                📋 Daily Meal Sheet
+            </h2>
+
+            <p class="text-xs text-gray-400">
+                Guest সংখ্যা দিলে শুধু সেই guest meal total-এ যোগ হবে
+            </p>
+        </div>
+
+        <div id="saveStatus"
+             class="text-xs text-green-400">
         </div>
 
     </div>
 
 
-
-    <!-- MEAL CONTROLS -->
-
-    <div class="glass p-4 mb-4">
-
-        <div class="flex flex-wrap items-center justify-between gap-3">
-
-            <div class="flex items-center gap-2">
-
-                <span class="text-xs font-bold uppercase tracking-wider text-gray-400">
-                    📅 Date:
-                </span>
-
-                <input
-                    type="date"
-                    id="selectedDate"
-                    class="input-glass"
-                    style="width:auto;margin-bottom:0;color-scheme:dark;"
-                    onchange="changeDate()"
-                >
-
-            </div>
-
-
-            <div class="flex gap-2 w-full sm:w-auto">
-
-                <button
-                    class="btn-push flex-1 sm:flex-none"
-                    style="padding:10px 16px;font-size:13px;"
-                    onclick="copyYesterdayMeals()"
-                >
-                    📋 Copy Yesterday
-                </button>
-
-
-                <button
-                    class="btn-push flex-1 sm:flex-none"
-                    style="padding:10px 16px;font-size:13px;background:linear-gradient(135deg,#34d399,#059669);box-shadow:0 5px 0 #047857;"
-                    onclick="saveMeals()"
-                >
-                    💾 Save Today
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- MEAL TABLE -->
-
-    <div class="glass p-4 mb-4 overflow-x-auto">
+    <div class="overflow-x-auto">
 
         <table class="meal-table">
 
@@ -777,43 +444,33 @@
 
                 <tr>
 
-                    <th>
-                        👤 Border Name
-                    </th>
+                    <th>Member</th>
 
-                    <th style="text-align:center;">
-                        🌅 Breakfast (0.5)
-                    </th>
+                    <th>Breakfast<br>(0.5)</th>
 
-                    <th style="text-align:center;">
-                        ☀️ Lunch (1.0)
-                    </th>
+                    <th>Lunch<br>(1)</th>
 
-                    <th style="text-align:center;">
-                        🌙 Dinner (1.0)
-                    </th>
+                    <th>Dinner<br>(1)</th>
 
-                    <th style="text-align:center;">
-                        📊 Today's Total
-                    </th>
+                    <th>Guest</th>
+
+                    <th>Guest Meal</th>
+
+                    <th>Main Meal</th>
+
+                    <th>Total</th>
 
                 </tr>
 
             </thead>
 
-
             <tbody id="mealTableBody">
 
                 <tr>
-
-                    <td
-                        colspan="5"
-                        style="text-align:center;padding:30px;color:var(--text-tertiary);"
-                    >
-                        Loading members...
-
+                    <td colspan="8"
+                        class="text-center py-10">
+                        Loading...
                     </td>
-
                 </tr>
 
             </tbody>
@@ -822,1202 +479,1237 @@
 
     </div>
 
+</div>
 
 
-    <!-- CHANGE PASSWORD -->
+<!-- PASSWORD -->
 
-    <div class="glass p-4 mb-4">
+<div class="glass p-4 mb-4">
 
-        <div class="section-heading">
+    <h2 class="font-bold mb-3">
+        🔐 Change Assistant Password
+    </h2>
 
-            <span class="section-icon">
-                🔒
-            </span>
-
-            Change Password
-
-        </div>
-
+    <div class="grid md:grid-cols-2 gap-3">
 
         <input
-            type="password"
             id="oldPasswordAssist"
-            class="input-glass"
-            placeholder="Current password"
-        >
-
+            type="password"
+            class="input"
+            placeholder="Current password">
 
         <input
-            type="password"
             id="newPasswordAssist"
-            class="input-glass"
-            placeholder="New password"
-        >
-
-
-        <button
-            class="btn-push"
-            onclick="changePassword()"
-        >
-
-            <span>
-                🔑
-            </span>
-
-            Update Password
-
-        </button>
-
-
-        <p
-            id="assistPasswordError"
-            style="color:var(--accent-red);font-size:0.8rem;margin-top:8px;display:none;"
-        ></p>
+            type="password"
+            class="input"
+            placeholder="New password">
 
     </div>
 
+    <button
+        class="btn btn-purple mt-3 w-full"
+        onclick="changePassword()">
+        🔑 Update Password
+    </button>
+
+    <div id="assistPasswordError"
+         class="text-red-400 text-sm mt-2">
+    </div>
+
+</div>
 
 </div>
 
 
+<script>
 
-<script type="module">
+let members = [];
+let currentMealsData = {};
+let selectedDateStr = new Date()
+    .toISOString()
+    .split("T")[0];
 
+document.getElementById("selectedDate").value =
+    selectedDateStr;
 
-    // ==========================================
-    // VARIABLES
-    // ==========================================
-
-    let members = [];
-
-    let currentMealsData = {};
-
-    let selectedDateStr =
-        new Date().toISOString().split('T')[0];
-
+document.getElementById("statDate").textContent =
+    selectedDateStr;
 
 
-    // ==========================================
-    // DATE
-    // ==========================================
+/* =========================
+   AUTH
+========================= */
 
-    document.getElementById('selectedDate').value =
-        selectedDateStr;
+function setupAuth() {
 
-
-
-    // ==========================================
-    // AUTH
-    // ==========================================
-
-    function setupAuth() {
-
-        // Firebase ready কিনা check
-        if (!window.auth || !window.FirebaseFunctions) {
-
-            console.error(
-                "Firebase Auth is not ready yet."
-            );
-
-            setTimeout(setupAuth, 100);
-
-            return;
-        }
-
-
-        const {
-            onAuthStateChanged
-        } = window.FirebaseFunctions;
-
-
-        onAuthStateChanged(
-            window.auth,
-            async (user) => {
-
-                console.log(
-                    "=== Auth State Changed ==="
-                );
-
-
-                console.log(
-                    "User:",
-                    user ? user.email : "No user"
-                );
-
-
-                // Only assistant account
-                if (
-                    !user ||
-                    user.email !== 'spi1@gmail.com'
-                ) {
-
-                    console.log(
-                        "Unauthorized access. Redirecting..."
-                    );
-
-                    window.location.href =
-                        'login.html';
-
-                    return;
-                }
-
-
-                console.log(
-                    "Authorized assistant logged in"
-                );
-
-
-                localStorage.setItem(
-                    'assistLoggedIn',
-                    'true'
-                );
-
-
-                const emailElement =
-                    document.getElementById(
-                        'userEmail'
-                    );
-
-
-                if (emailElement) {
-
-                    emailElement.textContent =
-                        user.email;
-
-                }
-
-
-                try {
-
-                    await loadMembersAndMeals();
-
-                } catch (error) {
-
-                    console.error(
-                        "Error in loadMembersAndMeals:",
-                        error
-                    );
-
-
-                    document.getElementById(
-                        'mealTableBody'
-                    ).innerHTML =
-
-                        `
-                        <tr>
-                            <td
-                                colspan="5"
-                                style="
-                                    text-align:center;
-                                    padding:30px;
-                                    color:var(--accent-red);
-                                "
-                            >
-                                Error loading data.
-                                Check console.
-                            </td>
-                        </tr>
-                        `;
-                }
-
-            }
-        );
+    if (!window.auth) {
+        console.error("Firebase Auth not ready.");
+        return;
     }
 
+    const {
+        onAuthStateChanged
+    } = window.FirebaseFunctions;
 
-
-    // ==========================================
-    // LOAD MEMBERS
-    // ==========================================
-
-    async function loadMembersAndMeals() {
-
-        try {
+    onAuthStateChanged(
+        window.auth,
+        async user => {
 
             console.log(
-                "=== Loading Members from Firestore ==="
+                "Auth:",
+                user ? user.email : "none"
             );
 
+            if (
+                !user ||
+                user.email.toLowerCase() !==
+                "spi1@gmail.com"
+            ) {
 
-            const {
-                collection,
-                getDocs
-            } = window.FirebaseFunctions;
+                window.location.href =
+                    "login.html";
+
+                return;
+            }
+
+            localStorage.setItem(
+                "assistLoggedIn",
+                "true"
+            );
+
+            document.getElementById(
+                "userEmail"
+            ).textContent = user.email;
+
+            await loadMembersAndMeals();
+
+        }
+    );
+}
 
 
-            const membersCollection =
+/* =========================
+   LOAD MEMBERS
+========================= */
+
+async function loadMembersAndMeals() {
+
+    try {
+
+        const {
+            collection,
+            getDocs
+        } = window.FirebaseFunctions;
+
+        const snap =
+            await getDocs(
                 collection(
                     window.db,
-                    'members'
-                );
-
-
-            console.log(
-                "Collection reference created:",
-                membersCollection
+                    "members"
+                )
             );
 
+        members = [];
 
-            const snap =
-                await getDocs(
-                    membersCollection
-                );
+        snap.forEach(d => {
 
+            const data = d.data();
 
-            console.log(
-                "Members snapshot received. Size:",
-                snap.size
-            );
-
-
-            members = [];
-
-
-            snap.forEach((d) => {
-
-                const data = d.data();
-
-
-                console.log(
-                    "Member found:",
-                    d.id,
-                    data
-                );
-
+            /*
+             * active false হলে member history-তে
+             * থাকতে পারে কিন্তু current assistant
+             * sheet-এ দেখানো হবে না.
+             */
+            if (data.active !== false) {
 
                 members.push({
                     id: d.id,
                     ...data
                 });
 
-            });
-
-
-            console.log(
-                "Total members loaded:",
-                members.length
-            );
-
-
-            if (members.length === 0) {
-
-                document.getElementById(
-                    'mealTableBody'
-                ).innerHTML =
-
-                    `
-                    <tr>
-                        <td
-                            colspan="5"
-                            style="
-                                text-align:center;
-                                padding:30px;
-                                color:var(--text-tertiary);
-                            "
-                        >
-                            No members found.
-                            Please add members first.
-                        </td>
-                    </tr>
-                    `;
-
             }
 
+        });
 
-            await loadTodaysMealsData();
+        document.getElementById(
+            "statMembers"
+        ).textContent = members.length;
 
-            renderTable();
+        await loadTodaysMealsData();
+
+        renderTable();
+
+    } catch(error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "mealTableBody"
+        ).innerHTML = `
+            <tr>
+                <td colspan="8"
+                    class="text-center py-10 text-red-400">
+                    ❌ ${escapeHTML(error.message)}
+                </td>
+            </tr>
+        `;
+
+    }
+}
 
 
-        } catch (error) {
+/* =========================
+   LOAD DAY
+========================= */
 
-            console.error(
-                "Error loading members:",
-                error
-            );
+async function loadTodaysMealsData() {
 
+    const {
+        doc,
+        getDoc
+    } = window.FirebaseFunctions;
 
-            console.error(
-                "Error code:",
-                error.code
-            );
+    const snap =
+        await getDoc(
+            doc(
+                window.db,
+                "meals",
+                selectedDateStr
+            )
+        );
 
+    if (snap.exists()) {
 
-            console.error(
-                "Error message:",
-                error.message
-            );
+        const data = snap.data();
 
+        currentMealsData =
+            data.members || {};
 
-            if (
-                error.code ===
-                'permission-denied'
-            ) {
+    } else {
 
-                document.getElementById(
-                    'mealTableBody'
-                ).innerHTML =
-
-                    `
-                    <tr>
-                        <td
-                            colspan="5"
-                            style="
-                                text-align:center;
-                                padding:30px;
-                                color:var(--accent-red);
-                            "
-                        >
-                            Permission denied.
-                            Check Firebase Rules.
-                        </td>
-                    </tr>
-                    `;
-
-            } else {
-
-                throw error;
-
-            }
-
-        }
+        currentMealsData = {};
 
     }
 
+}
 
 
-    // ==========================================
-    // LOAD TODAY MEALS
-    // ==========================================
+/* =========================
+   RENDER
+========================= */
 
-    async function loadTodaysMealsData() {
+function renderTable() {
 
-        try {
+    const tbody =
+        document.getElementById(
+            "mealTableBody"
+        );
 
-            const {
-                doc,
-                getDoc
-            } = window.FirebaseFunctions;
+    tbody.innerHTML = "";
+
+    let mainTotal = 0;
+    let guestTotal = 0;
+
+    if (!members.length) {
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8"
+                    class="text-center py-10">
+                    No members found.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
 
 
-            const mealDoc =
+    members.forEach(member => {
+
+        const m =
+            currentMealsData[member.id] || {};
+
+        const breakfast =
+            m.breakfast ? 1 : 0;
+
+        const lunch =
+            m.lunch ? 1 : 0;
+
+        const dinner =
+            m.dinner ? 1 : 0;
+
+        const guest =
+            Number(m.guest || 0);
+
+        const mainMeal =
+            (breakfast ? .5 : 0) +
+            (lunch ? 1 : 0) +
+            (dinner ? 1 : 0);
+
+        /*
+         * Guest সংখ্যাকে 1 meal হিসেবে ধরা হচ্ছে।
+         * অর্থাৎ Guest = 2 হলে +2 meals.
+         */
+        const guestMeal = guest;
+
+        const total =
+            mainMeal + guestMeal;
+
+        mainTotal += mainMeal;
+        guestTotal += guestMeal;
+
+
+        tbody.innerHTML += `
+
+        <tr>
+
+            <td>
+                ${escapeHTML(
+                    member.name || "Unnamed"
+                )}
+            </td>
+
+
+            <td>
+                <input
+                    type="checkbox"
+                    class="meal-check"
+                    ${breakfast ? "checked" : ""}
+                    onchange="
+                        updateMeal(
+                            '${member.id}',
+                            'breakfast',
+                            this.checked
+                        )
+                    ">
+            </td>
+
+
+            <td>
+                <input
+                    type="checkbox"
+                    class="meal-check"
+                    ${lunch ? "checked" : ""}
+                    onchange="
+                        updateMeal(
+                            '${member.id}',
+                            'lunch',
+                            this.checked
+                        )
+                    ">
+            </td>
+
+
+            <td>
+                <input
+                    type="checkbox"
+                    class="meal-check"
+                    ${dinner ? "checked" : ""}
+                    onchange="
+                        updateMeal(
+                            '${member.id}',
+                            'dinner',
+                            this.checked
+                        )
+                    ">
+            </td>
+
+
+            <td>
+
+                <input
+                    id="guest_${member.id}"
+                    type="number"
+                    min="0"
+                    step="1"
+                    value="${guest || ""}"
+                    placeholder="0"
+                    class="input guest-input"
+                    onchange="
+                        updateGuest(
+                            '${member.id}',
+                            this.value
+                        )
+                    ">
+
+            </td>
+
+
+            <td
+                id="guestTotal_${member.id}"
+                class="guest-total">
+                ${guestMeal}
+            </td>
+
+
+            <td
+                id="mainTotal_${member.id}"
+                class="total">
+                ${mainMeal}
+            </td>
+
+
+            <td
+                id="total_${member.id}"
+                class="daily-total">
+                ${total}
+            </td>
+
+        </tr>
+        `;
+
+    });
+
+
+    document.getElementById(
+        "statMain"
+    ).textContent =
+        formatMeal(mainTotal);
+
+    document.getElementById(
+        "statGuest"
+    ).textContent =
+        formatMeal(guestTotal);
+
+}
+
+
+/* =========================
+   UPDATE MAIN MEAL
+========================= */
+
+window.updateMeal =
+function(memberId,type,checked) {
+
+    if (!currentMealsData[memberId]) {
+
+        currentMealsData[memberId] = {
+            breakfast:0,
+            lunch:0,
+            dinner:0,
+            guest:0
+        };
+
+    }
+
+    currentMealsData[memberId][type] =
+        checked ? 1 : 0;
+
+    refreshMemberTotal(memberId);
+};
+
+
+/* =========================
+   UPDATE GUEST
+========================= */
+
+window.updateGuest =
+function(memberId,value) {
+
+    if (!currentMealsData[memberId]) {
+
+        currentMealsData[memberId] = {
+            breakfast:0,
+            lunch:0,
+            dinner:0,
+            guest:0
+        };
+
+    }
+
+    let number =
+        Number(value);
+
+    if (
+        !Number.isFinite(number) ||
+        number < 0
+    ) {
+        number = 0;
+    }
+
+    number =
+        Math.floor(number);
+
+    currentMealsData[memberId].guest =
+        number;
+
+    refreshMemberTotal(memberId);
+};
+
+
+/* =========================
+   REFRESH TOTAL
+========================= */
+
+function refreshMemberTotal(memberId) {
+
+    const m =
+        currentMealsData[memberId] || {};
+
+    const mainMeal =
+        (m.breakfast ? .5 : 0) +
+        (m.lunch ? 1 : 0) +
+        (m.dinner ? 1 : 0);
+
+    const guestMeal =
+        Number(m.guest || 0);
+
+    const total =
+        mainMeal + guestMeal;
+
+
+    const mainEl =
+        document.getElementById(
+            `mainTotal_${memberId}`
+        );
+
+    const guestEl =
+        document.getElementById(
+            `guestTotal_${memberId}`
+        );
+
+    const totalEl =
+        document.getElementById(
+            `total_${memberId}`
+        );
+
+
+    if (mainEl)
+        mainEl.textContent =
+            formatMeal(mainMeal);
+
+    if (guestEl)
+        guestEl.textContent =
+            formatMeal(guestMeal);
+
+    if (totalEl)
+        totalEl.textContent =
+            formatMeal(total);
+
+
+    calculateStats();
+}
+
+
+/* =========================
+   STATS
+========================= */
+
+function calculateStats() {
+
+    let main = 0;
+    let guest = 0;
+
+    Object.values(
+        currentMealsData
+    ).forEach(m => {
+
+        main +=
+            (m.breakfast ? .5 : 0) +
+            (m.lunch ? 1 : 0) +
+            (m.dinner ? 1 : 0);
+
+        guest +=
+            Number(m.guest || 0);
+
+    });
+
+    document.getElementById(
+        "statMain"
+    ).textContent =
+        formatMeal(main);
+
+    document.getElementById(
+        "statGuest"
+    ).textContent =
+        formatMeal(guest);
+}
+
+
+/* =========================
+   SAVE
+========================= */
+
+window.saveMeals =
+async function() {
+
+    try {
+
+        const {
+            doc,
+            setDoc
+        } = window.FirebaseFunctions;
+
+        let total = 0;
+
+        Object.values(
+            currentMealsData
+        ).forEach(m => {
+
+            total +=
+                (m.breakfast ? .5 : 0) +
+                (m.lunch ? 1 : 0) +
+                (m.dinner ? 1 : 0) +
+                Number(m.guest || 0);
+
+        });
+
+
+        await setDoc(
+            doc(
+                window.db,
+                "meals",
+                selectedDateStr
+            ),
+            {
+                date: selectedDateStr,
+                members: currentMealsData,
+                totalMeals: total,
+                updatedAt: new Date().toISOString()
+            },
+            {
+                merge:true
+            }
+        );
+
+
+        /*
+         * Update member totalMeals
+         * from all available meal documents.
+         */
+        const {
+            collection,
+            getDocs,
+            updateDoc
+        } = window.FirebaseFunctions;
+
+
+        const allSnap =
+            await getDocs(
+                collection(
+                    window.db,
+                    "meals"
+                )
+            );
+
+
+        const totals = {};
+
+        members.forEach(m => {
+            totals[m.id] = 0;
+        });
+
+
+        allSnap.forEach(d => {
+
+            const data = d.data();
+
+            if (!data.members)
+                return;
+
+            Object.entries(
+                data.members
+            ).forEach(
+                ([id,m]) => {
+
+                    if (
+                        totals[id] !== undefined
+                    ) {
+
+                        totals[id] +=
+                            (m.breakfast ? .5 : 0) +
+                            (m.lunch ? 1 : 0) +
+                            (m.dinner ? 1 : 0) +
+                            Number(m.guest || 0);
+
+                    }
+
+                }
+            );
+
+        });
+
+
+        for (const member of members) {
+
+            await updateDoc(
                 doc(
                     window.db,
-                    'meals',
-                    selectedDateStr
-                );
-
-
-            const snap =
-                await getDoc(mealDoc);
-
-
-            currentMealsData =
-                snap.exists()
-                    ? (
-                        snap.data().members || {}
-                    )
-                    : {};
-
-
-            console.log(
-                "Today's meals data:",
-                currentMealsData
+                    "members",
+                    member.id
+                ),
+                {
+                    totalMeals:
+                        totals[member.id] || 0
+                }
             );
-
-
-        } catch (error) {
-
-            console.error(
-                "Error loading today's meals:",
-                error
-            );
-
-
-            currentMealsData = {};
 
         }
 
+
+        document.getElementById(
+            "saveStatus"
+        ).textContent =
+            "✓ Saved successfully";
+
+        setTimeout(() => {
+
+            document.getElementById(
+                "saveStatus"
+            ).textContent = "";
+
+        },3000);
+
+
+    } catch(error) {
+
+        console.error(error);
+
+        alert(
+            "❌ Save failed:\n" +
+            error.message
+        );
+
     }
 
+};
 
 
-    // ==========================================
-    // COPY YESTERDAY
-    // ==========================================
+/* =========================
+   COPY YESTERDAY
+========================= */
 
-    async function copyYesterdayMeals() {
+window.copyYesterdayMeals =
+async function() {
 
-        try {
+    try {
 
-            let d =
-                new Date(selectedDateStr);
+        const d =
+            new Date(
+                selectedDateStr
+            );
+
+        d.setDate(
+            d.getDate() - 1
+        );
+
+        const yesterday =
+            d.toISOString()
+            .split("T")[0];
 
 
-            d.setDate(
-                d.getDate() - 1
+        const {
+            doc,
+            getDoc
+        } = window.FirebaseFunctions;
+
+
+        const snap =
+            await getDoc(
+                doc(
+                    window.db,
+                    "meals",
+                    yesterday
+                )
             );
 
 
-            let yestStr =
-                d.toISOString()
-                 .split('T')[0];
-
-
-            const {
-                doc,
-                getDoc
-            } = window.FirebaseFunctions;
-
-
-            const snap =
-                await getDoc(
-                    doc(
-                        window.db,
-                        'meals',
-                        yestStr
-                    )
-                );
-
-
-            if (snap.exists()) {
-
-                currentMealsData =
-                    snap.data().members || {};
-
-
-                renderTable();
-
-
-                alert(
-                    '📋 Copied from yesterday! Save to apply.'
-                );
-
-            } else {
-
-                alert(
-                    '⚠️ No meal record for yesterday.'
-                );
-
-            }
-
-
-        } catch (error) {
-
-            console.error(
-                "Error copying yesterday's meals:",
-                error
-            );
-
+        if (!snap.exists()) {
 
             alert(
-                '❌ Error copying meals'
+                "⚠️ Yesterday has no meal record."
             );
-
-        }
-
-    }
-
-
-
-    // ==========================================
-    // RENDER TABLE
-    // ==========================================
-
-    function renderTable() {
-
-        const tbody =
-            document.getElementById(
-                'mealTableBody'
-            );
-
-
-        tbody.innerHTML = '';
-
-
-        if (members.length === 0) {
-
-            tbody.innerHTML =
-
-                `
-                <tr>
-                    <td
-                        colspan="5"
-                        style="
-                            text-align:center;
-                            padding:30px;
-                            color:var(--text-tertiary);
-                        "
-                    >
-                        No members found.
-                    </td>
-                </tr>
-                `;
 
             return;
         }
 
 
-        members.forEach((m) => {
+        const data =
+            snap.data();
 
-            let mData =
-                currentMealsData[m.id] ||
-                {
-                    breakfast: 0,
-                    lunch: 0,
-                    dinner: 0
-                };
-
-
-            let totalToday =
-                (mData.breakfast ? 0.5 : 0) +
-                (mData.lunch ? 1 : 0) +
-                (mData.dinner ? 1 : 0);
-
-
-            tbody.innerHTML +=
-
-                `
-                <tr>
-
-                    <td
-                        style="
-                            padding:12px;
-                            font-weight:600;
-                            color:white;
-                        "
-                    >
-                        ${escapeHTML(
-                            m.name || 'Unnamed'
-                        )}
-                    </td>
-
-
-                    <td
-                        style="
-                            text-align:center;
-                            padding:12px;
-                        "
-                    >
-
-                        <input
-                            type="checkbox"
-                            class="meal-checkbox"
-                            ${
-                                mData.breakfast
-                                    ? 'checked'
-                                    : ''
-                            }
-                            onchange="
-                                updateMealVal(
-                                    '${escapeAttribute(m.id)}',
-                                    'breakfast',
-                                    this.checked
-                                )
-                            "
-                        >
-
-                    </td>
-
-
-                    <td
-                        style="
-                            text-align:center;
-                            padding:12px;
-                        "
-                    >
-
-                        <input
-                            type="checkbox"
-                            class="meal-checkbox"
-                            ${
-                                mData.lunch
-                                    ? 'checked'
-                                    : ''
-                            }
-                            onchange="
-                                updateMealVal(
-                                    '${escapeAttribute(m.id)}',
-                                    'lunch',
-                                    this.checked
-                                )
-                            "
-                        >
-
-                    </td>
-
-
-                    <td
-                        style="
-                            text-align:center;
-                            padding:12px;
-                        "
-                    >
-
-                        <input
-                            type="checkbox"
-                            class="meal-checkbox"
-                            ${
-                                mData.dinner
-                                    ? 'checked'
-                                    : ''
-                            }
-                            onchange="
-                                updateMealVal(
-                                    '${escapeAttribute(m.id)}',
-                                    'dinner',
-                                    this.checked
-                                )
-                            "
-                        >
-
-                    </td>
-
-
-                    <td
-                        style="
-                            text-align:center;
-                            padding:12px;
-                            font-weight:700;
-                            color:var(--accent-purple-light);
-                        "
-                        id="total_${escapeAttribute(m.id)}"
-                    >
-                        ${totalToday}
-                    </td>
-
-                </tr>
-                `;
-
-        });
-
-    }
-
-
-
-    // ==========================================
-    // SAFE HTML
-    // ==========================================
-
-    function escapeHTML(value) {
-
-        return String(value)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#039;');
-
-    }
-
-
-    function escapeAttribute(value) {
-
-        return String(value)
-            .replace(/\\/g, '\\\\')
-            .replace(/'/g, "\\'");
-
-    }
-
-
-
-    // ==========================================
-    // UPDATE MEAL
-    // ==========================================
-
-    function updateMealVal(
-        memberId,
-        mealType,
-        isChecked
-    ) {
-
-        if (
-            !currentMealsData[memberId]
-        ) {
-
-            currentMealsData[memberId] = {
-
-                breakfast: 0,
-
-                lunch: 0,
-
-                dinner: 0
-
-            };
-
-        }
-
-
-        currentMealsData[memberId][mealType] =
-            isChecked ? 1 : 0;
-
-
-        let mData =
-            currentMealsData[memberId];
-
-
-        let totalToday =
-            (mData.breakfast ? 0.5 : 0) +
-            (mData.lunch ? 1 : 0) +
-            (mData.dinner ? 1 : 0);
-
-
-        const totalElement =
-            document.getElementById(
-                `total_${memberId}`
+        currentMealsData =
+            JSON.parse(
+                JSON.stringify(
+                    data.members || {}
+                )
             );
-
-
-        if (totalElement) {
-
-            totalElement.textContent =
-                totalToday;
-
-        }
-
-    }
-
-
-
-    // ==========================================
-    // SAVE MEALS
-    // ==========================================
-
-    async function saveMeals() {
-
-        try {
-
-            const {
-                doc,
-                setDoc,
-                getDocs,
-                collection,
-                updateDoc
-            } = window.FirebaseFunctions;
-
-
-            let totalDayMeals = 0;
-
-
-            members.forEach((m) => {
-
-                let mData =
-                    currentMealsData[m.id] ||
-                    {
-                        breakfast: 0,
-                        lunch: 0,
-                        dinner: 0
-                    };
-
-
-                totalDayMeals +=
-
-                    (mData.breakfast ? 0.5 : 0) +
-
-                    (mData.lunch ? 1 : 0) +
-
-                    (mData.dinner ? 1 : 0);
-
-            });
-
-
-            // Save today's meals
-
-            await setDoc(
-
-                doc(
-                    window.db,
-                    'meals',
-                    selectedDateStr
-                ),
-
-                {
-                    members:
-                        currentMealsData,
-
-                    totalMeals:
-                        totalDayMeals
-                },
-
-                {
-                    merge: true
-                }
-
-            );
-
-
-            // Load all meal records
-
-            const allSnap =
-                await getDocs(
-                    collection(
-                        window.db,
-                        'meals'
-                    )
-                );
-
-
-            let memberTotals = {};
-
-
-            members.forEach((m) => {
-
-                memberTotals[m.id] = 0;
-
-            });
-
-
-            allSnap.forEach(
-                (docSnap) => {
-
-                    const data =
-                        docSnap.data();
-
-
-                    if (data.members) {
-
-                        Object.entries(
-                            data.members
-                        ).forEach(
-                            ([mId, meals]) => {
-
-                                if (
-                                    memberTotals[mId]
-                                    !== undefined
-                                ) {
-
-                                    memberTotals[mId] +=
-
-                                        (meals.breakfast
-                                            ? 0.5
-                                            : 0) +
-
-                                        (meals.lunch
-                                            ? 1
-                                            : 0) +
-
-                                        (meals.dinner
-                                            ? 1
-                                            : 0);
-
-                                }
-
-                            }
-                        );
-
-                    }
-
-                }
-            );
-
-
-            // Update member totals
-
-            for (
-                let m of members
-            ) {
-
-                await updateDoc(
-
-                    doc(
-                        window.db,
-                        'members',
-                        m.id
-                    ),
-
-                    {
-                        totalMeals:
-                            memberTotals[m.id] || 0
-                    }
-
-                );
-
-            }
-
-
-            alert(
-                '✅ Meals saved and public dashboard updated!'
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Error saving meals:",
-                error
-            );
-
-
-            alert(
-                '❌ Error saving meals: ' +
-                error.message
-            );
-
-        }
-
-    }
-
-
-
-    // ==========================================
-    // CHANGE DATE
-    // ==========================================
-
-    async function changeDate() {
-
-        selectedDateStr =
-            document.getElementById(
-                'selectedDate'
-            ).value;
-
-
-        await loadTodaysMealsData();
 
 
         renderTable();
 
-    }
+        alert(
+            "📋 Yesterday copied. Click Save Meals."
+        );
 
 
+    } catch(error) {
 
-    // ==========================================
-    // LOGOUT
-    // ==========================================
+        console.error(error);
 
-    async function logout() {
-
-        try {
-
-            const {
-                signOut
-            } = window.FirebaseFunctions;
-
-
-            await signOut(
-                window.auth
-            );
-
-
-            localStorage.removeItem(
-                'assistLoggedIn'
-            );
-
-
-            window.location.href =
-                'login.html';
-
-
-        } catch (error) {
-
-            console.error(
-                "Logout error:",
-                error
-            );
-
-        }
+        alert(
+            "❌ " +
+            error.message
+        );
 
     }
 
+};
 
 
-    // ==========================================
-    // CHANGE PASSWORD
-    // ==========================================
+/* =========================
+   DATE
+========================= */
 
-    async function changePassword() {
+window.changeDate =
+async function() {
 
-        const oldPass =
-            document.getElementById(
-                'oldPasswordAssist'
-            ).value;
+    selectedDateStr =
+        document.getElementById(
+            "selectedDate"
+        ).value;
 
+    document.getElementById(
+        "statDate"
+    ).textContent =
+        selectedDateStr;
 
-        const newPass =
-            document.getElementById(
-                'newPasswordAssist'
-            ).value;
+    await loadTodaysMealsData();
 
+    renderTable();
 
-        const errorEl =
-            document.getElementById(
-                'assistPasswordError'
-            );
+};
 
 
-        errorEl.style.display =
-            'none';
+/* =========================
+   PDF
+========================= */
 
+window.downloadPDF =
+function() {
 
-        if (
-            !oldPass ||
-            !newPass
-        ) {
-
-            errorEl.textContent =
-                'Please fill both fields.';
-
-            errorEl.style.display =
-                'block';
-
-            return;
-
-        }
-
-
-        if (
-            newPass.length < 6
-        ) {
-
-            errorEl.textContent =
-                'Password must be at least 6 characters.';
-
-            errorEl.style.display =
-                'block';
-
-            return;
-
-        }
-
-
-        try {
-
-            const {
-                EmailAuthProvider,
-                reauthenticateWithCredential,
-                updatePassword
-            } = window.FirebaseFunctions;
-
-
-            const user =
-                window.auth.currentUser;
-
-
-            if (!user) {
-
-                throw new Error(
-                    'No authenticated user found.'
-                );
-
-            }
-
-
-            const credential =
-                EmailAuthProvider.credential(
-                    user.email,
-                    oldPass
-                );
-
-
-            await reauthenticateWithCredential(
-                user,
-                credential
-            );
-
-
-            await updatePassword(
-                user,
-                newPass
-            );
-
-
-            alert(
-                '✅ Password updated successfully!'
-            );
-
-
-            document.getElementById(
-                'oldPasswordAssist'
-            ).value = '';
-
-
-            document.getElementById(
-                'newPasswordAssist'
-            ).value = '';
-
-
-        } catch (err) {
-
-            console.error(
-                "Password update error:",
-                err
-            );
-
-
-            errorEl.textContent =
-                err.message;
-
-
-            errorEl.style.display =
-                'block';
-
-        }
-
-    }
-
-
-
-    // ==========================================
-    // MAKE FUNCTIONS AVAILABLE TO HTML
-    // ==========================================
-
-    window.updateMealVal =
-        updateMealVal;
-
-    window.saveMeals =
-        saveMeals;
-
-    window.copyYesterdayMeals =
-        copyYesterdayMeals;
-
-    window.changeDate =
-        changeDate;
-
-    window.logout =
-        logout;
-
-    window.changePassword =
-        changePassword;
-
-    window.setupAuth =
-        setupAuth;
-
-
-
-    // ==========================================
-    // START ASSISTANT APP
-    // ==========================================
-
-    window.startAssistantApp =
-        function () {
-
-            console.log(
-                "Assistant Firebase is ready."
-            );
-
-
-            setupAuth();
-
-        };
-
-
-    // Firebase module may already be loaded
     if (
-        window.auth &&
-        window.FirebaseFunctions
+        !window.jspdf ||
+        !window.jspdf.jsPDF
     ) {
 
-        setupAuth();
+        alert(
+            "PDF library is still loading."
+        );
 
+        return;
     }
 
 
-    console.log(
-        "Assistant Console initialized"
+    const {
+        jsPDF
+    } = window.jspdf;
+
+
+    const pdf =
+        new jsPDF(
+            "landscape",
+            "mm",
+            "a4"
+        );
+
+
+    pdf.setFontSize(18);
+
+    pdf.text(
+        "Ma Achiya Villa",
+        15,
+        15
     );
 
 
-</script>
+    pdf.setFontSize(12);
 
+    pdf.text(
+        "Daily Meal Report - " +
+        selectedDateStr,
+        15,
+        23
+    );
+
+
+    let y = 34;
+
+    pdf.setFontSize(9);
+
+    pdf.text(
+        "Member",
+        15,
+        y
+    );
+
+    pdf.text(
+        "Breakfast",
+        70,
+        y
+    );
+
+    pdf.text(
+        "Lunch",
+        105,
+        y
+    );
+
+    pdf.text(
+        "Dinner",
+        135,
+        y
+    );
+
+    pdf.text(
+        "Guest",
+        165,
+        y
+    );
+
+    pdf.text(
+        "Main",
+        195,
+        y
+    );
+
+    pdf.text(
+        "Total",
+        225,
+        y
+    );
+
+
+    y += 7;
+
+
+    members.forEach(member => {
+
+        const m =
+            currentMealsData[
+                member.id
+            ] || {};
+
+
+        const breakfast =
+            m.breakfast ? .5 : 0;
+
+        const lunch =
+            m.lunch ? 1 : 0;
+
+        const dinner =
+            m.dinner ? 1 : 0;
+
+        const guest =
+            Number(m.guest || 0);
+
+        const main =
+            breakfast +
+            lunch +
+            dinner;
+
+        const total =
+            main + guest;
+
+
+        pdf.text(
+            String(
+                member.name || "Unnamed"
+            ).substring(0,28),
+            15,
+            y
+        );
+
+        pdf.text(
+            String(breakfast),
+            70,
+            y
+        );
+
+        pdf.text(
+            String(lunch),
+            105,
+            y
+        );
+
+        pdf.text(
+            String(dinner),
+            135,
+            y
+        );
+
+        pdf.text(
+            String(guest),
+            165,
+            y
+        );
+
+        pdf.text(
+            String(main),
+            195,
+            y
+        );
+
+        pdf.text(
+            String(total),
+            225,
+            y
+        );
+
+        y += 6;
+
+        if (y > 190) {
+
+            pdf.addPage();
+            y = 20;
+
+        }
+
+    });
+
+
+    let mainTotal = 0;
+    let guestTotal = 0;
+
+
+    Object.values(
+        currentMealsData
+    ).forEach(m => {
+
+        mainTotal +=
+            (m.breakfast ? .5 : 0) +
+            (m.lunch ? 1 : 0) +
+            (m.dinner ? 1 : 0);
+
+        guestTotal +=
+            Number(m.guest || 0);
+
+    });
+
+
+    y += 5;
+
+    pdf.setFontSize(11);
+
+    pdf.text(
+        "Main Meals: " +
+        formatMeal(mainTotal),
+        15,
+        y
+    );
+
+    pdf.text(
+        "Guest Meals: " +
+        formatMeal(guestTotal),
+        85,
+        y
+    );
+
+    pdf.text(
+        "Grand Total: " +
+        formatMeal(
+            mainTotal + guestTotal
+        ),
+        170,
+        y
+    );
+
+
+    pdf.save(
+        `Ma-Achiya-Villa-${selectedDateStr}.pdf`
+    );
+
+};
+
+
+/* =========================
+   PASSWORD
+========================= */
+
+window.changePassword =
+async function() {
+
+    const oldPass =
+        document.getElementById(
+            "oldPasswordAssist"
+        ).value;
+
+    const newPass =
+        document.getElementById(
+            "newPasswordAssist"
+        ).value;
+
+    const errorEl =
+        document.getElementById(
+            "assistPasswordError"
+        );
+
+
+    errorEl.textContent = "";
+
+
+    if (!oldPass || !newPass) {
+
+        errorEl.textContent =
+            "Please fill both passwords.";
+
+        return;
+    }
+
+
+    if (newPass.length < 6) {
+
+        errorEl.textContent =
+            "New password must be at least 6 characters.";
+
+        return;
+    }
+
+
+    try {
+
+        const {
+            EmailAuthProvider,
+            reauthenticateWithCredential,
+            updatePassword
+        } = window.FirebaseFunctions;
+
+
+        const user =
+            window.auth.currentUser;
+
+
+        if (!user) {
+
+            throw new Error(
+                "You are not logged in."
+            );
+
+        }
+
+
+        const credential =
+            EmailAuthProvider.credential(
+                user.email,
+                oldPass
+            );
+
+
+        await reauthenticateWithCredential(
+            user,
+            credential
+        );
+
+
+        await updatePassword(
+            user,
+            newPass
+        );
+
+
+        alert(
+            "✅ Password updated successfully."
+        );
+
+
+        document.getElementById(
+            "oldPasswordAssist"
+        ).value = "";
+
+        document.getElementById(
+            "newPasswordAssist"
+        ).value = "";
+
+
+    } catch(error) {
+
+        errorEl.textContent =
+            error.message;
+
+    }
+
+};
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+window.logout =
+async function() {
+
+    try {
+
+        await window.FirebaseFunctions
+            .signOut(
+                window.auth
+            );
+
+        localStorage.removeItem(
+            "assistLoggedIn"
+        );
+
+        window.location.href =
+            "login.html";
+
+    } catch(error) {
+
+        console.error(error);
+
+    }
+
+};
+
+
+/* =========================
+   HELPERS
+========================= */
+
+function formatMeal(n) {
+
+    return Number(n)
+        .toFixed(2)
+        .replace(/\.00$/,"")
+        .replace(/(\.\d)0$/,"$1");
+
+}
+
+
+function escapeHTML(str) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        String(str);
+
+    return div.innerHTML;
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+window.startAssistantApp =
+function() {
+
+    if (
+        !window.firebaseReady ||
+        !window.auth
+    ) {
+
+        return;
+
+    }
+
+    setupAuth();
+
+};
+
+
+</script>
 
 </body>
 </html>
