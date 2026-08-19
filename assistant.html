@@ -1,3 +1,20 @@
+None selected
+
+Skip to content
+Using Gmail with screen readers
+in:sent 
+Enable desktop notifications for Gmail.
+   OK  No thanks
+1 of 7
+(no subject)
+
+Lover of Chaina <loverofchaina@gmail.com>
+Attachments
+12:17 AM (1 hour ago)
+to naimeboss999@gmail.com
+
+ One attachment
+  •  Scanned by Gmail
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
@@ -19,10 +36,10 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, doc, getDoc, setDoc, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, doc, getDoc, setDoc, updateDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // ---- Firebase Config ----
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
             authDomain: "my-mess-17fbc.firebaseapp.com",
@@ -32,13 +49,29 @@
             appId: "1:848426874799:web:0722af59e7504da847e15a",
             measurementId: "G-RWHJKGV5LS"
         };
-        // ---- Firebase Config ----
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
+        
+        // Make Firebase globally available
         window.db = db;
         window.auth = auth;
+        window.FirebaseFunctions = {
+            collection,
+            doc,
+            getDoc,
+            setDoc,
+            updateDoc,
+            getDocs,
+            query,
+            where,
+            EmailAuthProvider,
+            reauthenticateWithCredential,
+            updatePassword
+        };
+        
+        console.log("Firebase initialized successfully");
     </script>
 
     <style>
@@ -74,7 +107,6 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
 
         body {
@@ -89,7 +121,6 @@
             line-height: 1.5;
         }
 
-        /* Animated Background Orbs */
         body::after {
             content: '';
             position: fixed;
@@ -114,16 +145,6 @@
             overflow: hidden;
             z-index: 1;
             transition: all var(--transition);
-        }
-        .glass::after {
-            content: '';
-            position: absolute; inset: 0;
-            opacity: 0.025; mix-blend-mode: overlay; pointer-events: none; z-index: 1;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-        }
-        .glass > * { position: relative; z-index: 2; }
-
-        .glass {
             background: var(--glass-bg);
             backdrop-filter: blur(42px) saturate(200%) contrast(105%);
             -webkit-backdrop-filter: blur(42px) saturate(200%) contrast(105%);
@@ -131,6 +152,15 @@
             border-radius: var(--radius-xl);
             box-shadow: var(--glass-shadow);
         }
+
+        .glass::after {
+            content: '';
+            position: absolute; inset: 0;
+            opacity: 0.025; mix-blend-mode: overlay; pointer-events: none; z-index: 1;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .glass > * { position: relative; z-index: 2; }
 
         .logo-circle {
             width: 56px; height: 56px; border-radius: 50%;
@@ -169,6 +199,7 @@
             background: rgba(255, 255, 255, 0.09);
             box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.12), inset 0 1px 0 rgba(255,255,255,0.1);
         }
+        .input-glass::placeholder { color: rgba(255, 255, 255, 0.3); }
         select.input-glass option { background: #1a103c; color: #fff; }
 
         .btn-push {
@@ -189,16 +220,14 @@
         .btn-home:hover { background: rgba(96, 165, 250, 0.2); }
         .btn-logout:hover { background: rgba(248, 113, 113, 0.2); }
 
-        /* Custom Checkbox Design */
         .meal-checkbox {
             width: 20px; height: 20px; accent-color: #8b5cf6; cursor: pointer;
             border-radius: 4px;
         }
 
-        /* Table Design */
         .meal-table { width: 100%; border-collapse: collapse; }
         .meal-table th { text-align: left; padding: 12px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-tertiary); border-bottom: 1px solid var(--divider); }
-        .meal-table td { padding: 12px; border-bottom: var(--divider); color: var(--text-secondary); }
+        .meal-table td { padding: 12px; border-bottom: 1px solid var(--divider); color: var(--text-secondary); }
         .meal-table tbody tr:hover { background: var(--table-hover); }
 
         ::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -207,7 +236,6 @@
     </style>
 </head>
 <body>
-
 <div class="max-w-4xl mx-auto relative z-10">
 
     <!-- Header -->
@@ -234,7 +262,7 @@
     <div class="glass p-4 mb-4">
         <div class="flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-2">
-                <span class="text-xs font-bold uppercase tracking-wider text-gray-400">Active Date:</span>
+                <span class="text-xs font-bold uppercase tracking-wider text-gray-400">📅 Date:</span>
                 <input type="date" id="selectedDate" class="input-glass" style="width: auto; margin-bottom: 0; color-scheme: dark;" onchange="changeDate()">
             </div>
             <div class="flex gap-2 w-full sm:w-auto">
@@ -253,15 +281,15 @@
         <table class="meal-table">
             <thead>
                 <tr>
-                    <th>Border Name</th>
-                    <th style="text-align: center;">Breakfast (0.5)</th>
-                    <th style="text-align: center;">Lunch (1.0)</th>
-                    <th style="text-align: center;">Dinner (1.0)</th>
-                    <th style="text-align: center;">Today's Total</th>
+                    <th>👤 Border Name</th>
+                    <th style="text-align: center;">🌅 Breakfast (0.5)</th>
+                    <th style="text-align: center;">☀️ Lunch (1.0)</th>
+                    <th style="text-align: center;">🌙 Dinner (1.0)</th>
+                    <th style="text-align: center;">📊 Today's Total</th>
                 </tr>
             </thead>
             <tbody id="mealTableBody">
-                <tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--text-tertiary);">Loading roster...</td></tr>
+                <tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--text-tertiary);">Loading members...</td></tr>
             </tbody>
         </table>
     </div>
@@ -288,58 +316,122 @@
 
     function setupAuth() {
         window.auth.onAuthStateChanged(async (user) => {
+            console.log("=== Auth State Changed ===");
+            console.log("User:", user ? user.email : "No user");
+            
             if (!user || user.email !== 'spi1@gmail.com') {
+                console.log("Unauthorized access. Redirecting to login...");
                 window.location.href = 'login.html';
                 return;
             }
+            
+            console.log("Authorized assistant logged in");
             localStorage.setItem('assistLoggedIn', 'true');
             document.getElementById('userEmail').textContent = user.email;
-            await loadMembersAndMeals();
+            
+            try {
+                await loadMembersAndMeals();
+            } catch (error) {
+                console.error("Error in loadMembersAndMeals:", error);
+                document.getElementById('mealTableBody').innerHTML = 
+                    '<tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--accent-red);">Error loading data. Check console.</td></tr>';
+            }
         });
     }
 
     async function loadMembersAndMeals() {
-        const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-        const snap = await getDocs(collection(window.db, 'members'));
-        members = [];
-        snap.forEach(d => members.push({ id: d.id, ...d.data() }));
-        await loadTodaysMealsData();
-        renderTable();
+        try {
+            console.log("=== Loading Members from Firestore ===");
+            const { collection, getDocs } = window.FirebaseFunctions;
+            
+            // Try to load members
+            const membersCollection = collection(window.db, 'members');
+            console.log("Collection reference created:", membersCollection);
+            
+            const snap = await getDocs(membersCollection);
+            console.log("Members snapshot received. Size:", snap.size);
+            console.log("Members snapshot empty?", snap.empty);
+            
+            members = [];
+            snap.forEach(d => {
+                const data = d.data();
+                console.log("Member found:", d.id, data);
+                members.push({ id: d.id, ...data });
+            });
+            
+            console.log("Total members loaded:", members.length);
+            
+            if (members.length === 0) {
+                console.warn("No members found in Firestore!");
+                document.getElementById('mealTableBody').innerHTML = 
+                    '<tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--text-tertiary);">No members found. Please add members first.</td></tr>';
+            }
+            
+            await loadTodaysMealsData();
+            renderTable();
+            
+        } catch (error) {
+            console.error("Error loading members:", error);
+            console.error("Error code:", error.code);
+            console.error("Error message:", error.message);
+            
+            if (error.code === 'permission-denied') {
+                document.getElementById('mealTableBody').innerHTML = 
+                    '<tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--accent-red);">Permission denied. Check Firebase rules.</td></tr>';
+            } else {
+                throw error;
+            }
+        }
     }
 
     async function loadTodaysMealsData() {
-        const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-        const snap = await getDoc(doc(window.db, 'meals', selectedDateStr));
-        currentMealsData = snap.exists() ? (snap.data().members || {}) : {};
+        try {
+            const { doc, getDoc } = window.FirebaseFunctions;
+            const mealDoc = doc(window.db, 'meals', selectedDateStr);
+            const snap = await getDoc(mealDoc);
+            currentMealsData = snap.exists() ? (snap.data().members || {}) : {};
+            console.log("Today's meals data:", currentMealsData);
+        } catch (error) {
+            console.error("Error loading today's meals:", error);
+            currentMealsData = {};
+        }
     }
 
     async function copyYesterdayMeals() {
-        let d = new Date(selectedDateStr);
-        d.setDate(d.getDate() - 1);
-        let yestStr = d.toISOString().split('T')[0];
-        const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-        const snap = await getDoc(doc(window.db, 'meals', yestStr));
-        if (snap.exists()) {
-            currentMealsData = snap.data().members || {};
-            renderTable();
-            alert('📋 Copied from yesterday! Save to apply.');
-        } else {
-            alert('⚠️ No meal record for yesterday.');
+        try {
+            let d = new Date(selectedDateStr);
+            d.setDate(d.getDate() - 1);
+            let yestStr = d.toISOString().split('T')[0];
+            const { doc, getDoc } = window.FirebaseFunctions;
+            const snap = await getDoc(doc(window.db, 'meals', yestStr));
+            if (snap.exists()) {
+                currentMealsData = snap.data().members || {};
+                renderTable();
+                alert('📋 Copied from yesterday! Save to apply.');
+            } else {
+                alert('⚠️ No meal record for yesterday.');
+            }
+        } catch (error) {
+            console.error("Error copying yesterday's meals:", error);
+            alert('❌ Error copying meals');
         }
     }
 
     function renderTable() {
         const tbody = document.getElementById('mealTableBody');
         tbody.innerHTML = '';
+        
         if (members.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--text-tertiary);">No members found.</td></tr>';
             return;
         }
+        
         members.forEach(m => {
             let mData = currentMealsData[m.id] || { breakfast: 0, lunch: 0, dinner: 0 };
             let totalToday = (mData.breakfast ? 0.5 : 0) + (mData.lunch ? 1 : 0) + (mData.dinner ? 1 : 0);
+            
             tbody.innerHTML += `<tr>
-                <td style="padding: 12px; font-weight: 600; color: white; font-family: var(--font-bengali);">${m.name}</td>
+                <td style="padding: 12px; font-weight: 600; color: white;">${m.name || 'Unnamed'}</td>
                 <td style="text-align: center; padding: 12px;"><input type="checkbox" class="meal-checkbox" ${mData.breakfast ? 'checked' : ''} onchange="updateMealVal('${m.id}', 'breakfast', this.checked)"></td>
                 <td style="text-align: center; padding: 12px;"><input type="checkbox" class="meal-checkbox" ${mData.lunch ? 'checked' : ''} onchange="updateMealVal('${m.id}', 'lunch', this.checked)"></td>
                 <td style="text-align: center; padding: 12px;"><input type="checkbox" class="meal-checkbox" ${mData.dinner ? 'checked' : ''} onchange="updateMealVal('${m.id}', 'dinner', this.checked)"></td>
@@ -357,30 +449,40 @@
     };
 
     window.saveMeals = async function() {
-        const { doc, setDoc, getDocs, collection, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-        let totalDayMeals = 0;
-        members.forEach(m => {
-            let mData = currentMealsData[m.id] || { breakfast: 0, lunch: 0, dinner: 0 };
-            totalDayMeals += (mData.breakfast ? 0.5 : 0) + (mData.lunch ? 1 : 0) + (mData.dinner ? 1 : 0);
-        });
-        await setDoc(doc(window.db, 'meals', selectedDateStr), { members: currentMealsData, totalMeals: totalDayMeals }, { merge: true });
+        try {
+            const { doc, setDoc, getDocs, collection, updateDoc } = window.FirebaseFunctions;
+            
+            let totalDayMeals = 0;
+            members.forEach(m => {
+                let mData = currentMealsData[m.id] || { breakfast: 0, lunch: 0, dinner: 0 };
+                totalDayMeals += (mData.breakfast ? 0.5 : 0) + (mData.lunch ? 1 : 0) + (mData.dinner ? 1 : 0);
+            });
+            
+            await setDoc(doc(window.db, 'meals', selectedDateStr), { members: currentMealsData, totalMeals: totalDayMeals }, { merge: true });
 
-        const allSnap = await getDocs(collection(window.db, 'meals'));
-        let memberTotals = {};
-        members.forEach(m => memberTotals[m.id] = 0);
-        allSnap.forEach(docSnap => {
-            const data = docSnap.data();
-            if (data.members) {
-                Object.entries(data.members).forEach(([mId, meals]) => {
-                    if (memberTotals[mId] !== undefined)
-                        memberTotals[mId] += (meals.breakfast ? 0.5 : 0) + (meals.lunch ? 1 : 0) + (meals.dinner ? 1 : 0);
-                });
+            const allSnap = await getDocs(collection(window.db, 'meals'));
+            let memberTotals = {};
+            members.forEach(m => memberTotals[m.id] = 0);
+            
+            allSnap.forEach(docSnap => {
+                const data = docSnap.data();
+                if (data.members) {
+                    Object.entries(data.members).forEach(([mId, meals]) => {
+                        if (memberTotals[mId] !== undefined)
+                            memberTotals[mId] += (meals.breakfast ? 0.5 : 0) + (meals.lunch ? 1 : 0) + (meals.dinner ? 1 : 0);
+                    });
+                }
+            });
+            
+            for (let m of members) {
+                await updateDoc(doc(window.db, 'members', m.id), { totalMeals: memberTotals[m.id] || 0 });
             }
-        });
-        for (let m of members) {
-            await updateDoc(doc(window.db, 'members', m.id), { totalMeals: memberTotals[m.id] || 0 });
+            
+            alert('✅ Meals saved and public dashboard updated!');
+        } catch (error) {
+            console.error("Error saving meals:", error);
+            alert('❌ Error saving meals: ' + error.message);
         }
-        alert('✅ Meals saved and public dashboard updated!');
     };
 
     function changeDate() {
@@ -392,6 +494,8 @@
         window.auth.signOut().then(() => {
             localStorage.removeItem('assistLoggedIn');
             window.location.href = 'login.html';
+        }).catch(error => {
+            console.error("Logout error:", error);
         });
     }
 
@@ -400,18 +504,21 @@
         const newPass = document.getElementById('newPasswordAssist').value;
         const errorEl = document.getElementById('assistPasswordError');
         errorEl.style.display = 'none';
+        
         if (!oldPass || !newPass) {
             errorEl.textContent = 'Please fill both fields.';
             errorEl.style.display = 'block';
             return;
         }
+        
         if (newPass.length < 6) {
-            errorEl.textContent = 'Min 6 characters.';
+            errorEl.textContent = 'Password must be at least 6 characters.';
             errorEl.style.display = 'block';
             return;
         }
+        
         try {
-            const { EmailAuthProvider, reauthenticateWithCredential, updatePassword } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
+            const { EmailAuthProvider, reauthenticateWithCredential, updatePassword } = window.FirebaseFunctions;
             const user = window.auth.currentUser;
             const credential = EmailAuthProvider.credential(user.email, oldPass);
             await reauthenticateWithCredential(user, credential);
@@ -425,7 +532,12 @@
         }
     }
 
+    // Initialize the app
     setupAuth();
+    
+    console.log("Assistant Console initialized");
 </script>
 </body>
 </html>
+index.html
+Displaying index.html.
