@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070812">
+<meta name="description" content="Ma Achiya Villa Premium Mess Dashboard">
+<title>Ma Achiya Villa — Dashboard</title>
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --bg:#05060c;
+    --panel:rgba(18,20,35,.72);
+    --panel2:rgba(255,255,255,.045);
+    --border:rgba(255,255,255,.085);
+    --border2:rgba(255,255,255,.14);
+    --text:#fff;
+    --muted:rgba(255,255,255,.58);
+    --dim:rgba(255,255,255,.35);
+
+    --purple:#a78bfa;
+    --blue:#60a5fa;
+    --green:#34d399;
+    --red:#f87171;
+
+    --shadow:
+        0 18px 50px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+    -webkit-tap-highlight-color:transparent;
+}
+
+body{
+    font-family:Inter,system-ui,sans-serif;
+    color:var(--text);
+    background:
+        radial-gradient(
+            700px 380px at 50% -100px,
+            rgba(111,76,255,.22),
+            transparent 70%
+        ),
+        radial-gradient(
+            500px 350px at 100% 30%,
+            rgba(50,120,255,.08),
+            transparent 70%
+        ),
+        var(--bg);
+    /* Optimization: Prevent background repaints */
+    background-attachment: fixed;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+/* =========================
+   PREMIUM GLASS
+========================= */
+
+.glass{
+    background:var(--panel);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    border-radius:24px;
+    
+    /* Optimization: GPU Hardware Acceleration */
+    transform: translateZ(0);
+    will-change: backdrop-filter;
+}
+
+.glass-card{
+    background:var(--panel2);
+    border:1px solid var(--border);
+    box-shadow:0 12px 35px rgba(0,0,0,.22);
+    border-radius:20px;
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        background .2s ease;
+        
+    /* Optimization: GPU Hardware Acceleration */
+    transform: translateZ(0);
+    will-change: transform, background-color;
+}
+
+.glass-card:hover{
+    border-color:var(--border2);
+    background:rgba(255,255,255,.06);
+    transform:translateY(-1px) translateZ(0);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.logo{
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(20,22,38,.7);
+    border:1.5px solid rgba(52,211,153,.75);
+    box-shadow:
+        0 0 24px rgba(52,211,153,.2),
+        inset 0 1px 0 rgba(255,255,255,.15);
+    flex-shrink:0;
+}
+
+.logo-text{
+    text-align:center;
+    font-family:"Noto Sans Bengali",sans-serif;
+    line-height:1.05;
+}
+
+.logo-bn{
+    display:block;
+    font-size:10px;
+    font-weight:800;
+}
+
+.logo-en{
+    display:block;
+    margin-top:3px;
+    font-family:Inter,sans-serif;
+    font-size:7px;
+    letter-spacing:1.4px;
+    color:var(--dim);
+    font-weight:700;
+}
+
+.manager-pill{
+    min-width:150px;
+    padding:8px 16px;
+    border-radius:999px;
+    background:rgba(255,255,255,.045);
+    border:1px solid var(--border);
+    text-align:center;
+    box-shadow:0 10px 28px rgba(0,0,0,.2);
+}
+
+.month-text{
+    display:block;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.5px;
+}
+
+.manager-label{
+    display:block;
+    margin-top:2px;
+    font-size:9px;
+    color:var(--dim);
+    text-transform:uppercase;
+    letter-spacing:.6px;
+}
+
+.manager-name{
+    color:var(--purple);
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stat-card{
+    padding:16px 8px;
+    text-align:center;
+}
+
+.stat-icon{
+    font-size:21px;
+    display:block;
+    margin-bottom:5px;
+}
+
+.stat-label{
+    font-size:9px;
+    font-weight:700;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:var(--dim);
+}
+
+.stat-value{
+    margin-top:3px;
+    font-size:21px;
+    line-height:1.1;
+    font-weight:800;
+}
+
+/* =========================
+   SECTION TITLE
+========================= */
+
+.section-title{
+    font-size:18px;
+    font-weight:800;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.section-subtitle{
+    font-size:10px;
+    color:var(--dim);
+    margin-top:3px;
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+.search-box{
+    position:relative;
+    margin-bottom:12px;
+}
+
+.search-box input{
+    width:100%;
+    height:44px;
+    border-radius:15px;
+    border:1px solid var(--border);
+    outline:none;
+    background:rgba(255,255,255,.045);
+    color:white;
+    padding:0 42px 0 42px;
+    font-size:13px;
+    transition:.2s;
+    /* Optimization for smoother focus */
+    will-change: border-color, box-shadow;
+}
+
+.search-box input:focus{
+    border-color:rgba(167,139,250,.45);
+    background:rgba(255,255,255,.06);
+    box-shadow:0 0 0 3px rgba(167,139,250,.07);
+}
+
+.search-icon{
+    position:absolute;
+    left:14px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--dim);
+    pointer-events:none;
+}
+
+.clear-search{
+    position:absolute;
+    right:10px;
+    top:50%;
+    transform:translateY(-50%);
+    width:26px;
+    height:26px;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    color:white;
+    cursor:pointer;
+    display:none;
+}
+
+/* =========================
+   MEMBER CARD
+========================= */
+
+.member-card{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:13px 14px;
+    border-radius:17px;
+    background:rgba(255,255,255,.035);
+    border:1px solid rgba(255,255,255,.055);
+    transition:.18s ease;
+    
+    /* Optimization: Contains DOM repaints to just this card */
+    contain: content;
+}
+
+.member-card:hover{
+    background:rgba(255,255,255,.055);
+    border-color:var(--border2);
+}
+
+.member-name{
+    font-family:"Noto Sans Bengali",Inter,sans-serif;
+    font-size:15px;
+    font-weight:800;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.member-info{
+    margin-top:3px;
+    font-size:10px;
+    color:var(--muted);
+}
+
+.balance{
+    text-align:right;
+    flex-shrink:0;
+}
+
+.balance-value{
+    font-size:18px;
+    font-weight:800;
+}
+
+.balance-status{
+    font-size:8px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    font-weight:700;
+    opacity:.8;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+    width:100%;
+    overflow:auto;
+    -webkit-overflow-scrolling:touch;
+    border-radius:16px;
+}
+
+.data-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.data-table th{
+    padding:10px 12px;
+    text-align:left;
+    font-size:9px;
+    text-transform:uppercase;
+    letter-spacing:1.2px;
+    color:var(--dim);
+    border-bottom:1px solid var(--border);
+    white-space:nowrap;
+}
+
+.data-table td{
+    padding:11px 12px;
+    font-size:12px;
+    color:var(--muted);
+    border-bottom:1px solid rgba(255,255,255,.035);
+    white-space:nowrap;
+}
+
+.data-table tbody tr:last-child td{
+    border-bottom:none;
+}
+
+.data-table td:first-child{
+    color:white;
+    font-weight:700;
+}
+
+/* =========================
+   MONTH CONTROL
+========================= */
+
+.month-control{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    padding:4px;
+    border:1px solid var(--border);
+    border-radius:13px;
+    background:rgba(255,255,255,.035);
+}
+
+.month-control button{
+    width:30px;
+    height:30px;
+    border:none;
+    border-radius:9px;
+    background:rgba(255,255,255,.05);
+    color:white;
+    cursor:pointer;
+    font-size:18px;
+}
+
+.month-control button:active{
+    transform:scale(.94);
+}
+
+.month-control select{
+    height:30px;
+    max-width:125px;
+    border:none;
+    outline:none;
+    background:transparent;
+    color:white;
+    font-size:10px;
+    font-weight:700;
+}
+
+.month-control option{
+    background:#151629;
+    color:white;
+}
+
+/* =========================
+   MONTHLY TABLE
+========================= */
+
+.monthly-wrapper{
+    overflow:auto;
+    border-radius:16px;
+    -webkit-overflow-scrolling:touch;
+}
+
+.monthly-table{
+    border-collapse:separate;
+    border-spacing:0;
+    min-width:max-content;
+    width:100%;
+}
+
+.monthly-table th,
+.monthly-table td{
+    text-align:center;
+    white-space:nowrap;
+    border-right:1px solid rgba(255,255,255,.035);
+    border-bottom:1px solid rgba(255,255,255,.035);
+}
+
+.monthly-table th{
+    padding:9px 7px;
+    font-size:9px;
+    color:var(--dim);
+    background:rgba(255,255,255,.025);
+    position:sticky;
+    top:0;
+    z-index:5;
+}
+
+.monthly-table td{
+    min-width:39px;
+    height:40px;
+    padding:5px;
+    font-size:10px;
+    font-weight:700;
+    color:var(--muted);
+}
+
+.monthly-table th:first-child,
+.monthly-table td:first-child{
+    position:sticky;
+    left:0;
+    z-index:7;
+    min-width:110px;
+    text-align:left;
+    background:#111321;
+}
+
+.monthly-table th:last-child,
+.monthly-table td:last-child{
+    position:sticky;
+    right:0;
+    z-index:7;
+    min-width:65px;
+    background:#151629;
+}
+
+.monthly-table td:first-child{
+    color:white;
+    font-family:"Noto Sans Bengali",Inter,sans-serif;
+}
+
+.meal-number{
+    min-width:25px;
+    height:25px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:8px;
+    background:rgba(255,255,255,.045);
+    color:var(--dim);
+}
+
+.meal-number.has-meal{
+    background:rgba(52,211,153,.10);
+    color:#6ee7b7;
+}
+
+.meal-number.has-guest{
+    box-shadow:
+        inset 0 0 0 1px rgba(96,165,250,.35),
+        0 0 10px rgba(96,165,250,.08);
+}
+
+.daily-total-row td{
+    background:rgba(167,139,250,.08)!important;
+    color:#c4b5fd!important;
+    font-weight:800;
+}
+
+.daily-total-row td:first-child{
+    color:white!important;
+}
+
+/* =========================
+   LOADER
+========================= */
+
+.loader{
+    width:32px;
+    height:32px;
+    border:3px solid rgba(255,255,255,.07);
+    border-top-color:var(--purple);
+    border-radius:50%;
+    animation:spin .7s linear infinite;
+    margin:auto;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.empty{
+    text-align:center;
+    padding:25px 10px;
+    color:var(--dim);
+    font-size:12px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:640px){
+    body{
+        padding:10px;
+    }
+    .glass{
+        border-radius:20px;
+    }
+    .logo{
+        width:50px;
+        height:50px;
+    }
+    .manager-pill{
+        min-width:0;
+        padding:7px 10px;
+    }
+    .month-text{
+        font-size:10px;
+    }
+    .manager-label{
+        font-size:7px;
+    }
+    .stat-card{
+        padding:13px 5px;
+    }
+    .stat-icon{
+        font-size:18px;
+    }
+    .stat-value{
+        font-size:18px;
+    }
+    .stat-label{
+        font-size:7px;
+        letter-spacing:.7px;
+    }
+    .member-name{
+        font-size:14px;
+    }
+    .balance-value{
+        font-size:16px;
+    }
+}
+
+/* =========================
+   QUICK MENU
+========================= */
+
+.quick-menu{
+    position:relative;
+    flex-shrink:0;
+}
+
+.quick-menu-btn{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.045);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    color:var(--muted);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:.25s;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.1);
+}
+
+.quick-menu-btn:hover,
+.quick-menu.open .quick-menu-btn{
+    background:rgba(167,139,250,.16);
+    border-color:rgba(167,139,250,.4);
+    color:#fff;
+}
+
+.quick-menu-btn svg{
+    width:17px;
+    height:17px;
+    transition:transform .3s ease;
+}
+
+.quick-menu.open .quick-menu-btn svg{
+    transform:rotate(90deg);
+}
+
+.quick-menu-dropdown{
+    position:absolute;
+    top:50px;
+    right:0;
+    min-width:190px;
+    padding:8px;
+    border-radius:18px;
+    background:rgba(16,16,34,.8);
+    border:1px solid var(--border2);
+    backdrop-filter:blur(30px) saturate(180%);
+    -webkit-backdrop-filter:blur(30px) saturate(180%);
+    box-shadow:0 20px 45px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.1);
+    opacity:0;
+    transform:translateY(-8px) scale(.96);
+    pointer-events:none;
+    transition:.25s;
+    z-index:20;
+}
+
+.quick-menu.open .quick-menu-dropdown{
+    opacity:1;
+    transform:translateY(0) scale(1);
+    pointer-events:auto;
+}
+
+.quick-menu-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    width:100%;
+    padding:10px 12px;
+    border-radius:12px;
+    background:transparent;
+    border:none;
+    color:var(--muted);
+    font-size:13px;
+    font-weight:700;
+    font-family:Inter,sans-serif;
+    text-align:left;
+    text-decoration:none;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.quick-menu-item .qm-icon{
+    width:28px;
+    height:28px;
+    border-radius:9px;
+    background:rgba(255,255,255,.06);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    flex-shrink:0;
+}
+
+.quick-menu-item:hover{
+    background:rgba(255,255,255,.07);
+    color:#fff;
+}
+
+.quick-menu-item:hover .qm-icon{
+    background:rgba(167,139,250,.25);
+}
+
+@media(max-width:640px){
+    .quick-menu-btn{
+        width:36px;
+        height:36px;
+    }
+}
+
+/* Reduce motion */
+@media(prefers-reduced-motion:reduce){
+    *,
+    *::before,
+    *::after{
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        scroll-behavior:auto!important;
+        transition:none!important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="max-w-2xl mx-auto">
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="flex items-center justify-between gap-3 mb-5">
+
+    <div class="logo">
+        <div class="logo-text">
+            <span class="logo-bn">মা আছিয়া</span>
+            <span class="logo-en">VILLA</span>
+        </div>
+    </div>
+
+    <div class="flex-1 flex justify-center">
+        <div class="manager-pill">
+            <span id="currentMonthYear" class="month-text">
+                Loading...
+            </span>
+
+            <span class="manager-label">
+                👤 Manager —
+                <strong id="managerName" class="manager-name">
+                    Loading...
+                </strong>
+            </span>
+        </div>
+    </div>
+
+    <div class="quick-menu" id="quickMenu">
+        <button type="button" class="quick-menu-btn" onclick="toggleQuickMenu(event)" title="Quick Access" aria-label="Quick Access Menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="12" cy="19" r="1.5"></circle></svg>
+        </button>
+        <div class="quick-menu-dropdown">
+            <a href="assistant.html" class="quick-menu-item">
+                <span class="qm-icon">🧑‍💼</span> Assistant
+            </a>
+            <a href="admin.html" class="quick-menu-item">
+                <span class="qm-icon">👑</span> Main Manager
+            </a>
+        </div>
+    </div>
+
+</header>
+
+
+<!-- =========================
+     STATS
+========================= -->
+
+<div class="grid grid-cols-3 gap-2 sm:gap-3 mb-5">
+
+    <div class="glass-card stat-card">
+        <span class="stat-icon">💰</span>
+        <div class="stat-label">Meal Rate</div>
+        <div id="currentMealRate" class="stat-value" style="color:var(--purple);">—</div>
+    </div>
+
+    <div class="glass-card stat-card">
+        <span class="stat-icon">🍽️</span>
+        <div class="stat-label">Total Meals</div>
+        <div id="totalMeals" class="stat-value" style="color:var(--blue);">—</div>
+    </div>
+
+    <div class="glass-card stat-card">
+        <span class="stat-icon">🛒</span>
+        <div class="stat-label">Total Bazar</div>
+        <div id="totalBazar" class="stat-value" style="color:var(--green);">—</div>
+    </div>
+
+</div>
+
+
+<!-- =========================
+     MEMBERS
+========================= -->
+
+<section class="glass p-4 sm:p-5 mb-5">
+
+    <div class="flex items-center justify-between gap-3 mb-4">
+        <div>
+            <h2 class="section-title">
+                <span>👥</span>
+                Members Balance
+            </h2>
+            <p class="section-subtitle">
+                Current member balance overview
+            </p>
+        </div>
+        <div id="memberCount" class="text-[10px] text-gray-500">—</div>
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+        <span class="search-icon">🔎</span>
+        <input id="memberSearch" type="search" autocomplete="off" placeholder="Search member...">
+        <button id="clearSearch" class="clear-search" type="button">×</button>
+    </div>
+
+
+    <div id="membersList" class="flex flex-col gap-2">
+        <div class="py-8"><div class="loader"></div></div>
+    </div>
+
+</section>
+
+
+<!-- =========================
+     BAZAR
+========================= -->
+
+<section class="glass p-4 sm:p-5 mb-5">
+
+    <h2 class="section-title mb-4">
+        <span>🧾</span>
+        Bazar History
+    </h2>
+
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Purchaser</th>
+                    <th style="text-align:right">Total Cost</th>
+                </tr>
+            </thead>
+            <tbody id="bazarList">
+                <tr>
+                    <td colspan="3"><div class="py-6"><div class="loader"></div></div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+
+<!-- =========================
+     MONTHLY SUMMARY
+========================= -->
+
+<section class="glass p-4 sm:p-5 mb-5">
+
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div>
+            <h2 class="section-title">
+                <span>📅</span>
+                Daily Meal Summary
+            </h2>
+            <p class="section-subtitle">
+                Border-wise daily meal record
+            </p>
+        </div>
+
+        <div class="month-control">
+            <button type="button" onclick="changeSummaryMonth(-1)">‹</button>
+            <select id="summaryMonth" onchange="loadMonthlyMealSummary()"></select>
+            <button type="button" onclick="changeSummaryMonth(1)">›</button>
+        </div>
+    </div>
+
+
+    <div class="flex items-center justify-between mb-3">
+        <div id="summaryMonthTitle" class="text-xs font-semibold text-gray-300">Loading...</div>
+        <div class="text-[9px] text-gray-500">🔵 Guest</div>
+    </div>
+
+
+    <div class="monthly-wrapper">
+        <table class="monthly-table">
+            <thead id="monthlyMealHead"></thead>
+            <tbody id="monthlyMealBody">
+                <tr>
+                    <td colspan="10"><div class="py-8"><div class="loader"></div></div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-3 text-[9px] text-gray-500">
+        Breakfast = 0.5 • Lunch = 1 • Dinner = 1 •
+        Guest quantity included
+    </div>
+
+</section>
+
+
+<!-- =========================
+     TODAY MEAL SHEET
+========================= -->
+
+<section class="glass p-4 sm:p-5 mb-5">
+
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="section-title">
+            <span>📋</span>
+            Master Meal Sheet
+        </h2>
+        <span id="mealSheetDate" class="text-[9px] text-gray-500"></span>
+    </div>
+
+
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Border</th>
+                    <th style="text-align:center">B.Fast</th>
+                    <th style="text-align:center">Lunch</th>
+                    <th style="text-align:center">Dinner</th>
+                </tr>
+            </thead>
+            <tbody id="mealSheetBody">
+                <tr>
+                    <td colspan="4"><div class="py-6"><div class="loader"></div></div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+
+<div class="text-center pb-5 text-[9px] text-gray-600">
+    Ma Achiya Villa • Public Dashboard
+</div>
+
+</div>
+
+
+<script type="module">
+
+/* =====================================================
+   FIREBASE
+===================================================== */
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+import {
+    getFirestore, collection, getDocs, doc, getDoc
+}
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDAr77xGTIvPzZOfmSzFwYt7GHLncCYQ2A",
+    authDomain: "my-mess-17fbc.firebaseapp.com",
+    projectId: "my-mess-17fbc",
+    storageBucket: "my-mess-17fbc.firebasestorage.app",
+    messagingSenderId: "848426874799",
+    appId: "1:848426874799:web:0722af59e7504da847e15a",
+    measurementId: "G-RWHJKGV5LS"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+
+/* =====================================================
+   GLOBAL STATE
+===================================================== */
+
+let membersArray = [];
+let filteredMembers = [];
+let summaryDate = new Date();
+let monthlyCache = new Map();
+let dashboardLoading = false;
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const $ = id => document.getElementById(id);
+
+
+/* =====================================================
+   ESCAPE
+===================================================== */
+
+function escapeHTML(value){
+    const div = document.createElement("div");
+    div.textContent = String(value ?? "");
+    return div.innerHTML;
+}
+
+
+/* =====================================================
+   FORMAT
+===================================================== */
+
+function formatMoney(value){
+    return "৳" + Number(value || 0).toFixed(0);
+}
+
+function formatMealNumber(value){
+    value = Number(value || 0);
+    if(!value) return "—";
+    return Number.isInteger(value) ? String(value) : value.toFixed(1);
+}
+
+
+/* =====================================================
+   DATE
+===================================================== */
+
+function todayString(){
+    const d = new Date();
+    return [
+        d.getFullYear(),
+        String(d.getMonth()+1).padStart(2,"0"),
+        String(d.getDate()).padStart(2,"0")
+    ].join("-");
+}
+
+
+/* =====================================================
+   MANAGER
+===================================================== */
+
+async function loadManager(){
+    try{
+        const snap = await getDoc(doc(db,"settings","manager"));
+        $("managerName").textContent = snap.exists() ? (snap.data().name || "Manager") : "Manager";
+    }catch(error){
+        console.error("Manager:",error);
+        $("managerName").textContent = "Manager";
+    }
+}
+
+
+/* =====================================================
+   MEAL VALUE
+===================================================== */
+
+function getMainMealValue(meal){
+    if(!meal) return 0;
+    let total = 0;
+    if(meal.breakfast === true || meal.breakfast === 1) total += .5;
+    if(meal.lunch === true || meal.lunch === 1) total += 1;
+    if(meal.dinner === true || meal.dinner === 1) total += 1;
+    return total;
+}
+
+function getGuestValue(meal){
+    if(!meal) return 0;
+    const keys = ["guest", "guests", "guestMeals", "guestMeal", "guestCount"];
+    for(const key of keys){
+        if(meal[key] !== undefined && meal[key] !== null && meal[key] !== ""){
+            const n = Number(meal[key]);
+            if(Number.isFinite(n) && n > 0) return n;
+        }
+    }
+    return 0;
+}
+
+
+/* =====================================================
+   MEMBERS
+===================================================== */
+
+function renderMembers(){
+    const container = $("membersList");
+    const list = filteredMembers;
+
+    $("memberCount").textContent = `${list.length} / ${membersArray.length}`;
+
+    if(!list.length){
+        container.innerHTML = `<div class="empty">No member found</div>`;
+        return;
+    }
+
+    // Optimization: Build string before setting innerHTML
+    let htmlString = "";
+    for(let i=0; i<list.length; i++) {
+        const member = list[i];
+        const deposit = Number(member.totalDeposit || 0);
+        const meals = Number(member.totalMeals || 0);
+        const rate = Number(member._mealRate || 0);
+        const balance = deposit - meals * rate;
+        const positive = balance >= 0;
+        const color = positive ? "var(--green)" : "var(--red)";
+        const status = positive ? "In Advance" : "Overdue";
+        const amount = positive ? `+৳${balance.toFixed(0)}` : `-৳${Math.abs(balance).toFixed(0)}`;
+
+        htmlString += `
+            <div class="member-card">
+                <div class="min-w-0">
+                    <div class="member-name">${escapeHTML(member.name || "Unnamed")}</div>
+                    <div class="member-info">
+                        Deposit: <span style="color:var(--green)">${formatMoney(deposit)}</span>
+                        <span class="mx-1 opacity-40">•</span>
+                        Meals: <span style="color:var(--blue)">${meals}</span>
+                    </div>
+                </div>
+                <div class="balance">
+                    <div class="balance-value" style="color:${color}">${amount}</div>
+                    <div class="balance-status" style="color:${color}">${status}</div>
+                </div>
+            </div>`;
+    }
+    container.innerHTML = htmlString;
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+function setupSearch(){
+    const input = $("memberSearch");
+    const clear = $("clearSearch");
+    let searchTimeout;
+
+    input.addEventListener("input",()=>{
+        const query = input.value.trim().toLowerCase();
+        clear.style.display = query ? "block" : "none";
+
+        // Optimization: Debounce search to prevent lag while typing
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            if(!query){
+                filteredMembers = [...membersArray];
+            }else{
+                filteredMembers = membersArray.filter(member =>
+                    String(member.name || "").toLowerCase().includes(query)
+                );
+            }
+            renderMembers();
+        }, 250); // 250ms delay
+    });
+
+    clear.addEventListener("click",()=>{
+        input.value = "";
+        clear.style.display = "none";
+        filteredMembers = [...membersArray];
+        renderMembers();
+        input.focus();
+    });
+}
+
+
+/* =====================================================
+   MONTH SELECTOR
+===================================================== */
+
+function initializeMonthSelector(){
+    const select = $("summaryMonth");
+    select.innerHTML = "";
+    for(let i=0;i<12;i++){
+        const d = new Date();
+        d.setMonth(d.getMonth() - i);
+        const year = d.getFullYear();
+        const month = d.getMonth();
+        const value = `${year}-${String(month+1).padStart(2,"0")}`;
+        const label = d.toLocaleDateString("en-US", {month:"long", year:"numeric"});
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = label;
+        select.appendChild(option);
+    }
+    setSelectedMonth();
+}
+
+function setSelectedMonth(){
+    const value = `${summaryDate.getFullYear()}-${String(summaryDate.getMonth()+1).padStart(2,"0")}`;
+    $("summaryMonth").value = value;
+}
+
+window.changeSummaryMonth = direction => {
+    summaryDate.setMonth(summaryDate.getMonth() + direction);
+    setSelectedMonth();
+    loadMonthlyMealSummary();
+};
+
+window.loadMonthlyMealSummary = async function(){
+    const value = $("summaryMonth").value;
+    if(!value) return;
+    const [year,month] = value.split("-").map(Number);
+    summaryDate = new Date(year,month-1,1);
+    await buildMonthlySummary();
+};
+
+
+/* =====================================================
+   MONTHLY SUMMARY
+===================================================== */
+
+async function buildMonthlySummary(){
+    const year = summaryDate.getFullYear();
+    const month = summaryDate.getMonth();
+    const days = new Date(year, month+1, 0).getDate();
+
+    $("summaryMonthTitle").textContent = summaryDate.toLocaleDateString("en-US", {month:"long", year:"numeric"});
+
+    $("monthlyMealHead").innerHTML = `
+        <tr>
+            <th>👤 Border</th>
+            ${Array.from({length:days}, (_,i)=>`<th>${i+1}</th>`).join("")}
+            <th>Month<br>Total</th>
+        </tr>
+    `;
+
+    const cacheKey = `${year}-${month+1}`;
+    let monthlyData = monthlyCache.get(cacheKey);
+
+    if(!monthlyData){
+        monthlyData = {};
+        const promises = [];
+
+        for(let day=1;day<=days;day++){
+            const date = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+            promises.push(
+                getDoc(doc(db,"meals",date)).then(snap=>{
+                    monthlyData[date] = snap.exists() ? (snap.data().members || {}) : {};
+                }).catch(()=>{
+                    monthlyData[date] = {};
+                })
+            );
+        }
+        await Promise.all(promises);
+        monthlyCache.set(cacheKey, monthlyData);
+    }
+
+    const dailyTotals = Array(days).fill(0);
+    let rows = "";
+
+    for(const member of membersArray){
+        let memberTotal = 0;
+        rows += `<tr><td>${escapeHTML(member.name || "Unnamed")}</td>`;
+
+        for(let day=1;day<=days;day++){
+            const date = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+            const meal = monthlyData[date]?.[member.id] || {};
+            const main = getMainMealValue(meal);
+            const guest = getGuestValue(meal);
+            const total = main + guest;
+
+            memberTotal += total;
+            dailyTotals[day-1] += total;
+
+            const hasMeal = total > 0;
+            const hasGuest = guest > 0;
+
+            rows += `
+                <td>
+                    <span
+                        class="meal-number ${hasMeal ? "has-meal":""} ${hasGuest ? "has-guest":""}"
+                        title="${hasGuest ? `Main: ${formatMealNumber(main)} + Guest: ${formatMealNumber(guest)}` : `Main: ${formatMealNumber(main)}`}"
+                    >
+                        ${formatMealNumber(total)}
+                    </span>
+                </td>
+            `;
+        }
+        rows += `<td>${formatMealNumber(memberTotal)}</td></tr>`;
+    }
+
+    const grandTotal = dailyTotals.reduce((a,b)=>a+b, 0);
+
+    rows += `
+        <tr class="daily-total-row">
+            <td>📊 Daily Total</td>
+            ${dailyTotals.map(value=>`<td>${formatMealNumber(value)}</td>`).join("")}
+            <td>${formatMealNumber(grandTotal)}</td>
+        </tr>
+    `;
+
+    if(!membersArray.length){
+        rows = `<tr><td colspan="${days+2}" class="text-center py-8 text-gray-500">No members found</td></tr>`;
+    }
+
+    $("monthlyMealBody").innerHTML = rows;
+}
+
+
+/* =====================================================
+   BAZAR
+===================================================== */
+
+async function loadBazar(){
+    const snap = await getDocs(collection(db,"bazar"));
+    const records = [];
+    let total = 0;
+
+    snap.forEach(item=>{
+        const data = item.data();
+        records.push(data);
+        total += Number(data.amount || 0);
+    });
+
+    records.sort((a,b)=>{
+        const da = String(a.date || "");
+        const db = String(b.date || "");
+        return db.localeCompare(da);
+    });
+
+    $("totalBazar").textContent = formatMoney(total);
+
+    if(!records.length){
+        $("bazarList").innerHTML = `<tr><td colspan="3" class="text-center py-5">No records</td></tr>`;
+        return;
+    }
+
+    $("bazarList").innerHTML = records.map(item=>`
+        <tr>
+            <td>${escapeHTML(item.date || "—")}</td>
+            <td>${escapeHTML(item.purchaser || "—")}</td>
+            <td style="text-align:right;color:var(--green);font-weight:700;">${formatMoney(item.amount || 0)}</td>
+        </tr>
+    `).join("");
+}
+
+
+/* =====================================================
+   TODAY MEAL SHEET
+===================================================== */
+
+async function loadTodayMealSheet(){
+    const today = todayString();
+    $("mealSheetDate").textContent = `(${today})`;
+    const snap = await getDoc(doc(db,"meals",today));
+    const data = snap.exists() ? (snap.data().members || {}) : {};
+
+    if(!snap.exists()){
+        $("mealSheetBody").innerHTML = `<tr><td colspan="4" class="text-center py-5">No meal record for today</td></tr>`;
+        return;
+    }
+
+    const rows = membersArray.map(member=>{
+        const meal = data[member.id] || {};
+        return `
+            <tr>
+                <td>${escapeHTML(member.name || "Unnamed")}</td>
+                <td style="text-align:center">${meal.breakfast ? "✅" : "—"}</td>
+                <td style="text-align:center">${meal.lunch ? "✅" : "—"}</td>
+                <td style="text-align:center">${meal.dinner ? "✅" : "—"}</td>
+            </tr>
+        `;
+    }).join("");
+
+    $("mealSheetBody").innerHTML = rows || `<tr><td colspan="4" class="text-center py-5">No members found</td></tr>`;
+}
+
+
+/* =====================================================
+   LOAD MEMBERS
+===================================================== */
+
+async function loadMembers(){
+    const [membersSnap, rateSnap] = await Promise.all([
+        getDocs(collection(db,"members")),
+        getDoc(doc(db,"settings","mealRate"))
+    ]);
+
+    const rate = rateSnap.exists() ? Number(rateSnap.data().rate || 0) : 0;
+    $("currentMealRate").textContent = formatMoney(rate);
+
+    membersArray = [];
+    let totalMeals = 0;
+
+    membersSnap.forEach(item=>{
+        const member = {id:item.id, ...item.data(), _mealRate:rate};
+        membersArray.push(member);
+        totalMeals += Number(member.totalMeals || 0);
+    });
+
+    membersArray.sort((a,b)=> String(a.name || "").localeCompare(String(b.name || ""), undefined, {sensitivity:"base"}));
+    filteredMembers = [...membersArray];
+    $("totalMeals").textContent = totalMeals;
+    renderMembers();
+}
+
+
+/* =====================================================
+   INITIAL DASHBOARD LOAD
+===================================================== */
+
+async function loadDashboard(){
+    if(dashboardLoading) return;
+    dashboardLoading = true;
+    try{
+        await Promise.all([loadManager(), loadMembers(), loadBazar()]);
+        await Promise.all([loadTodayMealSheet(), buildMonthlySummary()]);
+    }catch(error){
+        console.error("Dashboard error:",error);
+    }finally{
+        dashboardLoading = false;
+    }
+}
+
+
+/* =====================================================
+   INIT
+===================================================== */
+
+$("currentMonthYear").textContent = new Date().toLocaleDateString("en-US", {month:"long", year:"numeric"});
+
+initializeMonthSelector();
+setupSearch();
+loadDashboard();
+
+/*
+ * Quick-access menu (Assistant / Main Manager shortcuts)
+ */
+window.toggleQuickMenu = (event) => {
+    event.stopPropagation();
+    document.getElementById("quickMenu").classList.toggle("open");
+};
+
+document.addEventListener("click", (event) => {
+    const menu = document.getElementById("quickMenu");
+    if (menu && !menu.contains(event.target)) {
+        menu.classList.remove("open");
+    }
+});
+
+
+/*
+ * Optimization: Prevent massive battery and RAM usage.
+ * Only refresh lightweight sections (bazar, members, today's meal) every 60 seconds.
+ * We no longer wipe the entire monthly cache (30+ firebase reads) every minute.
+ */
+setInterval(async()=>{
+    if(document.visibilityState !== "visible") return;
+    try{
+        await Promise.all([
+            loadMembers(),
+            loadBazar(),
+            loadTodayMealSheet()
+        ]);
+        // Do not force buildMonthlySummary() here to save RAM
+    }catch(error){
+        console.error("Refresh error:",error);
+    }
+},60000);
+
+
+/*
+ * When user comes back to the tab, just refresh without wiping cache.
+ */
+document.addEventListener("visibilitychange", ()=>{
+    if(document.visibilityState === "visible"){
+        // Optimization: Do NOT clear cache here. Let the user manually change month if needed.
+        loadDashboard();
+    }
+});
+
+</script>
+
+</body>
+</html>
