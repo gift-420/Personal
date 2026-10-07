@@ -792,7 +792,8 @@ body{
 .car{position:relative;width:100%;height:100%}
 .car-track{display:flex;width:100%;height:100%;overflow-x:auto;overflow-y:hidden;
   scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none;
-  overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;cursor:grab}
+  overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;cursor:grab;
+  scroll-behavior:smooth}
 .car-track::-webkit-scrollbar{display:none}
 .car-track.drag{scroll-snap-type:none;cursor:grabbing;user-select:none}
 .car-track.single{overflow:hidden;cursor:inherit}
@@ -804,7 +805,7 @@ body{
   border:1px solid rgba(255,255,255,.28);background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.08));
   backdrop-filter:blur(12px) saturate(180%);-webkit-backdrop-filter:blur(12px) saturate(180%);
   color:#fff;display:grid;place-items:center;cursor:pointer;padding:0;
-  opacity:0;transition:opacity .3s var(--ease),transform .3s var(--ease);
+  opacity:0;transition:opacity .35s cubic-bezier(.16,1,.3,1),transform .35s cubic-bezier(.16,1,.3,1);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 8px 18px -8px rgba(0,0,0,.6)}
 .car-btn.prev{left:10px}.car-btn.next{right:10px}
 .car:hover .car-btn{opacity:1}
@@ -820,6 +821,7 @@ body{
   background:rgba(10,9,8,.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   border:1px solid rgba(255,255,255,.15)}
 
+/* ═══════════════ AUTO RESPONSIVE — ALL MOBILE SIZES ═══════════════ */
 @media (max-width:860px){
   .pv-layout,.checkout-layout,.cart-layout,.ov-layout{grid-template-columns:1fr;gap:24px}
   .pv-info{position:static}
@@ -858,14 +860,95 @@ body{
   .footer-mail-body small{font-size:11.5px}
   .footer-bottom{font-size:10px;letter-spacing:.12em;gap:8px}
 }
-@media (max-width:380px){
-  .brand-name{font-size:16px}
+@media (max-width:480px){
+  .page,.admin-page,.post-page,.checkout-page,.cart-page,.track-page,.order-view-page,.mail-page{
+    padding-left:14px;padding-right:14px;
+  }
+  .topbar{padding-left:12px;padding-right:12px;gap:8px}
+  .brand-name{font-size:16px;letter-spacing:.22em}
   .brand-mark{width:34px;height:34px;border-radius:10px}
-  .icon-btn{width:36px;height:36px}.icon-btn svg{width:15px;height:15px}
-  .post-title{font-size:13px}.post-details{display:none}
+  .right-group{gap:6px}
+  .icon-btn{width:36px;height:36px}
+  .icon-btn svg{width:15px;height:15px}
+  .dropdown{min-width:220px;right:-6px}
+  .banner{height:clamp(260px,48vh,360px);border-radius:20px}
+  .slide{padding:22px 20px 56px}
+  .slide-title{font-size:clamp(28px,5.2vh,38px)}
+  .slide-sub{font-size:12.5px}
+  .slide-cta{padding:11px 20px;font-size:11px;margin-top:18px}
+  .banner-count{left:20px;bottom:20px;font-size:17px}
+  .banner-dots{right:20px;bottom:24px}
+  .slide::before{font-size:clamp(90px,30vw,140px);bottom:8%}
+  .site-footer{padding:32px 16px 20px}
+  .footer-inner{gap:22px}
+  .footer-logo{font-size:24px;letter-spacing:.3em}
+  .footer-mail{padding:11px 13px;border-radius:14px}
+  .footer-mail-icon{width:36px;height:36px;border-radius:10px}
+  .footer-mail-body b{font-size:12px}
+  .footer-mail-body small{font-size:10.5px}
+  .footer-bottom{font-size:9.5px;letter-spacing:.1em;padding-top:18px;gap:6px}
+  .footer-watermark{font-size:clamp(80px,32vw,140px);opacity:.35}
+  .Products{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  .post-body{padding:12px 12px 14px}
+  .post-title{font-size:13px}
+  .post-details{font-size:11px}
+  .post-price{font-size:16px}
+  .post-add{width:28px;height:28px;font-size:14px}
+  .section-title{font-size:22px}
+  .cat-chip{padding:8px 14px;font-size:11.5px}
+  .pv-title{font-size:22px}
+  .pv-price{font-size:24px}
+  .pv-details{font-size:13px}
+  .co-card{padding:18px 16px}
+  .co-title{font-size:16px;margin-bottom:18px}
+  .cart-item{padding:12px;gap:10px}
+  .cart-thumb{width:56px;height:56px}
+  .cart-info h4{font-size:13.5px}
+  .order-card{padding:12px;gap:10px}
+  .order-thumb{width:60px;height:60px;border-radius:10px}
+  .mail-item{padding:14px;gap:10px}
+  .mail-avatar{width:40px;height:40px;border-radius:12px;font-size:15px}
+  .mail-from{font-size:12.5px}
+  .mail-subject{font-size:11.5px}
+  .mail-preview{font-size:11px}
+  .notif-stack{right:10px;left:10px;top:calc(64px + env(safe-area-inset-top,0))}
+  .toast{font-size:12px;padding:10px 18px;max-width:calc(100vw - 24px);white-space:normal;text-align:center}
+}
+@media (max-width:340px){
+  .brand-name{font-size:14px;letter-spacing:.18em}
+  .brand-mark{width:30px;height:30px}
+  .icon-btn{width:32px;height:32px}
+  .icon-btn svg{width:14px;height:14px}
+  .cart-count{font-size:9px;min-width:15px;height:15px}
+  .Products{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+  .slide-title{font-size:26px}
+  .footer-logo{font-size:22px}
+  .footer-mail-body small{font-size:9.5px}
+  .pv-title{font-size:20px}
+  .pv-price{font-size:22px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+
+/* MOBILE EMAIL FIX */
+.footer-mail-body{min-width:0;flex:1}
+.footer-mail-body b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.footer-mail-body small{
+  display:block;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  word-break:normal;
+  overflow-wrap:normal;
+  max-width:100%;
+}
+
+/* SMOOTH TRANSITIONS */
+.view{will-change:opacity,transform}
+.view.active{animation:fadeUp .55s cubic-bezier(.16,1,.3,1)}
+body,.bg,.topbar,.post,.co-card,.ov-card,.admin-panel,.key-card,.track-card,.site-footer{
+  transition:background-color .5s ease, border-color .5s ease, box-shadow .5s ease;
 }
 
 :root{
@@ -1011,7 +1094,7 @@ html[data-theme="blue"] .bg span:nth-child(2){background:radial-gradient(circle,
 }
 .footer-mail-body small{
   font-size:12px;font-weight:400;letter-spacing:.01em;
-  color:var(--accent-2);word-break:break-all;
+  color:var(--accent-2);
 }
 .footer-note{
   font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
@@ -1413,6 +1496,7 @@ html[data-theme="blue"] .bg span:nth-child(2){background:radial-gradient(circle,
 <script>
 /* ═══════════ CONFIG ═══════════ */
 const CFG = window.VAYA_CONFIG || {};
+const ADMIN_KEY = CFG.adminKey || "VAYA-2026";
 const ADMIN_EMAIL = "naimeboss999@gmail.com";
 
 const COUPONS = {
@@ -1566,7 +1650,6 @@ function sendAdminEmail(subject, body, tag, orderId, remote){
       if (r === 'fail'){ const b = getOutbox(); b.push({ subject, text }); setOutbox(b); }
       else if (r === 'none'){
         console.warn('VAYA: config.js e email/Telegram key nai');
-        if (adminUnlocked) showToast('Alert setup kora nai', 'warn');
       }
     }).catch(() => {});
   }
@@ -1592,7 +1675,6 @@ function renderMailInbox(){
     const initial = (m.from || 'V').charAt(0).toUpperCase();
     const tagClass = m.tag === 'good' ? 'good' : m.tag === 'bad' ? 'bad' : 'info';
     const tagLabel = m.tag === 'good' ? 'Confirmed' : m.tag === 'bad' ? 'Cancelled' : 'New Order';
-    // ✅ FIX: HTML strip agey, tarpor 120 char
     const plain = stripHtml(m.body);
     const preview = plain.length > 120 ? plain.slice(0, 120) + '…' : plain;
     return `
@@ -2382,97 +2464,34 @@ document.getElementById('clearMailBtn').addEventListener('click', () => {
 
 document.getElementById('cartBtn').addEventListener('click', () => { renderCart(); showView('cart'); });
 
-/* ═══════════ ADMIN SECURITY — SHA-256 + rate limit + session ═══════════ */
+/* ═══════════ ADMIN UNLOCK — SIMPLE KEY ═══════════ */
 const keyInput = document.getElementById('keyInput');
 const keySubmit = document.getElementById('keySubmit');
 const keyError = document.getElementById('keyError');
 
-async function sha256(text){
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-  return [...new Uint8Array(buf)].map(x => x.toString(16).padStart(2,'0')).join('');
-}
-
-const LOCK_KEY      = 'vaya_auth_lock';
-const ATTEMPTS_KEY  = 'vaya_auth_attempts';
-const MAX_ATTEMPTS  = 5;
-const LOCK_MS       = 60 * 1000;
-const SESSION_MS    = 30 * 60 * 1000;
-
-function getLockUntil(){ try{ return Number(sessionStorage.getItem(LOCK_KEY) || 0); }catch(e){ return 0; } }
-function setLockUntil(t){ try{ sessionStorage.setItem(LOCK_KEY, String(t)); }catch(e){} }
-function clearLock(){ try{ sessionStorage.removeItem(LOCK_KEY); sessionStorage.removeItem(ATTEMPTS_KEY); }catch(e){} }
-function getAttempts(){ try{ return Number(sessionStorage.getItem(ATTEMPTS_KEY) || 0); }catch(e){ return 0; } }
-function bumpAttempts(){ const n = getAttempts() + 1; try{ sessionStorage.setItem(ATTEMPTS_KEY, String(n)); }catch(e){} return n; }
-
-let adminSessionTimer = null;
-let adminSessionStart = 0;
-
-async function tryUnlock(){
-  const lockUntil = getLockUntil();
-  if (lockUntil > Date.now()){
-    const sec = Math.ceil((lockUntil - Date.now()) / 1000);
-    keyError.textContent = `Too many attempts. Locked for ${sec}s.`;
+function tryUnlock(){
+  const val = keyInput.value.trim();
+  if (!val){
+    keyError.textContent = 'Enter your key';
     keyError.classList.add('show');
     setTimeout(() => keyError.classList.remove('show'), 2400);
     return;
   }
-  const val = keyInput.value.trim();
-  if (!val) return;
-
-  let ok = false;
-  const expected = (CFG.adminKeyHash || '').trim().toLowerCase();
-  if (expected){
-    const h = await sha256(val);
-    ok = (h === expected);
-  } else {
-    ok = (val === (CFG.adminKey || ''));
-  }
-
-  if (ok){
-    clearLock();
+  if (val === ADMIN_KEY){
     adminUnlocked = true;
-    adminSessionStart = Date.now();
     document.getElementById('navMail').style.display = 'flex';
     document.getElementById('keyGate').style.display = 'none';
     document.getElementById('adminPanel').style.display = 'block';
     keyInput.value = ''; keyError.classList.remove('show');
     showToast('Welcome, Admin', 'good');
     renderAdminList(); renderOrders(); updateOrdersBadge();
-    startSessionWatch();
   } else {
-    const n = bumpAttempts();
-    keyInput.value = ''; keyInput.focus();
-    if (n >= MAX_ATTEMPTS){
-      setLockUntil(Date.now() + LOCK_MS);
-      keyError.textContent = `Too many attempts. Locked for 60s.`;
-    } else {
-      const left = MAX_ATTEMPTS - n;
-      keyError.textContent = `Incorrect key. ${left} attempt${left === 1 ? '' : 's'} left.`;
-    }
+    keyError.textContent = 'Incorrect key. Try again.';
     keyError.classList.add('show');
+    keyInput.value = ''; keyInput.focus();
     setTimeout(() => keyError.classList.remove('show'), 2400);
   }
 }
-
-function startSessionWatch(){
-  if (adminSessionTimer) clearInterval(adminSessionTimer);
-  adminSessionTimer = setInterval(() => {
-    if (!adminUnlocked) return;
-    if (Date.now() - adminSessionStart > SESSION_MS){
-      adminUnlocked = false;
-      document.getElementById('navMail').style.display = 'none';
-      document.getElementById('keyGate').style.display = 'flex';
-      document.getElementById('adminPanel').style.display = 'none';
-      showToast('Session expired — login again', 'warn');
-      clearInterval(adminSessionTimer);
-    }
-  }, 30000);
-}
-
-['click','keydown','pointerdown','touchstart'].forEach(ev =>
-  document.addEventListener(ev, () => { if (adminUnlocked) adminSessionStart = Date.now(); }, { passive: true, capture: true })
-);
-
 keySubmit.addEventListener('click', tryUnlock);
 keyInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
 
@@ -2570,7 +2589,7 @@ document.getElementById('resetForm').addEventListener('click', () => {
   upTxt.textContent = 'Click to upload photos';
 });
 
-/* ═══════════ THEME SYSTEM ═══════════ */
+/* ═══════════ THEME SYSTEM — RANDOM ON FIRST VISIT ═══════════ */
 const THEME_KEY = 'vaya_theme';
 function applyTheme(t){
   const themes = ['golden','green','blue'];
@@ -2582,15 +2601,19 @@ function applyTheme(t){
   });
 }
 function initTheme(){
-  let saved = 'golden';
-  try{ saved = localStorage.getItem(THEME_KEY) || 'golden'; }catch(e){}
+  let saved = null;
+  try{ saved = localStorage.getItem(THEME_KEY); }catch(e){}
+  if (!saved){
+    const themes = ['golden','green','blue'];
+    saved = themes[Math.floor(Math.random() * themes.length)];
+  }
   applyTheme(saved);
 }
 document.querySelectorAll('[data-theme-pick]').forEach(btn => {
   btn.addEventListener('click', () => { applyTheme(btn.dataset.themePick); });
 });
 
-/* ═══════════ ADMIN GATE (UA) ═══════════ */
+/* ═══════════ ADMIN GATE (User Agent) ═══════════ */
 const UA_LIST_URL = 'https://raw.githubusercontent.com/N4IM404/my-web/refs/heads/main/Haa.txt';
 
 (async function initAdminGate(){
@@ -2632,4 +2655,4 @@ startSlider();
 flushOutbox();
 </script>
 </body>
-</html>
+  </html>
