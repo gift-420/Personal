@@ -1,564 +1,1254 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NAIM - Digital Accounts Store</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
-                    colors: { brandPrimary: '#1a56db', brandDark: '#0f172a', surfaceLight: '#f8fafc' },
-                    boxShadow: { 'sleek': '0 4px 20px -2px rgba(0, 0, 0, 0.05)', 'modal': '0 -10px 40px -10px rgba(0, 0, 0, 0.15)' }
-                }
-            }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAIM 🦅 — Premium Digital Accounts Store</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            fontFamily: { sans: ['Outfit', 'sans-serif'] },
+            colors: { brandPrimary: '#1a56db', brandDark: '#0f172a' },
+            boxShadow: { sleek: '0 4px 20px -2px rgba(0,0,0,0.05)', card: '0 8px 30px -6px rgba(0,0,0,0.08)' }
         }
-    </script>
-    <style>
-        body { background-color: #f1f5f9; -webkit-tap-highlight-color: transparent; }
-        ::-webkit-scrollbar { display: none; }
-        #details-modal, #admin-panel, #region-modal, #checkout-modal { transition: opacity 0.3s ease-in-out; }
-        #modal-content, #admin-content, #checkout-content { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); transform: translateY(100%); }
-        .modal-open #modal-content, .modal-open #admin-content, .modal-open #checkout-content { transform: translateY(0); }
-        .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(16px); }
-        .pay-card { transition: all 0.2s ease; }
-        .copy-btn:active { transform: scale(0.92); }
-        .toast { animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .tab-btn.active { background: #0f172a; color: white; }
-    </style>
+    }
+}
+</script>
+<style>
+* { -webkit-tap-highlight-color: transparent; }
+body { background-color: #f1f5f9; }
+::-webkit-scrollbar { display: none; }
+.glass-nav { background: rgba(255,255,255,0.88); backdrop-filter: blur(20px); }
+#details-modal, #admin-login, #admin-panel, #region-modal, #checkout-modal, #success-modal, #product-details-modal {
+    transition: opacity 0.25s ease-in-out;
+}
+#modal-content, #admin-content, #checkout-content, #success-content, #pd-content {
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(100%);
+}
+.modal-open #modal-content, .modal-open #admin-content, .modal-open #checkout-content,
+.modal-open #success-content, .modal-open #pd-content {
+    transform: translateY(0);
+}
+.toast { animation: slideUp 0.3s ease; }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes bounceIn { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+.product-card { transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+.product-card:hover { transform: translateY(-4px); box-shadow: 0 15px 35px -12px rgba(0,0,0,0.15); }
+.product-card:active { transform: scale(0.98); }
+.hero-glow { animation: float 8s ease-in-out infinite; }
+.shimmer-text {
+    background: linear-gradient(90deg, #facc15 0%, #fff 50%, #facc15 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s linear infinite;
+}
+.tab-btn.active { background: #0f172a !important; color: white !important; box-shadow: 0 4px 15px rgba(15,23,42,0.3); }
+.qty-btn:active { transform: scale(0.85); }
+.copy-btn:active { transform: scale(0.9); }
+.upload-zone { transition: all 0.25s ease; }
+.upload-zone:hover, .upload-zone.dragover { border-color: #1a56db; background: #eff6ff; }
+.bounce-in { animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+.support-btn { transition: all 0.15s ease; }
+.support-btn:active { transform: scale(0.94); }
+input:focus, textarea:focus { outline: none; border-color: #1a56db; box-shadow: 0 0 0 3px rgba(26,86,219,0.12); }
+.detail-text { line-height: 1.7; white-space: pre-wrap; }
+button { cursor: pointer; user-select: none; }
+button:disabled { cursor: not-allowed; opacity: 0.5; }
+</style>
 </head>
 <body class="text-slate-900 antialiased min-h-screen flex flex-col pb-6">
 
-    <!-- Header -->
-    <header class="glass-nav sticky top-0 z-40 border-b border-slate-200/60 shadow-sm">
-        <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="bg-brandDark w-10 h-10 rounded-xl flex items-center justify-center shadow-lg text-white">
-                    <i class="fas fa-shield-halved text-xl"></i>
+<!-- HEADER -->
+<header class="glass-nav sticky top-0 z-40 border-b border-slate-200/60 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="bg-brandDark w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg text-white">
+                <i class="fas fa-shield-halved text-xl"></i>
+            </div>
+            <div class="font-black text-2xl tracking-tighter text-brandDark flex items-center">NAIM <span class="ml-1.5 text-sm">🦅</span></div>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button onclick="openRegionModal()" class="h-10 px-3 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center gap-1.5 text-xs font-bold text-slate-700 transition">
+                <i class="fas fa-globe"></i><span id="region-label">...</span>
+            </button>
+            <button onclick="openAdmin()" class="w-10 h-10 rounded-full bg-brandDark flex items-center justify-center text-white shadow-md hover:bg-slate-800 transition">
+                <i class="fas fa-lock text-sm"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- MAIN -->
+<main class="flex-grow max-w-6xl mx-auto w-full px-4 py-6">
+    <div class="mb-6 bg-gradient-to-br from-brandDark via-slate-800 to-brandDark rounded-3xl p-6 sm:p-10 relative overflow-hidden shadow-2xl">
+        <div class="absolute top-0 right-0 w-72 h-72 bg-blue-500 rounded-full filter blur-3xl opacity-25 -translate-y-1/2 translate-x-1/2 hero-glow"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 bg-purple-500 rounded-full filter blur-3xl opacity-20 translate-y-1/2 -translate-x-1/2 hero-glow" style="animation-delay:2s"></div>
+        <div class="relative z-10">
+            <span class="inline-block py-1 px-3 rounded-full bg-white/10 text-white text-[10px] font-black tracking-widest uppercase mb-3 backdrop-blur-md border border-white/20">
+                <i class="fas fa-bolt text-yellow-400 mr-1"></i> Smart Scanner
+            </span>
+            <h1 class="text-3xl sm:text-5xl font-black text-white leading-tight mb-2 tracking-tight">
+                Digital Accounts <span class="shimmer-text">Hub</span>
+            </h1>
+            <p class="text-slate-300 text-xs sm:text-sm font-medium max-w-lg">Pay → Upload screenshot → AI reads it → WhatsApp order.</p>
+        </div>
+    </div>
+
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-black text-brandDark tracking-tight">Products</h2>
+        <span id="item-count" class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Loading...</span>
+    </div>
+
+    <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"></div>
+
+    <div id="support-section" class="mt-8 mb-4"></div>
+
+    <div class="mt-6 text-center text-[10px] text-slate-400 font-semibold pb-4">
+        <p>🦅 NAIM — Trusted Digital Account Store · © 2026</p>
+    </div>
+</main>
+
+<!-- PRODUCT DETAILS MODAL -->
+<div id="product-details-modal" class="fixed inset-0 z-[58] flex items-end justify-center pointer-events-none opacity-0">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeProductDetails()"></div>
+    <div id="pd-content" class="relative w-full max-w-md bg-white rounded-t-3xl shadow-2xl pointer-events-auto flex flex-col max-h-[85vh]">
+        <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-200 rounded-full"></div></div>
+        <button onclick="closeProductDetails()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 z-10"><i class="fas fa-times"></i></button>
+        <div id="pd-body" class="overflow-y-auto px-6 pb-8 pt-4"></div>
+    </div>
+</div>
+
+<!-- REGION MODAL -->
+<div id="region-modal" class="fixed inset-0 z-[60] flex items-center justify-center pointer-events-none opacity-0">
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeRegionModal()"></div>
+    <div class="relative bg-white w-11/12 max-w-sm rounded-3xl p-6 shadow-2xl pointer-events-auto">
+        <h3 class="text-xl font-black mb-1">Select Region</h3>
+        <p class="text-xs text-slate-500 font-semibold mb-5">Currency & payment will change</p>
+        <div class="space-y-3">
+            <button onclick="setRegion('BD')" class="w-full flex items-center justify-between p-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition">
+                <span class="font-bold">Bangladesh (BDT)</span><span class="text-2xl">🇧🇩</span>
+            </button>
+            <button onclick="setRegion('NG')" class="w-full flex items-center justify-between p-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition">
+                <span class="font-bold">Nigeria (NGN)</span><span class="text-2xl">🇳🇬</span>
+            </button>
+            <button onclick="setRegion('US')" class="w-full flex items-center justify-between p-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition">
+                <span class="font-bold">Global (USDT)</span><span class="text-2xl">🌍</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- DETAILS MODAL -->
+<div id="details-modal" class="fixed inset-0 z-50 flex items-end justify-center pointer-events-none opacity-0">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModal()"></div>
+    <div id="modal-content" class="relative w-full max-w-md bg-white rounded-t-3xl shadow-2xl pointer-events-auto flex flex-col max-h-[90vh]">
+        <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-200 rounded-full"></div></div>
+        <button onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500"><i class="fas fa-times"></i></button>
+        <div id="modal-body" class="overflow-y-auto px-6 pb-8 pt-2"></div>
+    </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div id="checkout-modal" class="fixed inset-0 z-[55] flex items-end justify-center pointer-events-none opacity-0">
+    <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeCheckout()"></div>
+    <div id="checkout-content" class="relative w-full max-w-md bg-white rounded-t-3xl shadow-2xl pointer-events-auto flex flex-col max-h-[92vh]">
+        <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-200 rounded-full"></div></div>
+        <button onclick="closeCheckout()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 z-10"><i class="fas fa-times"></i></button>
+        <div id="checkout-body" class="overflow-y-auto px-6 pb-8 pt-4"></div>
+    </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div id="success-modal" class="fixed inset-0 z-[65] flex items-center justify-center pointer-events-none opacity-0">
+    <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm"></div>
+    <div id="success-content" class="relative bg-white w-11/12 max-w-sm rounded-3xl p-6 shadow-2xl pointer-events-auto text-center bounce-in">
+        <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-check text-4xl"></i>
+        </div>
+        <h3 class="text-2xl font-black text-brandDark mb-2">Order Submitted!</h3>
+        <p class="text-sm text-slate-500 font-semibold mb-4">Your order ID:</p>
+        <div class="bg-brandDark rounded-2xl p-4 text-white mb-4">
+            <p class="text-lg font-black text-yellow-400 mb-2" id="success-order-id">ORD-...</p>
+            <button onclick="copyOrderId()" class="text-xs bg-white/20 px-3 py-1.5 rounded-lg font-bold"><i class="fas fa-copy mr-1"></i>Copy</button>
+        </div>
+        <p class="text-xs text-slate-500 mb-3">Send the message + screenshot to admin on WhatsApp</p>
+        <a id="success-wa-btn" href="#" target="_blank" rel="noopener"
+            class="block w-full py-3 bg-green-500 text-white font-black rounded-xl mb-2 hover:bg-green-600 transition">
+            <i class="fab fa-whatsapp mr-1"></i> Open WhatsApp & Send
+        </a>
+        <button onclick="closeSuccess()" class="w-full py-2 text-sm text-slate-500 font-bold">Close</button>
+    </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div id="admin-login" class="fixed inset-0 z-[70] flex items-center justify-center pointer-events-none opacity-0">
+    <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm" onclick="closeAdminLogin()"></div>
+    <div class="relative bg-white w-11/12 max-w-sm rounded-3xl p-6 shadow-2xl pointer-events-auto">
+        <button onclick="closeAdminLogin()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500"><i class="fas fa-times"></i></button>
+        <div class="text-center mb-6">
+            <div class="w-14 h-14 bg-brandDark rounded-2xl flex items-center justify-center text-white mx-auto mb-3"><i class="fas fa-lock text-2xl"></i></div>
+            <h2 class="text-xl font-black">Admin Login</h2>
+            <p class="text-xs text-slate-500 font-semibold mt-1">Secure Firebase access</p>
+        </div>
+        <form onsubmit="doAdminLogin(event)" class="space-y-3">
+            <div>
+                <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Email</label>
+                <input type="email" id="admin-email" required class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold" placeholder="admin@naim.com" autocomplete="username">
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Password</label>
+                <div class="relative">
+                    <input type="password" id="admin-pass" required class="w-full p-3 pr-10 rounded-xl border border-slate-200 text-sm font-bold" placeholder="••••••••" autocomplete="current-password">
+                    <button type="button" onclick="togglePass()" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 text-slate-400"><i id="eye-icon" class="fas fa-eye"></i></button>
                 </div>
-                <div class="font-black text-2xl tracking-tighter text-brandDark flex items-center">
-                    NAIM <span class="ml-1.5 text-sm">🦅</span>
+            </div>
+            <p id="login-error" class="text-xs text-red-600 font-bold hidden"></p>
+            <button type="submit" id="login-btn" class="w-full py-3 bg-brandDark text-white font-black rounded-xl shadow-md">
+                <i class="fas fa-arrow-right-to-bracket mr-1"></i> Login
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel" class="fixed inset-0 z-50 flex items-end justify-center pointer-events-none opacity-0">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeAdmin()"></div>
+    <div id="admin-content" class="relative w-full max-w-lg bg-white rounded-t-3xl shadow-2xl pointer-events-auto flex flex-col h-[92vh]">
+        <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-200 rounded-full"></div></div>
+        <button onclick="closeAdmin()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 z-10"><i class="fas fa-times"></i></button>
+        <div class="px-6 pb-3 border-b border-slate-100">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h2 class="text-2xl font-black text-brandDark"><i class="fas fa-shield-halved mr-2"></i>Admin</h2>
+                    <p class="text-[10px] text-slate-500 font-bold mt-0.5" id="admin-who">Logged in</p>
                 </div>
+                <button onclick="logoutAdmin()" class="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-bold"><i class="fas fa-sign-out-alt mr-1"></i>Logout</button>
             </div>
-            <div class="flex items-center space-x-3">
-                <button onclick="openRegionModal()" id="region-btn" class="h-10 px-3 rounded-full bg-slate-100 flex items-center justify-center text-slate-700 hover:bg-slate-200 text-xs font-bold gap-1.5">
-                    <i class="fas fa-globe"></i><span id="region-label">...</span>
-                </button>
-                <button onclick="openAdmin()" class="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-white shadow-md hover:bg-slate-800">
-                    <i class="fas fa-lock"></i>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <main class="flex-grow max-w-5xl mx-auto w-full px-4 py-6" id="main-view">
-        <div class="mb-8 bg-brandDark rounded-3xl p-6 sm:p-10 relative overflow-hidden shadow-xl">
-            <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2"></div>
-            <div class="relative z-10">
-                <span class="inline-block py-1.5 px-3.5 rounded-full bg-white/10 text-white text-xs font-bold tracking-widest uppercase mb-4 backdrop-blur-md">Premium Assets</span>
-                <h1 class="text-3xl sm:text-5xl font-black text-white leading-tight mb-2 tracking-tight">Digital Accounts Hub</h1>
+            <div class="flex gap-2 mt-3 overflow-x-auto">
+                <button onclick="switchTab('orders')" id="tab-orders" class="tab-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 whitespace-nowrap">Orders</button>
+                <button onclick="switchTab('products')" id="tab-products" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 whitespace-nowrap">Products</button>
+                <button onclick="switchTab('payments')" id="tab-payments" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 whitespace-nowrap">Payments</button>
+                <button onclick="switchTab('support')" id="tab-support" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 whitespace-nowrap">Support</button>
+                <button onclick="switchTab('settings')" id="tab-settings" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 whitespace-nowrap">Settings</button>
             </div>
         </div>
-        <div class="flex justify-between items-end mb-5">
-            <h2 class="text-2xl font-black text-brandDark tracking-tight">Featured</h2>
-            <span id="item-count" class="text-xs font-bold text-slate-500 uppercase tracking-widest">0 Items</span>
-        </div>
-        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5"></div>
-    </main>
-
-    <!-- Region Modal -->
-    <div id="region-modal" class="fixed inset-0 z-[60] flex items-center justify-center pointer-events-none opacity-0">
-        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeRegionModal()"></div>
-        <div class="relative bg-white w-11/12 max-w-sm rounded-3xl p-6 pointer-events-auto shadow-2xl">
-            <h3 class="text-xl font-black mb-1">Select Location</h3>
-            <p class="text-xs text-slate-500 font-semibold mb-4">Currency & payment method change হবে</p>
-            <div class="space-y-3">
-                <button onclick="setRegion('BD')" class="w-full flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50">
-                    <span class="font-bold">Bangladesh (BDT)</span><span>🇧🇩</span>
-                </button>
-                <button onclick="setRegion('NG')" class="w-full flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50">
-                    <span class="font-bold">Nigeria (NGN)</span><span>🇳🇬</span>
-                </button>
-                <button onclick="setRegion('US')" class="w-full flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50">
-                    <span class="font-bold">Global (USDT)</span><span>🌍</span>
-                </button>
-            </div>
-        </div>
+        <div id="admin-body" class="overflow-y-auto p-6 flex-grow"></div>
     </div>
+</div>
 
-    <!-- Product Details -->
-    <div id="details-modal" class="fixed inset-0 z-50 flex items-end justify-center pointer-events-none opacity-0">
-        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModal()"></div>
-        <div id="modal-content" class="relative w-full max-w-md bg-white rounded-t-3xl shadow-modal pointer-events-auto flex flex-col max-h-[90vh]">
-            <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-200 rounded-full"></div></div>
-            <button onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-200"><i class="fas fa-times"></i></button>
-            <div id="modal-body" class="overflow-y-auto px-6 pb-8 pt-2"></div>
-        </div>
-    </div>
+<div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-[80] bg-brandDark text-white px-5 py-3 rounded-xl text-sm font-bold shadow-2xl opacity-0 pointer-events-none"></div>
 
-    <!-- Checkout -->
-    <div id="checkout-modal" class="fixed inset-0 z-[55] flex items-end justify-center pointer-events-none opacity-0">
-        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeCheckout()"></div>
-        <div id="checkout-content" class="relative w-full max-w-md bg-white rounded-t-3xl shadow-modal pointer-events-auto flex flex-col max-h-[92vh]">
-            <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-200 rounded-full"></div></div>
-            <button onclick="closeCheckout()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-200 z-10"><i class="fas fa-times"></i></button>
-            <div id="checkout-body" class="overflow-y-auto px-6 pb-8 pt-4"></div>
-        </div>
-    </div>
+<!-- Firebase SDK (NO STORAGE) -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, orderBy, doc, getDoc, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
-    <!-- Admin Panel -->
-    <div id="admin-panel" class="fixed inset-0 z-50 flex items-end justify-center pointer-events-none opacity-0">
-        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeAdmin()"></div>
-        <div id="admin-content" class="relative w-full max-w-lg bg-white rounded-t-3xl shadow-modal pointer-events-auto flex flex-col h-[90vh]">
-            <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-200 rounded-full"></div></div>
-            <button onclick="closeAdmin()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-200 z-10"><i class="fas fa-times"></i></button>
-            <div class="px-6 pb-3 border-b border-slate-100">
-                <h2 class="text-2xl font-black text-brandDark"><i class="fas fa-shield-halved mr-2"></i>Admin</h2>
-                <div class="flex gap-2 mt-3">
-                    <button onclick="switchTab('products')" id="tab-products" class="tab-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100">Products</button>
-                    <button onclick="switchTab('payments')" id="tab-payments" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100">Payments</button>
-                    <button onclick="switchTab('settings')" id="tab-settings" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100">Settings</button>
-                </div>
-            </div>
-            <div id="admin-body" class="overflow-y-auto p-6 flex-grow"></div>
-        </div>
-    </div>
+const firebaseConfig = {
+    apiKey: "AIzaSyC5yPcFGwfQwJFlneiVM-lyJy6UW7iTBag",
+    authDomain: "naim-store-a961d.firebaseapp.com",
+    projectId: "naim-store-a961d",
+    storageBucket: "naim-store-a961d.firebasestorage.app",
+    messagingSenderId: "1018491734368",
+    appId: "1:1018491734368:web:feb40c723753e18ce17605"
+};
 
-    <div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-[70] bg-brandDark text-white px-5 py-3 rounded-xl text-sm font-bold shadow-2xl opacity-0 pointer-events-none"></div>
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-    <script>
-        // ============ STATE ============
-        const rates = { USD: 1, BDT: 130, NGN: 1400 };
-        let userCountry = 'US';
-        let currentCurrency = 'USD';
-        let currentSymbol = '$';
-        let currentRate = 1;
-        let selectedQuantity = 1;
-        let activeProductId = null;
+window.__fb = { db, auth, addDoc, serverTimestamp, getDocs, query, orderBy, doc, getDoc, setDoc, updateDoc, collection, signInWithEmailAndPassword, signOut, onAuthStateChanged };
+window.__fbReady = true;
+console.log('✅ Firebase initialized (no storage)');
+</script>
 
-        // Default config — can be edited via Admin
-        const DEFAULT_CONFIG = {
-            whatsappNumber: '8801773204904',
-            whatsappDisplay: '+880 1773-204904',
-            payments: {
-                BD: {
-                    label: 'Bangladesh',
-                    methods: [
-                        { id: 'bkash', name: 'bKash', type: 'Personal', icon: 'fas fa-mobile-screen', color: 'text-pink-600', bg: 'bg-pink-50', border: 'border-pink-200', account: '01773204904', enabled: true },
-                        { id: 'nagad', name: 'Nagad', type: 'Personal', icon: 'fas fa-mobile-screen', color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-200', account: '01773204904', enabled: true }
-                    ]
-                },
-                NG: {
-                    label: 'Nigeria',
-                    methods: [
-                        { id: 'opay', name: 'OPay', type: 'Bank Transfer', icon: 'fas fa-wallet', color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200', bank: 'OPay', account: '6598578587', holder: 'Bright Munachi Amaraegbu', enabled: true }
-                    ]
-                },
-                US: {
-                    label: 'Global',
-                    methods: [
-                        { id: 'usdt', name: 'USDT (Arbitrum)', type: 'Crypto', icon: 'fab fa-bitcoin', color: 'text-yellow-600', bg: 'bg-yellow-50', border: 'border-yellow-200', account: '0xf0f0c92a09bf1d8d48ccf529d253f19b029fade0', network: 'Arbitrum One', enabled: true }
-                    ]
-                }
-            }
+<script>
+// ============ HELPERS ============
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function roundPrice(n) { return Math.round(n * 100) / 100; }
+function symbolForMethod(method) {
+    if (method === 'bKash' || method === 'Nagad') return '৳';
+    if (method === 'OPay') return '₦';
+    if (method === 'USDT') return '$';
+    return currentSymbol;
+}
+function waitFirebase(timeoutMs = 8000) {
+    return new Promise((resolve, reject) => {
+        if (window.__fbReady) return resolve();
+        const start = Date.now();
+        const check = () => {
+            if (window.__fbReady) return resolve();
+            if (Date.now() - start > timeoutMs) return reject(new Error('Firebase timeout'));
+            setTimeout(check, 100);
         };
+        check();
+    });
+}
 
-        const DEFAULT_PRODUCTS = [
-            { id: 1, title: 'PAGE', subtitle: 'Facebook Page', priceUSD: 1.10, icon: 'fas fa-flag', color: 'text-orange-500', bg: 'bg-orange-50' },
-            { id: 2, title: 'OLD FB', subtitle: 'Standard Account', priceUSD: 1.20, icon: 'fab fa-facebook', color: 'text-blue-600', bg: 'bg-blue-50' },
-            { id: 3, title: 'NEW FB', subtitle: 'Fresh Account', priceUSD: 0.70, icon: 'fab fa-facebook-square', color: 'text-blue-500', bg: 'bg-blue-50' },
-            { id: 4, title: 'CUSTOM NAME', subtitle: 'New FB Profile', priceUSD: 0.85, icon: 'fas fa-user-pen', color: 'text-indigo-600', bg: 'bg-indigo-50' },
-            { id: 5, title: 'APPLE ID', subtitle: 'Verified Account', priceUSD: 0.50, icon: 'fab fa-apple', color: 'text-slate-800', bg: 'bg-slate-100' },
-            { id: 6, title: 'PC CLONE FB', subtitle: 'Desktop Created', priceUSD: 0.30, icon: 'fas fa-desktop', color: 'text-teal-600', bg: 'bg-teal-50' }
-        ];
+// ============ STATE ============
+const rates = { USD: 1, BDT: 130, NGN: 1400 };
+let userCountry = 'US';
+let currentCurrency = 'USD';
+let currentSymbol = '$';
+let currentRate = 1;
+let selectedQuantity = 1;
+let activeProductId = null;
+let currentTab = 'orders';
+let isAdminLoggedIn = false;
+let selectedFile = null;
+let extractedData = null;
+let _pendingOrder = null;
+let _lastOrderId = null;
+let _lastWaUrl = null;
 
-        let config = load('naim_config', DEFAULT_CONFIG);
-        let products = load('naim_products', DEFAULT_PRODUCTS);
-        let currentTab = 'products';
+const DEFAULT_CONFIG = {
+    whatsappNumber: '8801773204904',
+    support: {
+        whatsapp: '8801773204904',
+        telegram: 'naim_store',
+        email: 'support@naim.com'
+    },
+    payments: {
+        BD: { label: 'Bangladesh', methods: [
+            { id: 'bkash', name: 'bKash', type: 'Personal', icon: 'fas fa-mobile-screen', color: 'text-pink-600', bg: 'bg-pink-50', border: 'border-pink-200', account: '01773204904', enabled: true },
+            { id: 'nagad', name: 'Nagad', type: 'Personal', icon: 'fas fa-mobile-screen', color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-200', account: '01773204904', enabled: true }
+        ]},
+        NG: { label: 'Nigeria', methods: [
+            { id: 'opay', name: 'OPay', type: 'Bank Transfer', icon: 'fas fa-wallet', color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200', bank: 'OPay', account: '6598578587', holder: 'Bright Munachi Amaraegbu', enabled: true }
+        ]},
+        US: { label: 'Global', methods: [
+            { id: 'usdt', name: 'USDT (Arbitrum)', type: 'Crypto', icon: 'fab fa-bitcoin', color: 'text-yellow-600', bg: 'bg-yellow-50', border: 'border-yellow-200', account: '0xf0f0c92a09bf1d8d48ccf529d253f19b029fade0', network: 'Arbitrum One', enabled: true }
+        ]}
+    }
+};
 
-        // ============ STORAGE ============
-        function load(key, fallback) {
-            try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
-            catch { return fallback; }
-        }
-        function save(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} }
-        function persistAll() { save('naim_config', config); save('naim_products', products); }
+const DEFAULT_PRODUCTS = [
+    { id: 1, title: 'PAGE', subtitle: 'Facebook Page', priceUSD: 1.10, icon: 'fas fa-flag', color: 'text-orange-500', bg: 'bg-orange-50', inputType: 'page_name', inputLabel: 'Your Page Name', inputPlaceholder: 'e.g. My Business Page', details: 'Facebook Page with full admin access. Verified and aged.' },
+    { id: 2, title: 'ANY NAME', subtitle: 'Custom Profile', priceUSD: 0.85, icon: 'fas fa-user-pen', color: 'text-indigo-600', bg: 'bg-indigo-50', inputType: 'name', inputLabel: 'Your Desired Name', inputPlaceholder: 'e.g. John Smith', details: 'Facebook profile with your chosen name.' },
+    { id: 3, title: 'OLD FB', subtitle: 'Standard Account', priceUSD: 1.20, icon: 'fab fa-facebook', color: 'text-blue-600', bg: 'bg-blue-50', inputType: null, details: 'Aged Facebook account with activity history.' },
+    { id: 4, title: 'NEW FB', subtitle: 'Fresh Account', priceUSD: 0.70, icon: 'fab fa-facebook-square', color: 'text-blue-500', bg: 'bg-blue-50', inputType: null, details: 'Brand new Facebook account.' },
+    { id: 5, title: 'APPLE ID', subtitle: 'Verified Account', priceUSD: 0.50, icon: 'fab fa-apple', color: 'text-slate-800', bg: 'bg-slate-100', inputType: null, details: 'Fully verified Apple ID.' },
+    { id: 6, title: 'PC CLONE FB', subtitle: 'Desktop Created', priceUSD: 0.30, icon: 'fas fa-desktop', color: 'text-teal-600', bg: 'bg-teal-50', inputType: null, details: 'Facebook account created from desktop.' }
+];
 
-        // ============ HELPERS ============
-        function formatPrice(usdPrice, qty = 1) {
-            const converted = usdPrice * currentRate * qty;
-            return `${currentSymbol} ${converted % 1 === 0 ? converted : converted.toFixed(2)}`;
-        }
+let config = load('naim_config', DEFAULT_CONFIG);
+let products = load('naim_products', DEFAULT_PRODUCTS);
+let localOrders = load('naim_local_orders', {});
+let cachedOrders = [];
 
-        function showToast(msg, color = 'bg-brandDark') {
-            const t = document.getElementById('toast');
-            t.className = `fixed bottom-24 left-1/2 -translate-x-1/2 z-[70] ${color} text-white px-5 py-3 rounded-xl text-sm font-bold shadow-2xl toast`;
-            t.innerText = msg;
-            clearTimeout(t._timer);
-            t._timer = setTimeout(() => t.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 z-[70] bg-brandDark text-white px-5 py-3 rounded-xl text-sm font-bold shadow-2xl opacity-0 pointer-events-none', 2000);
-        }
+function load(key, fallback) {
+    try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+    catch { return fallback; }
+}
+function save(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} }
+function persistAll() { save('naim_config', config); save('naim_products', products); }
 
-        function copyText(text, label) {
-            navigator.clipboard.writeText(text).then(() => showToast(label + ' copied ✓', 'bg-green-600')).catch(() => showToast('Copy failed', 'bg-red-600'));
-        }
+function formatPrice(usdPrice, qty = 1) {
+    const c = roundPrice(usdPrice * currentRate * qty);
+    return `${currentSymbol} ${c}`;
+}
+function showToast(msg, color = 'bg-brandDark') {
+    const t = document.getElementById('toast');
+    t.className = `fixed bottom-24 left-1/2 -translate-x-1/2 z-[80] ${color} text-white px-5 py-3 rounded-xl text-sm font-bold shadow-2xl toast`;
+    t.innerText = msg;
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 z-[80] bg-brandDark text-white px-5 py-3 rounded-xl text-sm font-bold shadow-2xl opacity-0 pointer-events-none', 2500);
+}
+function copyText(txt, label) {
+    navigator.clipboard.writeText(txt).then(() => showToast(label + ' copied ✓', 'bg-green-600')).catch(() => showToast('Copy failed', 'bg-red-600'));
+}
 
-        // ============ IP DETECTION (fixed) ============
-        async function detectCountry() {
-            // Try ipwho.is first (free, CORS-friendly)
-            try {
-                const r = await fetch('https://ipwho.is/');
-                const d = await r.json();
-                if (d && d.success && d.country_code) return d.country_code;
-            } catch (e) { console.warn('ipwho failed', e); }
+// ============ INIT ============
+async function detectCountry() {
+    try {
+        const r = await fetch('https://ipwho.is/');
+        const d = await r.json();
+        if (d && d.success && d.country_code) return d.country_code;
+    } catch {}
+    try {
+        const r = await fetch('https://ipapi.co/json/');
+        const d = await r.json();
+        if (d && d.country_code) return d.country_code;
+    } catch {}
+    const lang = (navigator.language || '').toUpperCase();
+    if (lang.includes('BN') || lang.includes('BD')) return 'BD';
+    if (lang.includes('NG')) return 'NG';
+    return 'US';
+}
 
-            // Fallback: ipapi.co
-            try {
-                const r = await fetch('https://ipapi.co/json/');
-                const d = await r.json();
-                if (d && d.country_code) return d.country_code;
-            } catch (e) { console.warn('ipapi failed', e); }
+async function initApp() {
+    renderGrid();
+    renderSupport();
 
-            // Fallback: browser language
-            const lang = (navigator.language || '').toUpperCase();
-            if (lang.includes('BN') || lang.includes('BD')) return 'BD';
-            if (lang.includes('NG')) return 'NG';
-            return 'US';
-        }
+    detectCountry().then(code => setRegion(code, false)).catch(() => setRegion('US', false));
 
-        async function initApp() {
-            const code = await detectCountry();
-            setRegion(code, false);
-        }
+    try {
+        await waitFirebase(8000);
+        const { doc, getDoc, db, onAuthStateChanged, auth, collection, getDocs, query, orderBy } = window.__fb;
 
-        function setRegion(code, closeMenu = true) {
-            userCountry = ['BD','NG','US'].includes(code) ? code : 'US';
-            const map = { BD: ['BDT','৳',rates.BDT], NG: ['NGN','₦',rates.NGN], US: ['USD','$',rates.USD] };
-            [currentCurrency, currentSymbol, currentRate] = map[userCountry];
-            document.getElementById('region-label').innerText = userCountry;
-            if (closeMenu) closeRegionModal();
-            renderGrid();
-        }
-
-        // ============ RENDER GRID ============
-        function renderGrid() {
-            document.getElementById('item-count').innerText = `${products.length} Items`;
-            const grid = document.getElementById('product-grid');
-            if (!products.length) {
-                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400"><i class="fas fa-box-open text-4xl mb-3"></i><p class="font-bold">No products yet</p></div>`;
-                return;
+        try {
+            const snap = await getDoc(doc(db, 'settings', 'config'));
+            if (snap.exists()) {
+                const remote = snap.data();
+                if (remote.payments) config.payments = remote.payments;
+                if (remote.whatsappNumber) config.whatsappNumber = remote.whatsappNumber;
+                if (remote.support) config.support = { ...config.support, ...remote.support };
+                save('naim_config', config);
             }
-            grid.innerHTML = products.map(p => `
-                <div onclick="openModal(${p.id})" class="bg-white rounded-2xl p-4 shadow-sleek border border-slate-100 flex flex-col cursor-pointer active:scale-95 transition-transform">
-                    <div class="h-16 w-16 mx-auto mt-2 mb-4 ${p.bg} rounded-2xl flex items-center justify-center"><i class="${p.icon} ${p.color} text-3xl"></i></div>
-                    <div class="text-center flex flex-col flex-grow">
-                        <h3 class="text-sm font-bold text-brandDark uppercase line-clamp-1">${p.title}</h3>
-                        <p class="text-[11px] text-slate-500 mt-0.5 mb-3 font-medium truncate">${p.subtitle}</p>
-                        <div class="text-lg font-black text-brandDark mb-3 mt-auto">${formatPrice(p.priceUSD)}</div>
-                    </div>
-                    <button class="w-full py-2.5 text-xs font-bold text-brandDark bg-slate-50 rounded-xl">Buy Now</button>
-                </div>
-            `).join('');
-        }
-
-        // ============ PRODUCT MODAL ============
-        function changeQty(c) {
-            if (selectedQuantity + c >= 1) {
-                selectedQuantity += c;
-                document.getElementById('qty-display').innerText = selectedQuantity;
-                document.getElementById('modal-total-price').innerText = formatPrice(products.find(x => x.id === activeProductId).priceUSD, selectedQuantity);
-            }
-        }
-
-        function openModal(id) {
-            activeProductId = id;
-            selectedQuantity = 1;
-            const p = products.find(x => x.id === id);
-            const paySet = config.payments[userCountry] || config.payments.US;
-            const methodsHTML = paySet.methods.filter(m => m.enabled).map(m => `
-                <div class="flex items-center space-x-3 p-3 rounded-xl border ${m.border} ${m.bg}">
-                    <div class="w-8 h-8 rounded-full bg-white ${m.color} flex items-center justify-center text-sm shadow-sm"><i class="${m.icon}"></i></div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-xs font-black ${m.color}">${m.name}</p>
-                        <p class="text-[10px] text-slate-500 font-semibold">${m.type}</p>
-                    </div>
-                </div>
-            `).join('') || '<p class="text-xs text-slate-400 col-span-2">No payment methods</p>';
-
-            document.getElementById('modal-body').innerHTML = `
-                <div class="flex items-center space-x-4 mb-6">
-                    <div class="h-16 w-16 ${p.bg} rounded-2xl flex items-center justify-center shrink-0"><i class="${p.icon} ${p.color} text-3xl"></i></div>
-                    <div><h2 class="text-2xl font-black uppercase">${p.title}</h2><p class="text-sm font-semibold text-slate-500">${p.subtitle}</p></div>
-                </div>
-                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-6">
-                    <div><p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Total Price</p><div class="text-3xl font-black text-brandDark" id="modal-total-price">${formatPrice(p.priceUSD, 1)}</div></div>
-                    <div class="flex items-center space-x-3 bg-white px-3 py-2 rounded-xl shadow-sm border border-slate-100">
-                        <button onclick="changeQty(-1)" class="w-8 h-8 bg-slate-100 rounded-lg font-black text-lg">-</button>
-                        <span id="qty-display" class="font-black text-lg w-6 text-center">1</span>
-                        <button onclick="changeQty(1)" class="w-8 h-8 bg-slate-900 text-white rounded-lg font-black text-lg">+</button>
-                    </div>
-                </div>
-                <div class="mb-6">
-                    <h3 class="text-sm font-bold text-brandDark uppercase tracking-widest mb-3">Payment Methods (${currentCurrency})</h3>
-                    <div class="grid grid-cols-2 gap-2">${methodsHTML}</div>
-                </div>
-                <button onclick="openCheckout()" class="w-full py-4 text-base font-black text-white bg-brandDark rounded-2xl shadow-lg flex items-center justify-center space-x-2">
-                    <i class="fas fa-bolt text-yellow-400"></i><span>Proceed to Checkout</span>
-                </button>`;
-
-            const modal = document.getElementById('details-modal');
-            modal.classList.remove('pointer-events-none', 'opacity-0');
-            modal.classList.add('modal-open');
-        }
-
-        function closeModal() {
-            const m = document.getElementById('details-modal');
-            m.classList.remove('modal-open'); m.classList.add('opacity-0');
-            setTimeout(() => m.classList.add('pointer-events-none'), 300);
-        }
-
-        // ============ CHECKOUT ============
-        function openCheckout() {
-            closeModal();
-            const p = products.find(x => x.id === activeProductId);
-            const paySet = config.payments[userCountry] || config.payments.US;
-            const total = formatPrice(p.priceUSD, selectedQuantity);
-
-            const methodCards = paySet.methods.filter(m => m.enabled).map(m => {
-                let detailHTML = '';
-                if (m.bank) {
-                    detailHTML = `
-                        <div class="mt-2 bg-white rounded-lg p-3 border border-slate-100 space-y-1.5">
-                            <div><p class="text-[10px] font-bold text-slate-400 uppercase">Bank</p><p class="font-bold text-sm">${m.bank}</p></div>
-                            <div><p class="text-[10px] font-bold text-slate-400 uppercase">Account</p>
-                                <div class="flex items-center justify-between"><p class="font-black text-sm text-brandDark tracking-wide">${m.account}</p>
-                                <button onclick="copyText('${m.account}','Account')" class="copy-btn w-7 h-7 rounded-lg ${m.bg} ${m.color} flex items-center justify-center"><i class="fas fa-copy text-[10px]"></i></button></div>
-                            </div>
-                            <div><p class="text-[10px] font-bold text-slate-400 uppercase">Name</p><p class="font-bold text-sm">${m.holder}</p></div>
-                        </div>`;
-                } else if (m.network) {
-                    detailHTML = `
-                        <div class="mt-2 bg-white rounded-lg p-3 border border-slate-100 space-y-1.5">
-                            <div><p class="text-[10px] font-bold text-slate-400 uppercase">Network</p><p class="font-bold text-sm">${m.network}</p></div>
-                            <div><p class="text-[10px] font-bold text-slate-400 uppercase">Wallet</p>
-                                <div class="flex items-start justify-between gap-2"><p class="font-mono text-[10px] text-brandDark break-all leading-tight">${m.account}</p>
-                                <button onclick="copyText('${m.account}','Wallet')" class="copy-btn shrink-0 w-7 h-7 rounded-lg ${m.bg} ${m.color} flex items-center justify-center"><i class="fas fa-copy text-[10px]"></i></button></div>
-                            </div>
-                        </div>`;
-                } else if (m.account) {
-                    detailHTML = `
-                        <div class="mt-2 bg-white rounded-lg p-3 border border-slate-100">
-                            <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Number</p>
-                            <div class="flex items-center justify-between"><p class="font-black text-base text-brandDark tracking-wide">${m.account}</p>
-                            <button onclick="copyText('${m.account}','Number')" class="copy-btn w-8 h-8 rounded-lg ${m.bg} ${m.color} flex items-center justify-center"><i class="fas fa-copy text-xs"></i></button></div>
-                        </div>`;
+            const pSnap = await getDoc(doc(db, 'settings', 'products'));
+            if (pSnap.exists()) {
+                const rp = pSnap.data();
+                if (Array.isArray(rp.list) && rp.list.length) {
+                    products = rp.list;
+                    save('naim_products', products);
                 }
-                return `
-                    <div class="pay-card bg-white border ${m.border} rounded-2xl p-4">
-                        <div class="flex items-center space-x-3 mb-1">
-                            <div class="w-10 h-10 rounded-xl ${m.bg} ${m.color} flex items-center justify-center text-lg"><i class="${m.icon}"></i></div>
-                            <div class="flex-1"><p class="font-black text-sm ${m.color}">${m.name}</p><p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">${m.type}</p></div>
-                            <span class="text-[10px] font-black px-2 py-1 rounded-md ${m.bg} ${m.color}">SEND HERE</span>
-                        </div>
-                        ${detailHTML}
-                    </div>`;
-            }).join('') || '<p class="text-center text-slate-400 py-6 font-bold">No payment methods available</p>';
+            }
+            renderGrid(); renderSupport();
+        } catch (e) { console.warn('Config load:', e); }
 
-            document.getElementById('checkout-body').innerHTML = `
-                <div class="text-center mb-5">
-                    <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-100 text-green-600 mb-2"><i class="fas fa-lock text-lg"></i></div>
-                    <h2 class="text-2xl font-black text-brandDark">Checkout</h2>
-                    <p class="text-xs text-slate-500 font-semibold mt-1">Send exact amount to any method below</p>
-                </div>
-                <div class="bg-brandDark rounded-2xl p-5 mb-6 text-white">
-                    <div class="flex items-center space-x-3 mb-3">
-                        <div class="w-10 h-10 ${p.bg} rounded-xl flex items-center justify-center"><i class="${p.icon} ${p.color}"></i></div>
-                        <div><p class="font-black text-sm">${p.title}</p><p class="text-[11px] text-slate-300">Qty: ${selectedQuantity}</p></div>
+        try {
+            const oq = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+            const osnap = await getDocs(oq);
+            cachedOrders = osnap.docs.map(d => d.data());
+        } catch (e) { console.warn('Orders preload:', e); }
+
+        onAuthStateChanged(auth, user => {
+            isAdminLoggedIn = !!user;
+            if (user) document.getElementById('admin-who').textContent = 'Logged: ' + user.email;
+        });
+    } catch (e) {
+        console.warn('Firebase unavailable:', e);
+    }
+}
+
+function setRegion(code, closeMenu = true) {
+    userCountry = ['BD','NG','US'].includes(code) ? code : 'US';
+    const map = { BD: ['BDT','৳',rates.BDT], NG: ['NGN','₦',rates.NGN], US: ['USD','$',rates.USD] };
+    [currentCurrency, currentSymbol, currentRate] = map[userCountry];
+    document.getElementById('region-label').innerText = userCountry;
+    if (closeMenu) closeRegionModal();
+    renderGrid();
+}
+
+// ============ SUPPORT ============
+function renderSupport() {
+    const s = config.support;
+    document.getElementById('support-section').innerHTML = `
+        <div class="bg-white rounded-2xl p-4 shadow-sleek border border-slate-100">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-headset text-sm"></i>
                     </div>
-                    <div class="border-t border-white/10 pt-3 flex justify-between items-end">
-                        <div><p class="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Amount</p><p class="text-2xl font-black text-yellow-400">${total}</p></div>
-                        <button onclick="copyText('${total.replace(/[^0-9.]/g,'')}','Amount')" class="copy-btn px-3 py-1.5 bg-white/10 rounded-lg text-xs font-bold"><i class="fas fa-copy mr-1"></i>Copy</button>
+                    <div>
+                        <p class="text-sm font-black text-brandDark">Need Help?</p>
+                        <p class="text-[10px] text-slate-500 font-semibold">Contact support</p>
                     </div>
                 </div>
-                <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-3">Send Payment To:</h3>
-                <div class="space-y-3 mb-6">${methodCards}</div>
-                <div class="bg-yellow-50 border border-yellow-200 rounded-2xl p-4 mb-6">
-                    <div class="flex items-start space-x-2">
-                        <i class="fas fa-triangle-exclamation text-yellow-600 mt-0.5"></i>
-                        <div class="text-[11px] text-yellow-900 font-semibold leading-relaxed">
-                            <p class="font-black mb-1">Important:</p>
-                            <p>Send EXACT amount. Payment করার পর নিচের button চাপুন — আপনার order details auto WhatsApp-এ চলে যাবে।</p>
-                        </div>
-                    </div>
+                <span class="text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">ONLINE</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+                <a href="https://wa.me/${(s.whatsapp||'').replace(/[^0-9]/g,'')}" target="_blank" rel="noopener" class="support-btn bg-green-500 hover:bg-green-600 rounded-xl p-2.5 text-center">
+                    <i class="fab fa-whatsapp text-white text-lg block mb-1"></i>
+                    <p class="text-white font-bold text-[10px]">WhatsApp</p>
+                </a>
+                <a href="https://t.me/${(s.telegram||'').replace(/^@/,'')}" target="_blank" rel="noopener" class="support-btn bg-blue-500 hover:bg-blue-600 rounded-xl p-2.5 text-center">
+                    <i class="fab fa-telegram text-white text-lg block mb-1"></i>
+                    <p class="text-white font-bold text-[10px]">Telegram</p>
+                </a>
+                <a href="mailto:${esc(s.email||'')}" class="support-btn bg-slate-700 hover:bg-slate-800 rounded-xl p-2.5 text-center">
+                    <i class="fas fa-envelope text-white text-lg block mb-1"></i>
+                    <p class="text-white font-bold text-[10px]">Email</p>
+                </a>
+            </div>
+        </div>
+    `;
+}
+
+// ============ GRID ============
+function renderGrid() {
+    document.getElementById('item-count').innerText = `${products.length} Items`;
+    const grid = document.getElementById('product-grid');
+    grid.innerHTML = products.map(p => `
+        <div class="product-card bg-white rounded-2xl p-3 shadow-sleek border border-slate-100 flex flex-col">
+            <div onclick="openModal(${p.id})" class="cursor-pointer flex-grow">
+                <div class="h-14 w-14 mx-auto mt-1 mb-3 ${esc(p.bg)} rounded-xl flex items-center justify-center"><i class="${esc(p.icon)} ${esc(p.color)} text-2xl"></i></div>
+                <div class="text-center">
+                    <h3 class="text-xs font-black text-brandDark uppercase line-clamp-1">${esc(p.title)}</h3>
+                    <p class="text-[10px] text-slate-500 mt-0.5 mb-2 font-semibold truncate">${esc(p.subtitle)}</p>
+                    <div class="text-base font-black text-brandDark mb-2">${formatPrice(p.priceUSD)}</div>
                 </div>
-                <button onclick="sendToWhatsApp()" class="w-full py-4 text-base font-black text-white bg-brandDark rounded-2xl shadow-lg flex items-center justify-center space-x-2">
-                    <i class="fab fa-whatsapp text-green-400 text-lg"></i><span>I've Paid — Confirm Order</span>
-                </button>
-                <p class="text-center text-[10px] text-slate-400 font-semibold mt-3">Processing time: 5–30 minutes</p>`;
+            </div>
+            <button onclick="openProductDetails(${p.id})" class="w-full py-1.5 mb-1.5 text-[10px] font-bold text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition flex items-center justify-center gap-1">
+                <i class="fas fa-info-circle text-[9px]"></i> Details
+            </button>
+            <button onclick="openModal(${p.id})" class="w-full py-2 text-[11px] font-bold text-white bg-brandDark rounded-lg hover:bg-slate-800 transition">Buy Now</button>
+        </div>
+    `).join('');
+}
 
-            const cm = document.getElementById('checkout-modal');
-            cm.classList.remove('pointer-events-none', 'opacity-0');
-            cm.classList.add('modal-open');
-        }
+// ============ PRODUCT DETAILS ============
+function openProductDetails(id) {
+    event?.stopPropagation();
+    const p = products.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('pd-body').innerHTML = `
+        <div class="flex items-center space-x-4 mb-6">
+            <div class="h-20 w-20 ${esc(p.bg)} rounded-2xl flex items-center justify-center shrink-0"><i class="${esc(p.icon)} ${esc(p.color)} text-4xl"></i></div>
+            <div>
+                <h2 class="text-2xl font-black uppercase">${esc(p.title)}</h2>
+                <p class="text-sm font-semibold text-slate-500">${esc(p.subtitle)}</p>
+                <p class="text-2xl font-black text-brandDark mt-1">${formatPrice(p.priceUSD)}</p>
+            </div>
+        </div>
+        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-5 mb-5">
+            <div class="flex items-center gap-2 mb-3">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white"><i class="fas fa-info-circle text-sm"></i></div>
+                <h3 class="font-black text-brandDark">Product Details</h3>
+            </div>
+            <div class="detail-text text-sm text-slate-700 font-medium">${esc(p.details || 'No details yet.').replace(/\n/g, '<br>')}</div>
+        </div>
+        ${p.inputType ? `<div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 mb-5">
+            <p class="text-xs font-bold text-emerald-900 mb-1"><i class="fas fa-edit mr-1"></i>Input Required</p>
+            <p class="text-[11px] text-emerald-800 font-semibold">Order করার সময় "${esc(p.inputLabel)}" দিতে হবে।</p>
+        </div>` : ''}
+        <button onclick="closeProductDetails();openModal(${p.id})" class="w-full py-4 text-base font-black text-white bg-brandDark rounded-2xl shadow-lg flex items-center justify-center space-x-2">
+            <i class="fas fa-shopping-cart"></i><span>Buy Now</span>
+        </button>
+    `;
+    const m = document.getElementById('product-details-modal');
+    m.classList.remove('pointer-events-none', 'opacity-0');
+    m.classList.add('modal-open');
+}
+function closeProductDetails() {
+    const m = document.getElementById('product-details-modal');
+    m.classList.remove('modal-open'); m.classList.add('opacity-0');
+    setTimeout(() => m.classList.add('pointer-events-none'), 300);
+}
 
-        function closeCheckout() {
-            const m = document.getElementById('checkout-modal');
-            m.classList.remove('modal-open'); m.classList.add('opacity-0');
-            setTimeout(() => m.classList.add('pointer-events-none'), 300);
-        }
+// ============ BUY MODAL ============
+function changeQty(c) {
+    if (selectedQuantity + c >= 1 && selectedQuantity + c <= 10) {
+        selectedQuantity += c;
+        document.getElementById('qty-display').innerText = selectedQuantity;
+        document.getElementById('modal-total-price').innerText = formatPrice(products.find(x => x.id === activeProductId).priceUSD, selectedQuantity);
+    }
+}
 
-        // ============ AUTO WHATSAPP ============
-        function sendToWhatsApp() {
-            if (!config.whatsappNumber) { showToast('WhatsApp number admin-এ set করুন', 'bg-red-600'); return; }
-            const p = products.find(x => x.id === activeProductId);
-            const total = formatPrice(p.priceUSD, selectedQuantity);
-            const msg = encodeURIComponent(
-                `Hi NAIM 🦅\n\n✅ NEW ORDER\n\n📦 Product: ${p.title} (${p.subtitle})\n🔢 Quantity: ${selectedQuantity}\n💰 Total: ${total}\n🌍 Region: ${(config.payments[userCountry]||config.payments.US).label}\n🕐 Time: ${new Date().toLocaleString()}\n\n📎 Payment proof attached.\nPlease process my order.`
-            );
-            window.open(`https://wa.me/${config.whatsappNumber.replace(/[^0-9]/g,'')}?text=${msg}`, '_blank');
-            closeCheckout();
-        }
+function openModal(id) {
+    activeProductId = id;
+    selectedQuantity = 1;
+    const p = products.find(x => x.id === id);
+    if (!p) return;
+    const paySet = config.payments[userCountry] || config.payments.US;
+    const methodsHTML = paySet.methods.filter(m => m.enabled).map(m => `
+        <div class="flex items-center space-x-2 p-2.5 rounded-lg border ${esc(m.border)} ${esc(m.bg)}">
+            <div class="w-6 h-6 rounded-full bg-white ${esc(m.color)} flex items-center justify-center text-xs shadow-sm"><i class="${esc(m.icon)}"></i></div>
+            <div class="flex-1 min-w-0">
+                <p class="text-[11px] font-black ${esc(m.color)}">${esc(m.name)}</p>
+                <p class="text-[9px] text-slate-500 font-semibold">${esc(m.type)}</p>
+            </div>
+        </div>
+    `).join('');
 
-        // ============ ADMIN ============
-        function openAdmin() {
-            renderAdmin();
-            const ap = document.getElementById('admin-panel');
-            ap.classList.remove('pointer-events-none', 'opacity-0');
-            ap.classList.add('modal-open');
-        }
-        function closeAdmin() {
-            const ap = document.getElementById('admin-panel');
-            ap.classList.remove('modal-open'); ap.classList.add('opacity-0');
-            setTimeout(() => ap.classList.add('pointer-events-none'), 300);
-        }
+    const inputHTML = p.inputType ? `
+        <div class="mb-4">
+            <label class="text-xs font-bold text-slate-700 block mb-2"><i class="fas fa-edit mr-1 text-blue-600"></i>${esc(p.inputLabel)} <span class="text-red-500">*</span></label>
+            <input type="text" id="custom-input" class="w-full p-3 rounded-xl border-2 border-slate-200 text-sm font-bold" placeholder="${esc(p.inputPlaceholder)}" oninput="checkCustomInput()">
+        </div>
+    ` : '';
 
-        function switchTab(tab) {
-            currentTab = tab;
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('tab-' + tab).classList.add('active');
-            renderAdmin();
-        }
+    document.getElementById('modal-body').innerHTML = `
+        <div class="flex items-center space-x-4 mb-5">
+            <div class="h-16 w-16 ${esc(p.bg)} rounded-2xl flex items-center justify-center shrink-0"><i class="${esc(p.icon)} ${esc(p.color)} text-3xl"></i></div>
+            <div><h2 class="text-2xl font-black uppercase">${esc(p.title)}</h2><p class="text-sm font-semibold text-slate-500">${esc(p.subtitle)}</p></div>
+        </div>
+        ${inputHTML}
+        <div class="flex justify-between items-center bg-gradient-to-br from-slate-50 to-white p-4 rounded-2xl border border-slate-100 mb-5">
+            <div><p class="text-xs font-bold text-slate-400 uppercase mb-1">Total</p><div class="text-2xl font-black text-brandDark" id="modal-total-price">${formatPrice(p.priceUSD, 1)}</div></div>
+            <div class="flex items-center space-x-3 bg-white px-3 py-2 rounded-xl shadow-sm border border-slate-100">
+                <button onclick="changeQty(-1)" class="qty-btn w-8 h-8 bg-slate-100 rounded-lg font-black text-lg">−</button>
+                <span id="qty-display" class="font-black text-lg w-8 text-center">1</span>
+                <button onclick="changeQty(1)" class="qty-btn w-8 h-8 bg-brandDark text-white rounded-lg font-black text-lg">+</button>
+            </div>
+        </div>
+        <div class="mb-5">
+            <h3 class="text-xs font-bold text-brandDark uppercase tracking-widest mb-2">Payment (${esc(currentCurrency)})</h3>
+            <div class="grid grid-cols-2 gap-2">${methodsHTML}</div>
+        </div>
+        <button id="continue-btn" onclick="openCheckout()" class="w-full py-3.5 text-base font-black text-white bg-brandDark rounded-2xl shadow-lg flex items-center justify-center space-x-2 ${p.inputType ? 'opacity-40 cursor-not-allowed' : ''}" ${p.inputType ? 'disabled' : ''}>
+            <i class="fas fa-bolt text-yellow-400"></i><span>Continue</span>
+        </button>`;
 
-        function renderAdmin() {
-            const body = document.getElementById('admin-body');
-            if (currentTab === 'products') body.innerHTML = renderProductsTab();
-            else if (currentTab === 'payments') body.innerHTML = renderPaymentsTab();
-            else body.innerHTML = renderSettingsTab();
-        }
+    const m = document.getElementById('details-modal');
+    m.classList.remove('pointer-events-none', 'opacity-0');
+    m.classList.add('modal-open');
+}
 
-        function renderProductsTab() {
-            return `
-                <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3">Products (${products.length})</h3>
-                <div class="space-y-2 mb-4">
-                    ${products.map(p => `
-                        <div class="flex justify-between items-center bg-white border border-slate-200 p-3 rounded-xl shadow-sm">
-                            <div class="flex items-center space-x-3 flex-1">
-                                <div class="w-10 h-10 ${p.bg} rounded-lg flex items-center justify-center"><i class="${p.icon} ${p.color}"></i></div>
-                                <div class="flex-1"><p class="font-bold text-sm leading-tight">${p.title}</p><p class="text-xs text-slate-500">$${p.priceUSD}</p></div>
+function checkCustomInput() {
+    const p = products.find(x => x.id === activeProductId);
+    if (!p.inputType) return;
+    const val = document.getElementById('custom-input').value.trim();
+    const btn = document.getElementById('continue-btn');
+    if (val) { btn.disabled = false; btn.classList.remove('opacity-40','cursor-not-allowed'); }
+    else { btn.disabled = true; btn.classList.add('opacity-40','cursor-not-allowed'); }
+}
+
+function closeModal() {
+    const m = document.getElementById('details-modal');
+    m.classList.remove('modal-open'); m.classList.add('opacity-0');
+    setTimeout(() => m.classList.add('pointer-events-none'), 300);
+}
+
+// ============ CHECKOUT ============
+function openCheckout() {
+    const p = products.find(x => x.id === activeProductId);
+    let customValue = null;
+    if (p.inputType) {
+        const el = document.getElementById('custom-input');
+        if (el) {
+            customValue = el.value.trim();
+            if (!customValue) { showToast(p.inputLabel + ' required', 'bg-red-600'); return; }
+        }
+    }
+    closeModal();
+    const paySet = config.payments[userCountry] || config.payments.US;
+    const total = formatPrice(p.priceUSD, selectedQuantity);
+
+    const methodCards = paySet.methods.filter(m => m.enabled).map(m => {
+        let detailHTML = '';
+        if (m.bank) {
+            detailHTML = `<div class="mt-2 bg-white rounded-lg p-3 border border-slate-100 space-y-1.5">
+                <div><p class="text-[10px] font-bold text-slate-400 uppercase">Bank</p><p class="font-bold text-sm">${esc(m.bank)}</p></div>
+                <div><p class="text-[10px] font-bold text-slate-400 uppercase">Account</p>
+                    <div class="flex items-center justify-between"><p class="font-black text-sm text-brandDark">${esc(m.account)}</p>
+                    <button onclick="copyText('${esc(m.account)}','Account')" class="copy-btn w-7 h-7 rounded-lg ${esc(m.bg)} ${esc(m.color)} flex items-center justify-center"><i class="fas fa-copy text-[10px]"></i></button></div>
+                </div>
+                <div><p class="text-[10px] font-bold text-slate-400 uppercase">Name</p><p class="font-bold text-sm">${esc(m.holder)}</p></div>
+            </div>`;
+        } else if (m.network) {
+            detailHTML = `<div class="mt-2 bg-white rounded-lg p-3 border border-slate-100 space-y-1.5">
+                <div><p class="text-[10px] font-bold text-slate-400 uppercase">Network</p><p class="font-bold text-sm">${esc(m.network)}</p></div>
+                <div><p class="text-[10px] font-bold text-slate-400 uppercase">Wallet</p>
+                    <div class="flex items-start justify-between gap-2"><p class="font-mono text-[10px] text-brandDark break-all leading-tight">${esc(m.account)}</p>
+                    <button onclick="copyText('${esc(m.account)}','Wallet')" class="copy-btn shrink-0 w-7 h-7 rounded-lg ${esc(m.bg)} ${esc(m.color)} flex items-center justify-center"><i class="fas fa-copy text-[10px]"></i></button></div>
+                </div>
+            </div>`;
+        } else {
+            detailHTML = `<div class="mt-2 bg-white rounded-lg p-3 border border-slate-100">
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Number</p>
+                <div class="flex items-center justify-between"><p class="font-black text-base text-brandDark tracking-wide">${esc(m.account)}</p>
+                <button onclick="copyText('${esc(m.account)}','Number')" class="copy-btn w-8 h-8 rounded-lg ${esc(m.bg)} ${esc(m.color)} flex items-center justify-center"><i class="fas fa-copy text-xs"></i></button></div>
+            </div>`;
+        }
+        return `<div class="bg-white border ${esc(m.border)} rounded-2xl p-4">
+            <div class="flex items-center space-x-3 mb-1">
+                <div class="w-10 h-10 rounded-xl ${esc(m.bg)} ${esc(m.color)} flex items-center justify-center text-lg"><i class="${esc(m.icon)}"></i></div>
+                <div class="flex-1"><p class="font-black text-sm ${esc(m.color)}">${esc(m.name)}</p><p class="text-[10px] text-slate-500 font-bold uppercase">${esc(m.type)}</p></div>
+                <span class="text-[10px] font-black px-2 py-1 rounded-md ${esc(m.bg)} ${esc(m.color)}">SEND</span>
+            </div>
+            ${detailHTML}
+        </div>`;
+    }).join('');
+
+    const customDisplay = customValue ? `<div class="bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-3 mb-3">
+        <p class="text-[10px] font-bold text-indigo-500 uppercase mb-1"><i class="fas fa-edit mr-1"></i>${esc(p.inputLabel)}</p>
+        <p class="font-black text-indigo-900 text-sm break-all">${esc(customValue)}</p>
+    </div>` : '';
+
+    document.getElementById('checkout-body').innerHTML = `
+        <div class="text-center mb-4">
+            <h2 class="text-2xl font-black text-brandDark">Complete Payment</h2>
+            <p class="text-xs text-slate-500 font-semibold mt-1">Send money, upload screenshot</p>
+        </div>
+        <div class="bg-brandDark rounded-2xl p-4 mb-3 text-white">
+            <div class="flex items-center space-x-3 mb-2">
+                <div class="w-10 h-10 ${esc(p.bg)} rounded-xl flex items-center justify-center"><i class="${esc(p.icon)} ${esc(p.color)}"></i></div>
+                <div><p class="font-black text-sm">${esc(p.title)}</p><p class="text-[11px] text-slate-300">Qty: ${selectedQuantity}</p></div>
+            </div>
+            <div class="border-t border-white/10 pt-2 flex justify-between items-end">
+                <div><p class="text-[10px] font-bold text-slate-300 uppercase">Amount</p><p class="text-2xl font-black text-yellow-400">${total}</p></div>
+                <button onclick="copyText('${total.replace(/[^0-9.]/g,'')}','Amount')" class="copy-btn px-3 py-1.5 bg-white/10 rounded-lg text-xs font-bold"><i class="fas fa-copy mr-1"></i>Copy</button>
+            </div>
+        </div>
+        ${customDisplay}
+        <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Send Payment To:</h3>
+        <div class="space-y-2 mb-4">${methodCards}</div>
+
+        <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-2"><i class="fas fa-camera mr-1"></i>Upload Screenshot</h3>
+        <div class="bg-slate-50 border-2 border-dashed border-slate-300 rounded-2xl p-4 text-center mb-3 upload-zone" id="upload-zone">
+            <input type="file" id="screenshot-input" accept="image/*" class="hidden" onchange="handleScreenshot(this)">
+            <label for="screenshot-input" class="cursor-pointer block">
+                <div id="upload-icon"><i class="fas fa-cloud-upload-alt text-2xl text-slate-400 mb-1"></i></div>
+                <p id="upload-text" class="font-bold text-xs text-brandDark">Click to upload</p>
+                <p id="upload-hint" class="text-[10px] text-slate-500 mt-0.5">Auto scan (no upload)</p>
+            </label>
+            <img id="preview" class="hidden mx-auto mt-3 max-h-32 rounded-lg shadow" />
+            <div id="scan-result" class="hidden mt-3"></div>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-3">
+            <p class="text-[10px] text-blue-900 font-semibold mb-1"><b>Your phone number (optional):</b></p>
+            <input type="tel" id="user-phone" placeholder="01XXXXXXXXX" class="w-full p-2.5 rounded-lg border-2 border-blue-200 font-bold text-sm">
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-3">
+            <p class="text-[10px] text-amber-900 font-semibold leading-relaxed">
+                <i class="fas fa-exclamation-triangle mr-1"></i>
+                <b>Note:</b> Screenshot কোথাও save হবে না — শুধু text পড়া হবে। Admin verify করবে। WhatsApp-এ নিজে screenshot পাঠাতে হবে।
+            </p>
+        </div>
+
+        <button id="submit-btn" onclick="submitOrder()" disabled
+            class="w-full py-3.5 text-base font-black text-white bg-brandDark rounded-2xl shadow-lg opacity-40 cursor-not-allowed flex items-center justify-center space-x-2">
+            <i class="fas fa-paper-plane"></i><span>Submit Order</span>
+        </button>
+    `;
+
+    _pendingOrder = {
+        productId: p.id, productTitle: p.title,
+        quantity: selectedQuantity, amount: total,
+        amountNumeric: roundPrice(p.priceUSD * currentRate * selectedQuantity),
+        region: userCountry, currency: currentCurrency,
+        customValue: customValue, customLabel: p.inputType ? p.inputLabel : null
+    };
+    selectedFile = null;
+    extractedData = null;
+
+    const cm = document.getElementById('checkout-modal');
+    cm.classList.remove('pointer-events-none', 'opacity-0'); cm.classList.add('modal-open');
+}
+
+function closeCheckout() {
+    const m = document.getElementById('checkout-modal');
+    m.classList.remove('modal-open'); m.classList.add('opacity-0');
+    setTimeout(() => m.classList.add('pointer-events-none'), 300);
+}
+
+async function handleScreenshot(input) {
+    selectedFile = input.files[0];
+    if (!selectedFile) return;
+    const preview = document.getElementById('preview');
+    preview.src = URL.createObjectURL(selectedFile);
+    preview.classList.remove('hidden');
+    document.getElementById('upload-icon').innerHTML = '<i class="fas fa-spinner fa-spin text-2xl text-blue-500 mb-1"></i>';
+    document.getElementById('upload-text').innerText = 'Preparing scanner...';
+    document.getElementById('upload-text').className = 'font-bold text-xs text-blue-600';
+    document.getElementById('upload-hint').innerText = 'First scan may take 10–20s';
+    document.getElementById('scan-result').classList.add('hidden');
+
+    try {
+        const result = await Tesseract.recognize(selectedFile, 'eng+ben', {
+            logger: m => {
+                if (m.status === 'recognizing text') {
+                    document.getElementById('upload-hint').innerText = `Scanning... ${Math.round(m.progress * 100)}%`;
+                } else if (m.status && m.status.includes('loading')) {
+                    document.getElementById('upload-hint').innerText = 'Loading OCR engine (~10MB, first time)...';
+                }
+            }
+        });
+        extractedData = extractPaymentInfo(result.data.text, _pendingOrder);
+        document.getElementById('upload-icon').innerHTML = '<i class="fas fa-check-circle text-2xl text-green-500 mb-1"></i>';
+        document.getElementById('upload-text').innerText = 'Scanned ✓ (hint only)';
+        document.getElementById('upload-text').className = 'font-bold text-xs text-green-600';
+        document.getElementById('upload-hint').innerText = 'Admin will verify manually';
+        renderScanResult(extractedData);
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = false;
+        btn.classList.remove('opacity-40','cursor-not-allowed');
+        showToast('Scanned ✓', 'bg-green-600');
+    } catch (err) {
+        console.error('OCR failed:', err);
+        document.getElementById('upload-icon').innerHTML = '<i class="fas fa-exclamation-triangle text-2xl text-amber-500 mb-1"></i>';
+        document.getElementById('upload-text').innerText = 'Scan failed — still can submit';
+        document.getElementById('upload-text').className = 'font-bold text-xs text-amber-600';
+        document.getElementById('upload-hint').innerText = 'Attach screenshot in WhatsApp manually';
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = false;
+        btn.classList.remove('opacity-40','cursor-not-allowed');
+    }
+}
+
+function extractPaymentInfo(text, order) {
+    const info = { raw: text.substring(0, 500), amount: null, trxId: null, sender: null, time: null, method: null, matchesAmount: false };
+    const expectedAmount = parseFloat(order.amountNumeric);
+
+    const amountPatterns = [
+        /(?:৳|Tk\.?|BDT|Amount[:\s]+|মোট|টাকা)\s*([0-9,]+\.?[0-9]*)/i,
+        /([0-9,]+\.?[0-9]*)\s*(?:৳|Tk|BDT|টাকা)/i,
+        /(?:total|paid|amount)[^\d]*([0-9,]+\.?[0-9]*)/i
+    ];
+    for (const pat of amountPatterns) {
+        const m = text.match(pat);
+        if (m) {
+            info.amount = m[1].replace(/,/g, '');
+            const got = parseFloat(info.amount);
+            const tolerance = Math.max(0.5, expectedAmount * 0.02);
+            if (Math.abs(got - expectedAmount) <= tolerance) info.matchesAmount = true;
+            break;
+        }
+    }
+
+    const trxPatterns = [/(?:Trx\s*ID|Transaction\s*ID|Txn\s*ID|TrxId|ট্রানজেকশন)[:\s]*([A-Z0-9]{6,20})/i, /(?:Ref|Reference)[:\s]*([A-Z0-9]{6,20})/i];
+    for (const pat of trxPatterns) {
+        const m = text.match(pat);
+        if (m) { info.trxId = m[1]; break; }
+    }
+
+    const ownNumbers = Object.values(config.payments).flatMap(p => p.methods.map(m => m.account).filter(a => /^01\d+$/.test(a || '')));
+    const phoneMatches = text.match(/(?:\+?8801[3-9]\d{8}|01[3-9]\d{8})/g) || [];
+    info.sender = phoneMatches.find(p => !ownNumbers.includes(p.replace(/^\+?880/, '0'))) || null;
+
+    const timePatterns = [/(\d{1,2}:\d{2}(?::\d{2})?\s*(?:AM|PM|am|pm)?)/];
+    for (const pat of timePatterns) {
+        const m = text.match(pat);
+        if (m) { info.time = m[1].trim(); break; }
+    }
+    const datePatterns = [/(\d{1,2}[\s\/\-](?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[\s\/\-]\d{2,4})/i, /(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/];
+    for (const pat of datePatterns) {
+        const m = text.match(pat);
+        if (m) { info.date = m[1]; break; }
+    }
+    const lower = text.toLowerCase();
+    if (lower.includes('bkash') || lower.includes('bikash') || lower.includes('বিকাশ')) info.method = 'bKash';
+    else if (lower.includes('nagad') || lower.includes('নগদ')) info.method = 'Nagad';
+    else if (lower.includes('opay')) info.method = 'OPay';
+    else if (lower.includes('usdt') || lower.includes('tether')) info.method = 'USDT';
+    else if (lower.includes('bank')) info.method = 'Bank';
+    return info;
+}
+
+function renderScanResult(info) {
+    const el = document.getElementById('scan-result');
+    let rows = '';
+    const sym = symbolForMethod(info.method);
+    if (info.amount) {
+        const color = info.matchesAmount ? 'text-green-600' : 'text-red-600';
+        const icon = info.matchesAmount ? 'fa-check-circle' : 'fa-exclamation-circle';
+        rows += `<div class="flex justify-between items-center bg-white rounded p-1.5 border border-slate-100">
+            <span class="text-[10px] font-bold text-slate-600"><i class="fas fa-money-bill text-green-500 mr-1"></i>Amount</span>
+            <span class="text-xs font-black ${color}"><i class="fas ${icon} mr-1 text-[9px]"></i>${sym}${esc(info.amount)}</span>
+        </div>`;
+    }
+    if (info.trxId) rows += `<div class="flex justify-between items-center bg-white rounded p-1.5 border border-slate-100">
+        <span class="text-[10px] font-bold text-slate-600"><i class="fas fa-key text-blue-500 mr-1"></i>TrxID</span>
+        <span class="text-[10px] font-mono font-black text-brandDark">${esc(info.trxId)}</span></div>`;
+    if (info.sender) rows += `<div class="flex justify-between items-center bg-white rounded p-1.5 border border-slate-100">
+        <span class="text-[10px] font-bold text-slate-600"><i class="fas fa-phone text-purple-500 mr-1"></i>From</span>
+        <span class="text-[10px] font-mono font-black text-brandDark">${esc(info.sender)}</span></div>`;
+    if (info.time) rows += `<div class="flex justify-between items-center bg-white rounded p-1.5 border border-slate-100">
+        <span class="text-[10px] font-bold text-slate-600"><i class="fas fa-clock text-amber-500 mr-1"></i>Time</span>
+        <span class="text-[10px] font-black text-brandDark">${esc(info.time)}</span></div>`;
+    if (info.method) rows += `<div class="flex justify-between items-center bg-white rounded p-1.5 border border-slate-100">
+        <span class="text-[10px] font-bold text-slate-600"><i class="fas fa-credit-card text-pink-500 mr-1"></i>Method</span>
+        <span class="text-[10px] font-black text-brandDark">${esc(info.method)}</span></div>`;
+    el.innerHTML = `<div class="bg-green-50 border border-green-200 rounded-xl p-2 text-left">
+        <p class="text-[10px] font-black text-green-900 mb-1"><i class="fas fa-robot mr-1"></i>Extracted (hint only):</p>
+        <div class="space-y-1">${rows || '<p class="text-[10px] text-slate-500 text-center">No data extracted</p>'}</div>
+        ${info.amount && !info.matchesAmount ? '<p class="text-[9px] text-red-600 font-bold mt-1"><i class="fas fa-exclamation-triangle mr-1"></i>Mismatch! Expected ' + esc(_pendingOrder.amount) + '</p>' : ''}
+    </div>`;
+    el.classList.remove('hidden');
+}
+
+// ============ SUBMIT ORDER (TEXT-ONLY) ============
+async function submitOrder() {
+    if (!selectedFile) return showToast('Upload screenshot first', 'bg-red-600');
+
+    if (extractedData && extractedData.trxId) {
+        const dup = cachedOrders.some(o => o.extracted?.trxId === extractedData.trxId);
+        if (dup) {
+            return showToast('⚠️ This TrxID was already used. Contact support.', 'bg-red-600');
+        }
+    }
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i><span>Saving...</span>`;
+
+    const orderId = 'ORD-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
+    const userPhone = document.getElementById('user-phone').value.trim();
+
+    // Save text-only to Firestore
+    try {
+        const { db, addDoc, serverTimestamp, collection } = window.__fb;
+        await addDoc(collection(db, 'orders'), {
+            orderId,
+            productId: _pendingOrder.productId,
+            productTitle: _pendingOrder.productTitle,
+            quantity: _pendingOrder.quantity,
+            amount: _pendingOrder.amount,
+            amountNumeric: _pendingOrder.amountNumeric,
+            currency: _pendingOrder.currency,
+            region: _pendingOrder.region,
+            customValue: _pendingOrder.customValue,
+            customLabel: _pendingOrder.customLabel,
+            userPhone: userPhone || null,
+            extracted: extractedData,
+            status: 'pending',
+            createdAt: serverTimestamp()
+        });
+        console.log('✅ Order + scanned text saved');
+    } catch (e) {
+        console.error('Firestore save failed:', e);
+        showToast('Save failed — WhatsApp will still open', 'bg-amber-600');
+    }
+
+    const order = { orderId, ..._pendingOrder, userPhone, extracted: extractedData, createdAt: Date.now(), status: 'pending' };
+    localOrders[orderId] = order;
+    save('naim_local_orders', localOrders);
+    _lastOrderId = orderId;
+
+    let msg = `🦅 *NEW ORDER*\n\n`;
+    msg += `📋 Order: *${orderId}*\n`;
+    msg += `📦 ${_pendingOrder.productTitle}\n`;
+    msg += `🔢 Qty: ${_pendingOrder.quantity}\n`;
+    msg += `💰 Amount: ${_pendingOrder.amount}\n`;
+    msg += `🌍 Region: ${_pendingOrder.region}\n`;
+    if (_pendingOrder.customValue) msg += `✏️ ${_pendingOrder.customLabel}: *${_pendingOrder.customValue}*\n`;
+    if (userPhone) msg += `📱 Phone: ${userPhone}\n`;
+
+    if (extractedData && (extractedData.amount || extractedData.trxId || extractedData.sender)) {
+        msg += `\n📸 *SCREENSHOT TEXT (auto-read):*\n`;
+        if (extractedData.amount) msg += `${extractedData.matchesAmount ? '✅' : '⚠️'} Amount: ${symbolForMethod(extractedData.method)}${extractedData.amount}\n`;
+        if (extractedData.trxId) msg += `🔑 TrxID: ${extractedData.trxId}\n`;
+        if (extractedData.sender) msg += `📱 From: ${extractedData.sender}\n`;
+        if (extractedData.time) msg += `🕐 Time: ${extractedData.time}\n`;
+        if (extractedData.date) msg += `📅 Date: ${extractedData.date}\n`;
+        if (extractedData.method) msg += `💳 Method: ${extractedData.method}\n`;
+    }
+
+    msg += `\n📎 *Screenshot attached in next message*\n`;
+    msg += `✅ Please confirm and send my account.`;
+
+    _lastWaUrl = `https://wa.me/${config.whatsappNumber.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(msg)}`;
+
+    closeCheckout();
+    showSuccessModal(orderId);
+}
+
+function showSuccessModal(orderId) {
+    document.getElementById('success-order-id').textContent = orderId;
+    document.getElementById('success-wa-btn').href = _lastWaUrl || '#';
+    const m = document.getElementById('success-modal');
+    m.classList.remove('pointer-events-none', 'opacity-0');
+    m.classList.add('modal-open');
+}
+function closeSuccess() {
+    const m = document.getElementById('success-modal');
+    m.classList.remove('modal-open'); m.classList.add('opacity-0');
+    setTimeout(() => m.classList.add('pointer-events-none'), 300);
+}
+function copyOrderId() { copyText(_lastOrderId, 'Order ID'); }
+
+// ============ ADMIN ============
+function openAdmin() {
+    if (isAdminLoggedIn) {
+        renderAdmin();
+        const ap = document.getElementById('admin-panel');
+        ap.classList.remove('pointer-events-none', 'opacity-0');
+        ap.classList.add('modal-open');
+    } else {
+        document.getElementById('admin-login').classList.remove('pointer-events-none', 'opacity-0');
+        setTimeout(() => document.getElementById('admin-email').focus(), 100);
+    }
+}
+function closeAdminLogin() {
+    document.getElementById('admin-login').classList.add('pointer-events-none', 'opacity-0');
+    document.getElementById('admin-pass').value = '';
+    document.getElementById('login-error').classList.add('hidden');
+}
+function togglePass() {
+    const p = document.getElementById('admin-pass');
+    const i = document.getElementById('eye-icon');
+    if (p.type === 'password') { p.type = 'text'; i.className = 'fas fa-eye-slash'; }
+    else { p.type = 'password'; i.className = 'fas fa-eye'; }
+}
+
+async function doAdminLogin(e) {
+    e.preventDefault();
+    const btn = document.getElementById('login-btn');
+    const err = document.getElementById('login-error');
+    err.classList.add('hidden');
+    btn.disabled = true;
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i>Logging in...`;
+    try {
+        const { auth, signInWithEmailAndPassword } = window.__fb;
+        await signInWithEmailAndPassword(auth, document.getElementById('admin-email').value, document.getElementById('admin-pass').value);
+        isAdminLoggedIn = true;
+        document.getElementById('admin-pass').value = '';
+        closeAdminLogin();
+        showToast('Welcome, admin ✓', 'bg-green-600');
+        renderAdmin();
+        const ap = document.getElementById('admin-panel');
+        ap.classList.remove('pointer-events-none', 'opacity-0');
+        ap.classList.add('modal-open');
+    } catch (e) {
+        let msg = 'Login failed';
+        if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') msg = 'Wrong credentials';
+        if (e.code === 'auth/user-not-found') msg = 'Email not found';
+        if (e.code === 'auth/invalid-email') msg = 'Invalid email';
+        err.innerText = msg;
+        err.classList.remove('hidden');
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fas fa-arrow-right-to-bracket mr-1"></i> Login`;
+    }
+}
+
+function closeAdmin() {
+    const ap = document.getElementById('admin-panel');
+    ap.classList.remove('modal-open'); ap.classList.add('opacity-0');
+    setTimeout(() => ap.classList.add('pointer-events-none'), 300);
+}
+async function logoutAdmin() {
+    if (!confirm('Logout?')) return;
+    const { auth, signOut } = window.__fb;
+    await signOut(auth);
+    isAdminLoggedIn = false;
+    closeAdmin();
+    showToast('Logged out', 'bg-slate-700');
+}
+function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    renderAdmin();
+}
+
+async function renderAdmin() {
+    const body = document.getElementById('admin-body');
+    if (currentTab === 'orders') {
+        body.innerHTML = `<p class="text-center text-slate-400 py-8"><i class="fas fa-spinner fa-spin text-2xl"></i></p>`;
+        try {
+            const { db, getDocs, collection, query, orderBy } = window.__fb;
+            const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+            const snap = await getDocs(q);
+            const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            if (!list.length) { body.innerHTML = `<p class="text-center text-slate-400 py-8 font-bold">No orders yet</p>`; return; }
+            body.innerHTML = `
+                <p class="text-xs font-bold text-slate-500 mb-3">${list.length} orders</p>
+                <div class="space-y-2">
+                    ${list.map(o => `
+                        <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-sm">
+                            <div class="flex justify-between items-start mb-1">
+                                <p class="font-bold text-xs">${esc(o.orderId)}</p>
+                                <span class="text-[10px] font-black px-2 py-0.5 rounded ${o.status === 'delivered' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">
+                                    ${esc((o.status || 'pending').toUpperCase())}
+                                </span>
                             </div>
-                            <button onclick="deleteProduct(${p.id})" class="text-red-500 bg-red-50 p-2 rounded-lg hover:bg-red-100"><i class="fas fa-trash-alt"></i></button>
-                        </div>`).join('') || '<p class="text-xs text-slate-400 text-center py-4">No products</p>'}
-                </div>
-                <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3 mt-6">Add Product</h3>
-                <div class="space-y-2 bg-slate-50 p-4 rounded-2xl border border-slate-200">
-                    <input type="text" id="add-title" placeholder="Title" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold">
-                    <input type="text" id="add-subtitle" placeholder="Subtitle" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold">
-                    <input type="number" step="0.01" id="add-price" placeholder="Price USD" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold">
-                    <button onclick="addNewProduct()" class="w-full py-3 bg-brandDark text-white font-bold rounded-xl shadow-md">+ Add Product</button>
+                            <p class="text-[11px] text-slate-600 font-semibold">${esc(o.productTitle)} × ${esc(o.quantity)} — ${esc(o.amount)}</p>
+                            ${o.customValue ? `<p class="text-[10px] text-indigo-600 font-bold">✏️ ${esc(o.customLabel)}: ${esc(o.customValue)}</p>` : ''}
+                            ${o.userPhone ? `<p class="text-[10px] text-slate-500">📱 ${esc(o.userPhone)}</p>` : ''}
+                            ${o.extracted && (o.extracted.amount || o.extracted.trxId) ? `
+                                <div class="mt-2 bg-green-50 border border-green-200 rounded-lg p-2">
+                                    <p class="text-[9px] font-black text-green-900 mb-1">📸 SCANNED FROM SCREENSHOT:</p>
+                                    <div class="space-y-0.5 text-[10px]">
+                                        ${o.extracted.amount ? `<p class="text-green-700"><b>Amount:</b> ${esc(o.extracted.amount)}</p>` : ''}
+                                        ${o.extracted.trxId ? `<p class="text-green-700"><b>TrxID:</b> ${esc(o.extracted.trxId)}</p>` : ''}
+                                        ${o.extracted.sender ? `<p class="text-green-700"><b>From:</b> ${esc(o.extracted.sender)}</p>` : ''}
+                                        ${o.extracted.time ? `<p class="text-green-700"><b>Time:</b> ${esc(o.extracted.time)}</p>` : ''}
+                                        ${o.extracted.method ? `<p class="text-green-700"><b>Method:</b> ${esc(o.extracted.method)}</p>` : ''}
+                                    </div>
+                                </div>
+                            ` : '<p class="text-[10px] text-amber-600 mt-1">⚠️ No text extracted from screenshot</p>'}
+                            ${o.status !== 'delivered' ? `<button onclick="markDelivered('${esc(o.id)}')" class="mt-2 w-full py-1.5 bg-green-500 text-white text-[10px] font-bold rounded-lg"><i class="fas fa-check mr-1"></i>Mark Delivered</button>` : ''}
+                        </div>`).join('')}
                 </div>`;
+        } catch (e) {
+            body.innerHTML = `<p class="text-red-600 text-center py-8 font-bold">${esc(e.message)}</p>`;
         }
+    } else if (currentTab === 'products') {
+        body.innerHTML = renderProductsTab();
+    } else if (currentTab === 'payments') {
+        body.innerHTML = renderPaymentsTab();
+    } else if (currentTab === 'support') {
+        body.innerHTML = renderSupportTab();
+    } else {
+        body.innerHTML = renderSettingsTab();
+    }
+}
 
-        function renderPaymentsTab() {
-            const regions = ['BD','NG','US'];
+async function markDelivered(docId) {
+    try {
+        const { db, doc, updateDoc } = window.__fb;
+        await updateDoc(doc(db, 'orders', docId), { status: 'delivered' });
+        showToast('Marked as delivered ✓', 'bg-green-600');
+        renderAdmin();
+    } catch (e) {
+        showToast('Failed: ' + e.message, 'bg-red-600');
+    }
+}
+
+function renderProductsTab() {
+    return `
+        <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3">Products (${products.length})</h3>
+        <div class="space-y-2 mb-4">
+            ${products.map(p => `
+                <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                    <div class="flex justify-between items-center p-3">
+                        <div class="flex items-center space-x-3 flex-1">
+                            <div class="w-10 h-10 ${esc(p.bg)} rounded-lg flex items-center justify-center"><i class="${esc(p.icon)} ${esc(p.color)}"></i></div>
+                            <div class="flex-1"><p class="font-bold text-sm leading-tight">${esc(p.title)}</p><p class="text-xs text-slate-500">$${esc(p.priceUSD)} ${p.inputType ? '· '+esc(p.inputLabel) : ''}</p></div>
+                        </div>
+                        <button onclick="deleteProduct(${p.id})" class="text-red-500 bg-red-50 p-2 rounded-lg hover:bg-red-100"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                    <div class="bg-slate-50 px-3 py-2 border-t border-slate-100">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase mb-1 block">Details</label>
+                        <textarea onchange="updateProductDetails(${p.id}, this.value)" rows="2" class="w-full p-2 text-xs rounded-lg border border-slate-200">${esc(p.details || '')}</textarea>
+                    </div>
+                </div>`).join('')}
+        </div>
+        <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3 mt-4">Add Product</h3>
+        <div class="space-y-2 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+            <input type="text" id="add-title" placeholder="Title" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold">
+            <input type="text" id="add-subtitle" placeholder="Subtitle" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold">
+            <input type="number" step="0.01" id="add-price" placeholder="Price USD" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold">
+            <textarea id="add-details" rows="2" placeholder="Details" class="w-full p-3 rounded-xl border border-slate-200 text-sm"></textarea>
+            <select id="add-input-type" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold">
+                <option value="">No custom input</option>
+                <option value="name">Name input</option>
+                <option value="page_name">Page name input</option>
+            </select>
+            <button onclick="addNewProduct()" class="w-full py-3 bg-brandDark text-white font-bold rounded-xl shadow-md">+ Add Product</button>
+        </div>`;
+}
+
+function renderPaymentsTab() {
+    const regions = ['BD','NG','US'];
+    return `
+        <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3">Payment Accounts</h3>
+        ${regions.map(r => {
+            const set = config.payments[r];
             return `
-                <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3">Payment Accounts</h3>
-                ${regions.map(r => {
-                    const set = config.payments[r];
-                    return `
-                        <div class="mb-4 bg-slate-50 rounded-2xl p-4 border border-slate-200">
-                            <p class="font-black text-sm mb-3">${set.label} (${r})</p>
-                            <div class="space-y-2">
-                                ${set.methods.map((m, i) => `
-                                    <div class="bg-white rounded-xl p-3 border border-slate-100">
-                                        <div class="flex items-center justify-between mb-2">
-                                            <div class="flex items-center gap-2"><i class="${m.icon} ${m.color}"></i><span class="font-bold text-sm">${m.name}</span></div>
-                                            <label class="relative inline-flex items-center cursor-pointer">
-                                                <input type="checkbox" ${m.enabled?'checked':''} onchange="toggleMethod('${r}',${i},this.checked)" class="sr-only peer">
-                                                <div class="w-9 h-5 bg-slate-200 peer-checked:bg-green-500 rounded-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition peer-checked:after:translate-x-4"></div>
-                                            </label>
-                                        </div>
-                                        ${m.bank ? `<input type="text" value="${m.bank}" placeholder="Bank name" onchange="updateMethod('${r}',${i},'bank',this.value)" class="w-full p-2 text-xs rounded-lg border mb-1">` : ''}
-                                        ${m.holder ? `<input type="text" value="${m.holder}" placeholder="Account holder" onchange="updateMethod('${r}',${i},'holder',this.value)" class="w-full p-2 text-xs rounded-lg border mb-1">` : ''}
-                                        ${m.network ? `<input type="text" value="${m.network}" placeholder="Network" onchange="updateMethod('${r}',${i},'network',this.value)" class="w-full p-2 text-xs rounded-lg border mb-1">` : ''}
-                                        <input type="text" value="${m.account}" placeholder="Account / Wallet" onchange="updateMethod('${r}',${i},'account',this.value)" class="w-full p-2 text-xs rounded-lg border font-mono">
-                                    </div>`).join('')}
-                            </div>
-                        </div>`;
-                }).join('')}`;
-        }
+                <div class="mb-4 bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                    <p class="font-black text-sm mb-3">${esc(set.label)} (${r})</p>
+                    <div class="space-y-2">
+                        ${set.methods.map((m, i) => `
+                            <div class="bg-white rounded-xl p-3 border border-slate-100">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center gap-2"><i class="${esc(m.icon)} ${esc(m.color)}"></i><span class="font-bold text-sm">${esc(m.name)}</span></div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" ${m.enabled?'checked':''} onchange="toggleMethod('${r}',${i},this.checked)" class="sr-only peer">
+                                        <div class="w-9 h-5 bg-slate-200 peer-checked:bg-green-500 rounded-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition peer-checked:after:translate-x-4"></div>
+                                    </label>
+                                </div>
+                                ${m.bank ? `<input type="text" value="${esc(m.bank)}" placeholder="Bank" onchange="updateMethod('${r}',${i},'bank',this.value)" class="w-full p-2 text-xs rounded-lg border mb-1">` : ''}
+                                ${m.holder ? `<input type="text" value="${esc(m.holder)}" placeholder="Holder" onchange="updateMethod('${r}',${i},'holder',this.value)" class="w-full p-2 text-xs rounded-lg border mb-1">` : ''}
+                                ${m.network ? `<input type="text" value="${esc(m.network)}" placeholder="Network" onchange="updateMethod('${r}',${i},'network',this.value)" class="w-full p-2 text-xs rounded-lg border mb-1">` : ''}
+                                <input type="text" value="${esc(m.account)}" placeholder="Account" onchange="updateMethod('${r}',${i},'account',this.value)" class="w-full p-2 text-xs rounded-lg border font-mono">
+                            </div>`).join('')}
+                    </div>
+                </div>`;
+        }).join('')}
+        <button onclick="saveConfigToFirebase()" class="w-full py-3 bg-green-600 text-white font-bold rounded-xl shadow-md mt-4">
+            <i class="fas fa-cloud-upload-alt mr-1"></i>Save Payments
+        </button>`;
+}
 
-        function renderSettingsTab() {
-            return `
-                <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3">WhatsApp Settings</h3>
-                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-6">
-                    <label class="text-xs font-bold text-slate-600 mb-1 block">WhatsApp Number (with country code, no +)</label>
-                    <input type="text" value="${config.whatsappNumber}" placeholder="8801773204904" onchange="config.whatsappNumber=this.value.replace(/[^0-9]/g,'');persistAll();showToast('Saved ✓','bg-green-600')" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold font-mono mb-2">
-                    <p class="text-[10px] text-slate-500 font-semibold">Example: 8801773204904</p>
-                </div>
+function renderSupportTab() {
+    const s = config.support;
+    return `
+        <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3">Support Info</h3>
+        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-4 space-y-3">
+            <div><label class="text-[10px] font-bold text-slate-600 mb-1 block">WhatsApp</label>
+                <input type="text" value="${esc(s.whatsapp||'')}" onchange="updateSupport('whatsapp',this.value)" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold font-mono"></div>
+            <div><label class="text-[10px] font-bold text-slate-600 mb-1 block">Telegram</label>
+                <input type="text" value="${esc(s.telegram||'')}" onchange="updateSupport('telegram',this.value)" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold font-mono"></div>
+            <div><label class="text-[10px] font-bold text-slate-600 mb-1 block">Email</label>
+                <input type="email" value="${esc(s.email||'')}" onchange="updateSupport('email',this.value)" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold"></div>
+        </div>
+        <button onclick="saveConfigToFirebase()" class="w-full py-3 bg-green-600 text-white font-bold rounded-xl shadow-md">
+            <i class="fas fa-cloud-upload-alt mr-1"></i>Save Support
+        </button>`;
+}
 
-                <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3">Reset</h3>
-                <button onclick="resetAll()" class="w-full py-3 bg-red-500 text-white font-bold rounded-xl shadow-md mb-2"><i class="fas fa-rotate-left mr-2"></i>Reset All to Default</button>
-                <p class="text-[10px] text-slate-400 text-center">This will clear all saved data (products, payments, settings)</p>`;
-        }
+function renderSettingsTab() {
+    return `
+        <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3">WhatsApp Settings</h3>
+        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-6">
+            <label class="text-xs font-bold text-slate-600 mb-1 block">WhatsApp Number (no +)</label>
+            <input type="text" value="${esc(config.whatsappNumber)}" placeholder="8801773204904" onchange="config.whatsappNumber=this.value.replace(/[^0-9]/g,'');persistAll();showToast('Saved ✓','bg-green-600')" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold font-mono mb-2">
+        </div>
+        <button onclick="saveConfigToFirebase()" class="w-full py-3 bg-green-600 text-white font-bold rounded-xl shadow-md mb-2">
+            <i class="fas fa-cloud-upload-alt mr-1"></i>Save Settings
+        </button>
+        <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3 mt-6">Danger</h3>
+        <button onclick="resetAll()" class="w-full py-3 bg-red-500 text-white font-bold rounded-xl shadow-md">
+            <i class="fas fa-rotate-left mr-2"></i>Reset Local Data
+        </button>
+        <p class="text-[10px] text-slate-400 text-center mt-2">Firestore data is not deleted</p>`;
+}
 
-        function toggleMethod(region, idx, val) {
-            config.payments[region].methods[idx].enabled = val;
-            persistAll();
-        }
-        function updateMethod(region, idx, field, val) {
-            config.payments[region].methods[idx][field] = val;
-            persistAll();
-        }
-        function addNewProduct() {
-            const title = document.getElementById('add-title').value.trim();
-            const subtitle = document.getElementById('add-subtitle').value.trim() || 'Digital Asset';
-            const price = parseFloat(document.getElementById('add-price').value);
-            if (!title || isNaN(price)) { showToast('Title & price required', 'bg-red-600'); return; }
-            products.push({ id: Date.now(), title, subtitle, priceUSD: price, icon: 'fas fa-box', color: 'text-slate-600', bg: 'bg-slate-100' });
-            persistAll();
-            document.getElementById('add-title').value = '';
-            document.getElementById('add-subtitle').value = '';
-            document.getElementById('add-price').value = '';
-            renderGrid(); renderAdmin();
-            showToast('Product added ✓', 'bg-green-600');
-        }
-        function deleteProduct(id) {
-            products = products.filter(p => p.id !== id);
-            persistAll(); renderGrid(); renderAdmin();
-            showToast('Deleted', 'bg-red-600');
-        }
-        function resetAll() {
-            if (!confirm('সব ডাটা reset হবে। নিশ্চিত?')) return;
-            localStorage.removeItem('naim_config');
-            localStorage.removeItem('naim_products');
-            config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
-            products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
-            renderGrid(); renderAdmin();
-            showToast('Reset done ✓', 'bg-green-600');
-        }
+async function saveConfigToFirebase() {
+    try {
+        const { db, doc, setDoc } = window.__fb;
+        await setDoc(doc(db, 'settings', 'config'), {
+            payments: config.payments,
+            whatsappNumber: config.whatsappNumber,
+            support: config.support
+        });
+        await setDoc(doc(db, 'settings', 'products'), { list: products });
+        showToast('Saved to cloud ✓', 'bg-green-600');
+    } catch (e) {
+        showToast('Save failed: ' + e.message, 'bg-red-600');
+    }
+}
 
-        function openRegionModal() {
-            document.getElementById('region-modal').classList.remove('pointer-events-none', 'opacity-0');
-        }
-        function closeRegionModal() {
-            document.getElementById('region-modal').classList.add('pointer-events-none', 'opacity-0');
-        }
+function toggleMethod(region, idx, val) { config.payments[region].methods[idx].enabled = val; persistAll(); }
+function updateMethod(region, idx, field, val) { config.payments[region].methods[idx][field] = val; persistAll(); }
+function updateSupport(field, val) { config.support[field] = val; persistAll(); renderSupport(); }
+function updateProductDetails(id, val) {
+    const p = products.find(x => x.id === id);
+    if (p) { p.details = val; persistAll(); showToast('Saved locally — click Save to Cloud', 'bg-amber-600'); }
+}
+function addNewProduct() {
+    const title = document.getElementById('add-title').value.trim();
+    const subtitle = document.getElementById('add-subtitle').value.trim() || 'Digital Asset';
+    const price = parseFloat(document.getElementById('add-price').value);
+    const details = document.getElementById('add-details').value.trim();
+    const inputType = document.getElementById('add-input-type').value || null;
+    if (!title || isNaN(price)) { showToast('Title & price required', 'bg-red-600'); return; }
+    products.push({
+        id: Date.now(), title, subtitle, priceUSD: price, details,
+        icon: 'fas fa-box', color: 'text-slate-600', bg: 'bg-slate-100',
+        inputType,
+        inputLabel: inputType === 'page_name' ? 'Your Page Name' : (inputType === 'name' ? 'Your Desired Name' : null),
+        inputPlaceholder: inputType === 'page_name' ? 'e.g. My Business Page' : (inputType === 'name' ? 'e.g. John Smith' : null)
+    });
+    persistAll();
+    ['add-title','add-subtitle','add-price','add-details'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('add-input-type').value = '';
+    renderGrid(); renderAdmin();
+    showToast('Added — click Save to Cloud', 'bg-green-600');
+}
+function deleteProduct(id) {
+    if (!confirm('Delete?')) return;
+    products = products.filter(p => p.id !== id);
+    persistAll(); renderGrid(); renderAdmin();
+    showToast('Deleted locally', 'bg-red-600');
+}
+function resetAll() {
+    if (!confirm('Reset local data?')) return;
+    ['naim_config','naim_products','naim_local_orders'].forEach(k => localStorage.removeItem(k));
+    config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+    localOrders = {};
+    renderGrid(); renderSupport(); renderAdmin();
+    showToast('Reset done ✓', 'bg-green-600');
+}
 
-        document.addEventListener('DOMContentLoaded', initApp);
-    </script>
+function openRegionModal() { document.getElementById('region-modal').classList.remove('pointer-events-none', 'opacity-0'); }
+function closeRegionModal() { document.getElementById('region-modal').classList.add('pointer-events-none', 'opacity-0'); }
+
+document.addEventListener('DOMContentLoaded', initApp);
+</script>
 </body>
-  </html>
+          </html>
