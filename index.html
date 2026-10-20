@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>NAIM 🦅 — Premium Digital Accounts Store</title>
+<title>NAIM — Premium Digital Accounts Store</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,26 +20,49 @@ tailwind.config = {
 }
 </script>
 <style>
-/* ================= MOBILE & CLICK FIXES ================= */
-* {
-    -webkit-tap-highlight-color: rgba(26,86,219,0.15);
-    touch-action: manipulation;
-}
-body { background-color: #f1f5f9; }
-::-webkit-scrollbar { display: none; }
-.glass-nav { background: rgba(255,255,255,0.88); backdrop-filter: blur(20px); }
+/* ============ GLASS SYSTEM ============ */
+* { -webkit-tap-highlight-color: rgba(26,86,219,0.15); touch-action: manipulation; }
 
-button, a, [onclick] {
-    cursor: pointer;
-    touch-action: manipulation;
-    -webkit-user-select: none;
-    user-select: none;
+body {
+    background:
+        radial-gradient(circle at 0% 0%, rgba(99,102,241,0.15), transparent 40%),
+        radial-gradient(circle at 100% 0%, rgba(236,72,153,0.12), transparent 40%),
+        radial-gradient(circle at 0% 100%, rgba(59,130,246,0.12), transparent 40%),
+        radial-gradient(circle at 100% 100%, rgba(168,85,247,0.12), transparent 40%),
+        linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
 }
+
+::-webkit-scrollbar { display: none; }
+
+.glass {
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.6);
+    box-shadow: 0 8px 32px rgba(15,23,42,0.06);
+}
+.glass-strong {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(30px) saturate(200%);
+    -webkit-backdrop-filter: blur(30px) saturate(200%);
+    border: 1px solid rgba(255,255,255,0.7);
+    box-shadow: 0 10px 40px rgba(15,23,42,0.08);
+}
+.glass-nav {
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-bottom: 1px solid rgba(255,255,255,0.5);
+    box-shadow: 0 4px 20px rgba(15,23,42,0.04);
+}
+
+button, a, [onclick] { cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
 button i, button svg, a i, a svg { pointer-events: none; }
 button:active:not(:disabled) { transform: scale(0.96); }
 body.modal-active { overflow: hidden; position: fixed; width: 100%; }
 
-/* Modals */
 #details-modal, #checkout-modal, #product-details-modal, #success-modal,
 #admin-panel, #admin-login, #region-modal { display: none; }
 #details-modal.modal-open, #checkout-modal.modal-open, #product-details-modal.modal-open,
@@ -53,15 +76,26 @@ body.modal-active { overflow: hidden; position: fixed; width: 100%; }
 .modal-open #modal-content, .modal-open #admin-content, .modal-open #checkout-content,
 .modal-open #success-content, .modal-open #pd-content { transform: translateY(0); }
 
-/* Animations */
+/* Menu slide */
+#nx-menu-body {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateX(100%);
+}
+#nx-menu.modal-open #nx-menu-body { transform: translateX(0); }
+
 .toast { animation: slideUp 0.3s ease; }
 @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 @keyframes bounceIn { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
-.product-card { transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
-.product-card:hover { transform: translateY(-4px); box-shadow: 0 15px 35px -12px rgba(0,0,0,0.15); }
+@keyframes pulseDot { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.product-card {
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.product-card:hover { transform: translateY(-4px); box-shadow: 0 15px 40px -12px rgba(15,23,42,0.15); }
 .product-card:active { transform: scale(0.98); }
+
 .hero-glow { animation: float 8s ease-in-out infinite; }
 .shimmer-text {
     background: linear-gradient(90deg, #facc15 0%, #fff 50%, #facc15 100%);
@@ -72,50 +106,48 @@ body.modal-active { overflow: hidden; position: fixed; width: 100%; }
 .qty-btn:active { transform: scale(0.85); }
 .copy-btn:active { transform: scale(0.9); }
 .upload-zone { transition: all 0.25s ease; }
-.upload-zone:hover, .upload-zone.dragover { border-color: #1a56db; background: #eff6ff; }
+.upload-zone:hover, .upload-zone.dragover { border-color: #1a56db; background: rgba(239,246,255,0.6); }
 .bounce-in { animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
 .support-btn { transition: all 0.15s ease; }
 .support-btn:active { transform: scale(0.94); }
 input:focus, textarea:focus, select:focus { outline: none; border-color: #1a56db; box-shadow: 0 0 0 3px rgba(26,86,219,0.12); }
 .detail-text { line-height: 1.7; white-space: pre-wrap; }
 button:disabled { cursor: not-allowed; opacity: 0.5; }
+.nx-m{display:none}.nx-m.modal-open{display:flex}
+.nx-i{width:100%;padding:.75rem;border-radius:.75rem;border:1px solid rgba(226,232,240,0.8);font-size:.875rem;font-weight:700;margin-top:.25rem;background:rgba(255,255,255,0.6);backdrop-filter:blur(10px)}
 </style>
 </head>
 <body class="text-slate-900 antialiased min-h-screen flex flex-col pb-6">
 
 <!-- HEADER -->
-<header class="glass-nav sticky top-0 z-40 border-b border-slate-200/60 shadow-sm">
+<header class="glass-nav sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         <div class="flex items-center space-x-3">
-            <div class="bg-brandDark w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg text-white">
+            <div class="bg-brandDark w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg shadow-brandDark/30 text-white">
                 <i class="fas fa-shield-halved text-xl"></i>
             </div>
-            <div class="font-black text-2xl tracking-tighter text-brandDark flex items-center">NAIM <span class="ml-1.5 text-sm">🦅</span></div>
+            <div class="font-black text-2xl tracking-tighter text-brandDark flex items-center">NAIM <i class="fas fa-dove ml-1.5 text-sm"></i></div>
         </div>
         <div class="flex items-center space-x-2">
-            <button type="button" onclick="openRegionModal()" class="h-10 px-3 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center gap-1.5 text-xs font-bold text-slate-700 transition">
+            <button type="button" onclick="openRegionModal()" class="h-10 px-3 rounded-full glass hover:bg-white/90 flex items-center gap-1.5 text-xs font-bold text-slate-700 transition border border-white/60">
                 <i class="fas fa-globe"></i><span id="region-label">...</span>
-            </button>
-            <button type="button" onclick="openAdmin()" class="w-10 h-10 rounded-full bg-brandDark flex items-center justify-center text-white shadow-md hover:bg-slate-800 transition">
-                <i class="fas fa-lock text-sm"></i>
             </button>
         </div>
     </div>
 </header>
 
-<!-- MAIN -->
 <main class="flex-grow max-w-6xl mx-auto w-full px-4 py-6">
-    <div class="mb-6 bg-gradient-to-br from-brandDark via-slate-800 to-brandDark rounded-3xl p-6 sm:p-10 relative overflow-hidden shadow-2xl">
-        <div class="absolute top-0 right-0 w-72 h-72 bg-blue-500 rounded-full filter blur-3xl opacity-25 -translate-y-1/2 translate-x-1/2 hero-glow"></div>
-        <div class="absolute bottom-0 left-0 w-64 h-64 bg-purple-500 rounded-full filter blur-3xl opacity-20 translate-y-1/2 -translate-x-1/2 hero-glow" style="animation-delay:2s"></div>
+    <div class="mb-6 bg-gradient-to-br from-brandDark via-slate-800 to-brandDark rounded-3xl p-6 sm:p-10 relative overflow-hidden shadow-2xl shadow-brandDark/20">
+        <div class="absolute top-0 right-0 w-72 h-72 bg-blue-500 rounded-full filter blur-3xl opacity-30 -translate-y-1/2 translate-x-1/2 hero-glow"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 bg-purple-500 rounded-full filter blur-3xl opacity-25 translate-y-1/2 -translate-x-1/2 hero-glow" style="animation-delay:2s"></div>
         <div class="relative z-10">
             <span class="inline-block py-1 px-3 rounded-full bg-white/10 text-white text-[10px] font-black tracking-widest uppercase mb-3 backdrop-blur-md border border-white/20">
-                <i class="fas fa-bolt text-yellow-400 mr-1"></i> Smart Scanner
+                <i class="fas fa-bolt text-yellow-400 mr-1"></i> M M NAIME RAHMAN
             </span>
             <h1 class="text-3xl sm:text-5xl font-black text-white leading-tight mb-2 tracking-tight">
                 Digital Accounts <span class="shimmer-text">Hub</span>
             </h1>
-            <p class="text-slate-300 text-xs sm:text-sm font-medium max-w-lg">Pay → Upload screenshot → AI reads it → WhatsApp order.</p>
+            <p class="text-slate-300 text-xs sm:text-sm font-medium max-w-lg">Honesty is the rarest wealth anyone can possess 🤍.</p>
         </div>
     </div>
 
@@ -129,127 +161,87 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
     <div id="support-section" class="mt-8 mb-4"></div>
 
     <div class="mt-6 text-center text-[10px] text-slate-400 font-semibold pb-4">
-        <p>🦅 NAIM — Trusted Digital Account Store · © 2025</p>
+        <p>NAIM — Trusted Digital Account Store · © 2025</p>
     </div>
 </main>
 
 <!-- MODALS -->
-
-<!-- PRODUCT DETAILS -->
 <div id="product-details-modal" class="fixed inset-0 z-[58] items-end justify-center pointer-events-none opacity-0">
     <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeProductDetails()"></div>
-    <div id="pd-content" class="relative w-full max-w-md bg-white rounded-t-3xl shadow-2xl pointer-events-auto flex flex-col max-h-[85vh]">
-        <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-200 rounded-full"></div></div>
-        <button type="button" onclick="closeProductDetails()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 z-10"><i class="fas fa-times"></i></button>
+    <div id="pd-content" class="relative w-full max-w-md glass-strong rounded-t-3xl shadow-2xl pointer-events-auto flex flex-col max-h-[85vh]">
+        <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-300/70 rounded-full"></div></div>
+        <button type="button" onclick="closeProductDetails()" class="absolute top-4 right-4 w-8 h-8 glass rounded-full flex items-center justify-center text-slate-500 z-10"><i class="fas fa-times"></i></button>
         <div id="pd-body" class="overflow-y-auto px-6 pb-8 pt-4"></div>
     </div>
 </div>
 
-<!-- REGION -->
 <div id="region-modal" class="fixed inset-0 z-[60] items-center justify-center pointer-events-none opacity-0">
     <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeRegionModal()"></div>
-    <div class="relative bg-white w-11/12 max-w-sm rounded-3xl p-6 shadow-2xl pointer-events-auto">
+    <div class="relative glass-strong w-11/12 max-w-sm rounded-3xl p-6 shadow-2xl pointer-events-auto">
         <h3 class="text-xl font-black mb-1">Select Region</h3>
         <p class="text-xs text-slate-500 font-semibold mb-5">Currency & payment will change</p>
         <div class="space-y-3">
-            <button type="button" onclick="setRegion('BD')" class="w-full flex items-center justify-between p-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition">
+            <button type="button" onclick="setRegion('BD')" class="w-full flex items-center justify-between p-4 rounded-2xl glass hover:bg-white/90 transition border border-white/60">
                 <span class="font-bold">Bangladesh (BDT)</span><span class="text-2xl">🇧🇩</span>
             </button>
-            <button type="button" onclick="setRegion('NG')" class="w-full flex items-center justify-between p-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition">
+            <button type="button" onclick="setRegion('NG')" class="w-full flex items-center justify-between p-4 rounded-2xl glass hover:bg-white/90 transition border border-white/60">
                 <span class="font-bold">Nigeria (NGN)</span><span class="text-2xl">🇳🇬</span>
             </button>
-            <button type="button" onclick="setRegion('US')" class="w-full flex items-center justify-between p-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition">
+            <button type="button" onclick="setRegion('US')" class="w-full flex items-center justify-between p-4 rounded-2xl glass hover:bg-white/90 transition border border-white/60">
                 <span class="font-bold">Global (USDT)</span><span class="text-2xl">🌍</span>
             </button>
         </div>
     </div>
 </div>
 
-<!-- DETAILS (BUY MODAL) -->
 <div id="details-modal" class="fixed inset-0 z-50 items-end justify-center pointer-events-none opacity-0">
     <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModal()"></div>
-    <div id="modal-content" class="relative w-full max-w-md bg-white rounded-t-3xl shadow-2xl pointer-events-auto flex flex-col max-h-[90vh]">
-        <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-200 rounded-full"></div></div>
-        <button type="button" onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500"><i class="fas fa-times"></i></button>
+    <div id="modal-content" class="relative w-full max-w-md glass-strong rounded-t-3xl shadow-2xl pointer-events-auto flex flex-col max-h-[90vh]">
+        <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-300/70 rounded-full"></div></div>
+        <button type="button" onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 glass rounded-full flex items-center justify-center text-slate-500"><i class="fas fa-times"></i></button>
         <div id="modal-body" class="overflow-y-auto px-6 pb-8 pt-2"></div>
     </div>
 </div>
 
-<!-- CHECKOUT -->
 <div id="checkout-modal" class="fixed inset-0 z-[55] items-end justify-center pointer-events-none opacity-0">
     <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeCheckout()"></div>
-    <div id="checkout-content" class="relative w-full max-w-md bg-white rounded-t-3xl shadow-2xl pointer-events-auto flex flex-col max-h-[92vh]">
-        <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-200 rounded-full"></div></div>
-        <button type="button" onclick="closeCheckout()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 z-10"><i class="fas fa-times"></i></button>
+    <div id="checkout-content" class="relative w-full max-w-md glass-strong rounded-t-3xl shadow-2xl pointer-events-auto flex flex-col max-h-[92vh]">
+        <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-300/70 rounded-full"></div></div>
+        <button type="button" onclick="closeCheckout()" class="absolute top-4 right-4 w-8 h-8 glass rounded-full flex items-center justify-center text-slate-500 z-10"><i class="fas fa-times"></i></button>
         <div id="checkout-body" class="overflow-y-auto px-6 pb-8 pt-4"></div>
     </div>
 </div>
 
-<!-- SUCCESS -->
 <div id="success-modal" class="fixed inset-0 z-[65] items-center justify-center pointer-events-none opacity-0">
     <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm"></div>
-    <div id="success-content" class="relative bg-white w-11/12 max-w-sm rounded-3xl p-6 shadow-2xl pointer-events-auto text-center bounce-in">
-        <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+    <div id="success-content" class="relative glass-strong w-11/12 max-w-sm rounded-3xl p-6 shadow-2xl pointer-events-auto text-center bounce-in">
+        <div class="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/40">
             <i class="fas fa-check text-4xl"></i>
         </div>
         <h3 class="text-2xl font-black text-brandDark mb-2">Order Submitted!</h3>
         <p class="text-sm text-slate-500 font-semibold mb-4">Your order ID:</p>
-        <div class="bg-brandDark rounded-2xl p-4 text-white mb-4">
+        <div class="bg-brandDark rounded-2xl p-4 text-white mb-4 shadow-lg shadow-brandDark/30">
             <p class="text-lg font-black text-yellow-400 mb-2" id="success-order-id">ORD-...</p>
-            <button type="button" onclick="copyOrderId()" class="text-xs bg-white/20 px-3 py-1.5 rounded-lg font-bold"><i class="fas fa-copy mr-1"></i>Copy</button>
+            <button type="button" onclick="copyOrderId()" class="text-xs bg-white/20 px-3 py-1.5 rounded-lg font-bold backdrop-blur"><i class="fas fa-copy mr-1"></i>Copy</button>
         </div>
-        <p class="text-xs text-slate-500 mb-3">Send the message + screenshot to admin on WhatsApp</p>
-        <a id="success-wa-btn" href="#" target="_blank" rel="noopener"
-            class="block w-full py-3 bg-green-500 text-white font-black rounded-xl mb-2 hover:bg-green-600 transition">
-            <i class="fab fa-whatsapp mr-1"></i> Open WhatsApp & Send
-        </a>
+        <p class="text-xs text-slate-500 mb-3">Your order and payment proof were sent to the admin. Track it in your dashboard.</p>
+        <button type="button" onclick="closeSuccess();nxGo('orders')" class="block w-full py-3 bg-brandDark text-white font-black rounded-xl mb-2 shadow-lg shadow-brandDark/30"><i class="fas fa-box mr-1"></i> Go to My Dashboard</button>
         <button type="button" onclick="closeSuccess()" class="w-full py-2 text-sm text-slate-500 font-bold">Close</button>
     </div>
 </div>
 
-<!-- ADMIN LOGIN -->
-<div id="admin-login" class="fixed inset-0 z-[70] items-center justify-center pointer-events-none opacity-0">
-    <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm" onclick="closeAdminLogin()"></div>
-    <div class="relative bg-white w-11/12 max-w-sm rounded-3xl p-6 shadow-2xl pointer-events-auto">
-        <button type="button" onclick="closeAdminLogin()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500"><i class="fas fa-times"></i></button>
-        <div class="text-center mb-6">
-            <div class="w-14 h-14 bg-brandDark rounded-2xl flex items-center justify-center text-white mx-auto mb-3"><i class="fas fa-lock text-2xl"></i></div>
-            <h2 class="text-xl font-black">Admin Login</h2>
-            <p class="text-xs text-slate-500 font-semibold mt-1">Secure Firebase access</p>
-        </div>
-        <form onsubmit="doAdminLogin(event)" class="space-y-3">
-            <div>
-                <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Email</label>
-                <input type="email" id="admin-email" required class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold" placeholder="admin@naim.com" autocomplete="username">
-            </div>
-            <div>
-                <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Password</label>
-                <div class="relative">
-                    <input type="password" id="admin-pass" required class="w-full p-3 pr-10 rounded-xl border border-slate-200 text-sm font-bold" placeholder="••••••••" autocomplete="current-password">
-                    <button type="button" onclick="togglePass()" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 text-slate-400"><i id="eye-icon" class="fas fa-eye"></i></button>
-                </div>
-            </div>
-            <p id="login-error" class="text-xs text-red-600 font-bold hidden"></p>
-            <button type="submit" id="login-btn" class="w-full py-3 bg-brandDark text-white font-black rounded-xl shadow-md">
-                <i class="fas fa-arrow-right-to-bracket mr-1"></i> Login
-            </button>
-        </form>
-    </div>
-</div>
-
-<!-- ADMIN PANEL -->
-<div id="admin-panel" class="fixed inset-0 z-50 items-end justify-center pointer-events-none opacity-0">
+<div id="admin-panel" class="fixed inset-0 z-50 items-stretch sm:items-center justify-center pointer-events-none opacity-0">
     <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeAdmin()"></div>
-    <div id="admin-content" class="relative w-full max-w-lg bg-white rounded-t-3xl shadow-2xl pointer-events-auto flex flex-col h-[92vh]">
-        <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-200 rounded-full"></div></div>
-        <button type="button" onclick="closeAdmin()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 z-10"><i class="fas fa-times"></i></button>
-        <div class="px-6 pb-3 border-b border-slate-100">
+    <div id="admin-content" class="relative w-full max-w-3xl glass-strong sm:rounded-3xl shadow-2xl pointer-events-auto flex flex-col h-full sm:h-[94vh]">
+        <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-300/70 rounded-full"></div></div>
+        <button type="button" onclick="closeAdmin()" class="absolute top-4 right-4 w-8 h-8 glass rounded-full flex items-center justify-center text-slate-500 z-10"><i class="fas fa-times"></i></button>
+        <div class="px-6 pb-3 border-b border-white/40">
             <div class="flex justify-between items-start">
                 <div>
-                    <h2 class="text-2xl font-black text-brandDark"><i class="fas fa-shield-halved mr-2"></i>Admin</h2>
+                    <h2 class="text-2xl font-black text-brandDark"><i class="fas fa-shield-halved mr-2"></i>Admin Dashboard</h2>
                     <p class="text-[10px] text-slate-500 font-bold mt-0.5" id="admin-who">Logged in</p>
                 </div>
-                <button type="button" onclick="logoutAdmin()" class="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-bold"><i class="fas fa-sign-out-alt mr-1"></i>Logout</button>
+                <button type="button" onclick="logoutAdmin()" class="px-3 py-1.5 bg-red-50/80 backdrop-blur text-red-600 rounded-lg text-xs font-bold border border-red-200/60"><i class="fas fa-sign-out-alt mr-1"></i>Logout</button>
             </div>
             <div class="flex gap-2 mt-3 overflow-x-auto">
                 <button type="button" onclick="switchTab('orders')" id="tab-orders" class="tab-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 whitespace-nowrap">Orders</button>
@@ -265,7 +257,6 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 
 <div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-[80] bg-brandDark text-white px-5 py-3 rounded-xl text-sm font-bold shadow-2xl opacity-0 pointer-events-none"></div>
 
-<!-- FIREBASE SDK -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, orderBy, doc, getDoc, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
@@ -286,11 +277,10 @@ const auth = getAuth(app);
 
 window.__fb = { db, auth, addDoc, serverTimestamp, getDocs, query, orderBy, doc, getDoc, setDoc, updateDoc, collection, signInWithEmailAndPassword, signOut, onAuthStateChanged };
 window.__fbReady = true;
-console.log('✅ Firebase ready');
+console.log('Firebase ready');
 </script>
 
 <script>
-// ================= HELPERS =================
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function roundPrice(n) { return Math.round(n * 100) / 100; }
 function symbolForMethod(m) {
@@ -312,7 +302,6 @@ function waitFirebase(timeoutMs = 8000) {
     });
 }
 
-// ================= OCR WORKER (REUSE) =================
 let tesseractWorker = null;
 async function getOCRWorker() {
     if (!tesseractWorker) {
@@ -321,7 +310,6 @@ async function getOCRWorker() {
     return tesseractWorker;
 }
 
-// ================= MODAL HELPERS =================
 function openModalEl(id) {
     document.body.classList.add('modal-active');
     const el = document.getElementById(id);
@@ -335,7 +323,6 @@ function closeModalEl(id) {
     el.classList.add('opacity-0', 'pointer-events-none');
 }
 
-// ================= STATE =================
 const rates = { USD: 1, BDT: 130, NGN: 1400 };
 let userCountry = 'US';
 let currentCurrency = 'USD';
@@ -349,11 +336,10 @@ let selectedFile = null;
 let extractedData = null;
 let _pendingOrder = null;
 let _lastOrderId = null;
-let _lastWaUrl = null;
 
 const DEFAULT_CONFIG = {
-    whatsappNumber: '8801773204904',
     support: { whatsapp: '8801773204904', telegram: 'naim_store', email: 'support@naim.com' },
+    telegram: { enabled: false, token: '', chatId: '' },
     payments: {
         BD: { label: 'Bangladesh', methods: [
             { id: 'bkash', name: 'bKash', type: 'Personal', icon: 'fas fa-mobile-screen', color: 'text-pink-600', bg: 'bg-pink-50', border: 'border-pink-200', account: '01773204904', enabled: true },
@@ -401,10 +387,9 @@ function showToast(msg, color = 'bg-brandDark') {
     t._t = setTimeout(() => t.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 z-[80] bg-brandDark text-white px-5 py-3 rounded-xl text-sm font-bold shadow-2xl opacity-0 pointer-events-none', 2500);
 }
 function copyText(txt, label) {
-    navigator.clipboard.writeText(txt).then(() => showToast(label + ' copied ✓', 'bg-green-600')).catch(() => showToast('Copy failed', 'bg-red-600'));
+    navigator.clipboard.writeText(txt).then(() => showToast(label + ' copied', 'bg-green-600')).catch(() => showToast('Copy failed', 'bg-red-600'));
 }
 
-// ================= INIT =================
 async function detectCountry() {
     try {
         const r = await fetch('https://ipwho.is/');
@@ -437,8 +422,9 @@ async function initApp() {
             if (snap.exists()) {
                 const remote = snap.data();
                 if (remote.payments) config.payments = remote.payments;
-                if (remote.whatsappNumber) config.whatsappNumber = remote.whatsappNumber;
                 if (remote.support) config.support = { ...config.support, ...remote.support };
+                if (remote.telegram) config.telegram = { ...(config.telegram || {}), ...remote.telegram };
+                config.telegram = config.telegram || { enabled: false, token: '', chatId: '' };
                 save('naim_config', config);
             }
             const pSnap = await getDoc(doc(db, 'settings', 'products'));
@@ -474,81 +460,93 @@ function setRegion(code, closeMenu = true) {
     renderGrid();
 }
 
-// ================= SUPPORT =================
+/* ============ SLEEK GLASS SUPPORT BANNER ============ */
 function renderSupport() {
     const s = config.support;
     document.getElementById('support-section').innerHTML = `
-        <div class="bg-white rounded-2xl p-4 shadow-sleek border border-slate-100">
-            <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center"><i class="fas fa-headset text-sm"></i></div>
-                    <div><p class="text-sm font-black text-brandDark">Need Help?</p><p class="text-[10px] text-slate-500 font-semibold">Contact support</p></div>
+        <div class="glass-strong rounded-3xl p-5 border border-white/60 shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/40">
+                        <i class="fas fa-headset text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-black text-brandDark tracking-tight">Need Help?</p>
+                        <p class="text-[10px] text-slate-500 font-semibold">24/7 live support</p>
+                    </div>
                 </div>
-                <span class="text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">ONLINE</span>
+                <span class="text-[9px] font-black text-emerald-700 bg-emerald-100/60 backdrop-blur px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-emerald-200/60">
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full" style="animation:pulseDot 1.5s infinite"></span>ONLINE
+                </span>
             </div>
-            <div class="grid grid-cols-3 gap-2">
-                <a href="https://wa.me/${(s.whatsapp||'').replace(/[^0-9]/g,'')}" target="_blank" rel="noopener" class="support-btn bg-green-500 hover:bg-green-600 rounded-xl p-2.5 text-center">
-                    <i class="fab fa-whatsapp text-white text-lg block mb-1"></i>
-                    <p class="text-white font-bold text-[10px]">WhatsApp</p>
+            <div class="grid grid-cols-3 gap-2.5">
+                <a href="https://wa.me/${(s.whatsapp||'').replace(/[^0-9]/g,'')}" target="_blank" rel="noopener" class="group glass rounded-2xl p-3 text-center hover:scale-[1.03] active:scale-95 transition-transform border border-white/60">
+                    <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white shadow-md group-hover:shadow-lg transition-shadow">
+                        <i class="fab fa-whatsapp text-base"></i>
+                    </div>
+                    <p class="text-slate-700 font-bold text-[10px]">WhatsApp</p>
                 </a>
-                <a href="https://t.me/${(s.telegram||'').replace(/^@/,'')}" target="_blank" rel="noopener" class="support-btn bg-blue-500 hover:bg-blue-600 rounded-xl p-2.5 text-center">
-                    <i class="fab fa-telegram text-white text-lg block mb-1"></i>
-                    <p class="text-white font-bold text-[10px]">Telegram</p>
+                <a href="https://t.me/${(s.telegram||'').replace(/^@/,'')}" target="_blank" rel="noopener" class="group glass rounded-2xl p-3 text-center hover:scale-[1.03] active:scale-95 transition-transform border border-white/60">
+                    <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-white shadow-md group-hover:shadow-lg transition-shadow">
+                        <i class="fab fa-telegram text-base"></i>
+                    </div>
+                    <p class="text-slate-700 font-bold text-[10px]">Telegram</p>
                 </a>
-                <a href="mailto:${esc(s.email||'')}" class="support-btn bg-slate-700 hover:bg-slate-800 rounded-xl p-2.5 text-center">
-                    <i class="fas fa-envelope text-white text-lg block mb-1"></i>
-                    <p class="text-white font-bold text-[10px]">Email</p>
+                <a href="mailto:${esc(s.email||'')}" class="group glass rounded-2xl p-3 text-center hover:scale-[1.03] active:scale-95 transition-transform border border-white/60">
+                    <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-slate-500 to-slate-700 flex items-center justify-center text-white shadow-md group-hover:shadow-lg transition-shadow">
+                        <i class="fas fa-envelope text-base"></i>
+                    </div>
+                    <p class="text-slate-700 font-bold text-[10px]">Email</p>
                 </a>
             </div>
         </div>
     `;
 }
 
-// ================= GRID =================
+/* ============ GLASS PRODUCT GRID ============ */
 function renderGrid() {
     document.getElementById('item-count').innerText = `${products.length} Items`;
     const grid = document.getElementById('product-grid');
     grid.innerHTML = products.map(p => `
-        <div class="product-card bg-white rounded-2xl p-3 shadow-sleek border border-slate-100 flex flex-col">
+        <div class="product-card glass rounded-2xl p-3 border border-white/60 flex flex-col">
             <button type="button" onclick="openModal(${p.id})" class="flex-grow text-center flex flex-col items-center w-full bg-transparent border-0 p-0">
-                <div class="h-14 w-14 mx-auto mt-1 mb-3 ${esc(p.bg)} rounded-xl flex items-center justify-center"><i class="${esc(p.icon)} ${esc(p.color)} text-2xl"></i></div>
+                <div class="h-14 w-14 mx-auto mt-1 mb-3 ${esc(p.bg)} rounded-xl flex items-center justify-center shadow-sm"><i class="${esc(p.icon)} ${esc(p.color)} text-2xl"></i></div>
                 <h3 class="text-xs font-black text-brandDark uppercase line-clamp-1">${esc(p.title)}</h3>
                 <p class="text-[10px] text-slate-500 mt-0.5 mb-2 font-semibold truncate">${esc(p.subtitle)}</p>
                 <div class="text-base font-black text-brandDark mb-2">${formatPrice(p.priceUSD)}</div>
             </button>
-            <button type="button" onclick="openProductDetails(${p.id})" class="w-full py-1.5 mb-1.5 text-[10px] font-bold text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition flex items-center justify-center gap-1">
+            <button type="button" onclick="openProductDetails(${p.id})" class="w-full py-1.5 mb-1.5 text-[10px] font-bold text-slate-600 bg-white/50 backdrop-blur rounded-lg hover:bg-white/80 transition flex items-center justify-center gap-1 border border-white/50">
                 <i class="fas fa-info-circle text-[9px]"></i> Details
             </button>
-            <button type="button" onclick="openModal(${p.id})" class="w-full py-2 text-[11px] font-bold text-white bg-brandDark rounded-lg hover:bg-slate-800 transition">Buy Now</button>
+            <button type="button" onclick="openModal(${p.id})" class="w-full py-2 text-[11px] font-bold text-white bg-brandDark rounded-lg hover:bg-slate-800 transition shadow-md shadow-brandDark/20">Buy Now</button>
         </div>
     `).join('');
 }
 
-// ================= PRODUCT DETAILS =================
 function openProductDetails(id) {
     const p = products.find(x => x.id === id);
     if (!p) return;
     document.getElementById('pd-body').innerHTML = `
         <div class="flex items-center space-x-4 mb-6">
-            <div class="h-20 w-20 ${esc(p.bg)} rounded-2xl flex items-center justify-center shrink-0"><i class="${esc(p.icon)} ${esc(p.color)} text-4xl"></i></div>
+            <div class="h-20 w-20 ${esc(p.bg)} rounded-2xl flex items-center justify-center shrink-0 shadow-sm"><i class="${esc(p.icon)} ${esc(p.color)} text-4xl"></i></div>
             <div>
                 <h2 class="text-2xl font-black uppercase">${esc(p.title)}</h2>
                 <p class="text-sm font-semibold text-slate-500">${esc(p.subtitle)}</p>
                 <p class="text-2xl font-black text-brandDark mt-1">${formatPrice(p.priceUSD)}</p>
             </div>
         </div>
-        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-5 mb-5">
+        <div class="glass rounded-2xl p-5 mb-5 border border-white/60">
             <div class="flex items-center gap-2 mb-3">
-                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white"><i class="fas fa-info-circle text-sm"></i></div>
+                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center text-white shadow-md"><i class="fas fa-info-circle text-sm"></i></div>
                 <h3 class="font-black text-brandDark">Product Details</h3>
             </div>
             <div class="detail-text text-sm text-slate-700 font-medium">${esc(p.details || 'No details yet.').replace(/\n/g, '<br>')}</div>
         </div>
-        ${p.inputType ? `<div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 mb-5">
+        ${p.inputType ? `<div class="bg-emerald-50/70 backdrop-blur border border-emerald-200 rounded-2xl p-4 mb-5">
             <p class="text-xs font-bold text-emerald-900 mb-1"><i class="fas fa-edit mr-1"></i>Input Required</p>
             <p class="text-[11px] text-emerald-800 font-semibold">Order করার সময় "${esc(p.inputLabel)}" দিতে হবে।</p>
         </div>` : ''}
-        <button type="button" onclick="closeProductDetails();openModal(${p.id})" class="w-full py-4 text-base font-black text-white bg-brandDark rounded-2xl shadow-lg flex items-center justify-center space-x-2">
+        <button type="button" onclick="closeProductDetails();openModal(${p.id})" class="w-full py-4 text-base font-black text-white bg-brandDark rounded-2xl shadow-lg shadow-brandDark/30 flex items-center justify-center space-x-2">
             <i class="fas fa-shopping-cart"></i><span>Buy Now</span>
         </button>
     `;
@@ -556,7 +554,6 @@ function openProductDetails(id) {
 }
 function closeProductDetails() { closeModalEl('product-details-modal'); }
 
-// ================= BUY MODAL =================
 function changeQty(c) {
     if (selectedQuantity + c >= 1 && selectedQuantity + c <= 10) {
         selectedQuantity += c;
@@ -572,7 +569,7 @@ function openModal(id) {
     if (!p) return;
     const paySet = config.payments[userCountry] || config.payments.US;
     const methodsHTML = paySet.methods.filter(m => m.enabled).map(m => `
-        <div class="flex items-center space-x-2 p-2.5 rounded-lg border ${esc(m.border)} ${esc(m.bg)}">
+        <div class="flex items-center space-x-2 p-2.5 rounded-lg border ${esc(m.border)} ${esc(m.bg)}/70 backdrop-blur">
             <div class="w-6 h-6 rounded-full bg-white ${esc(m.color)} flex items-center justify-center text-xs shadow-sm"><i class="${esc(m.icon)}"></i></div>
             <div class="flex-1 min-w-0">
                 <p class="text-[11px] font-black ${esc(m.color)}">${esc(m.name)}</p>
@@ -584,19 +581,19 @@ function openModal(id) {
     const inputHTML = p.inputType ? `
         <div class="mb-4">
             <label class="text-xs font-bold text-slate-700 block mb-2"><i class="fas fa-edit mr-1 text-blue-600"></i>${esc(p.inputLabel)} <span class="text-red-500">*</span></label>
-            <input type="text" id="custom-input" class="w-full p-3 rounded-xl border-2 border-slate-200 text-sm font-bold" placeholder="${esc(p.inputPlaceholder)}" oninput="checkCustomInput()">
+            <input type="text" id="custom-input" class="w-full p-3 rounded-xl border-2 border-white/70 bg-white/60 backdrop-blur text-sm font-bold" placeholder="${esc(p.inputPlaceholder)}" oninput="checkCustomInput()">
         </div>
     ` : '';
 
     document.getElementById('modal-body').innerHTML = `
         <div class="flex items-center space-x-4 mb-5">
-            <div class="h-16 w-16 ${esc(p.bg)} rounded-2xl flex items-center justify-center shrink-0"><i class="${esc(p.icon)} ${esc(p.color)} text-3xl"></i></div>
+            <div class="h-16 w-16 ${esc(p.bg)} rounded-2xl flex items-center justify-center shrink-0 shadow-sm"><i class="${esc(p.icon)} ${esc(p.color)} text-3xl"></i></div>
             <div><h2 class="text-2xl font-black uppercase">${esc(p.title)}</h2><p class="text-sm font-semibold text-slate-500">${esc(p.subtitle)}</p></div>
         </div>
         ${inputHTML}
-        <div class="flex justify-between items-center bg-gradient-to-br from-slate-50 to-white p-4 rounded-2xl border border-slate-100 mb-5">
+        <div class="flex justify-between items-center glass p-4 rounded-2xl border border-white/60 mb-5">
             <div><p class="text-xs font-bold text-slate-400 uppercase mb-1">Total</p><div class="text-2xl font-black text-brandDark" id="modal-total-price">${formatPrice(p.priceUSD, 1)}</div></div>
-            <div class="flex items-center space-x-3 bg-white px-3 py-2 rounded-xl shadow-sm border border-slate-100">
+            <div class="flex items-center space-x-3 bg-white/70 backdrop-blur px-3 py-2 rounded-xl shadow-sm border border-white/60">
                 <button type="button" onclick="changeQty(-1)" class="qty-btn w-8 h-8 bg-slate-100 rounded-lg font-black text-lg">−</button>
                 <span id="qty-display" class="font-black text-lg w-8 text-center">1</span>
                 <button type="button" onclick="changeQty(1)" class="qty-btn w-8 h-8 bg-brandDark text-white rounded-lg font-black text-lg">+</button>
@@ -606,7 +603,7 @@ function openModal(id) {
             <h3 class="text-xs font-bold text-brandDark uppercase tracking-widest mb-2">Payment (${esc(currentCurrency)})</h3>
             <div class="grid grid-cols-2 gap-2">${methodsHTML}</div>
         </div>
-        <button type="button" id="continue-btn" onclick="openCheckout()" class="w-full py-3.5 text-base font-black text-white bg-brandDark rounded-2xl shadow-lg flex items-center justify-center space-x-2 ${p.inputType ? 'opacity-40 cursor-not-allowed' : ''}" ${p.inputType ? 'disabled' : ''}>
+        <button type="button" id="continue-btn" onclick="openCheckout()" class="w-full py-3.5 text-base font-black text-white bg-brandDark rounded-2xl shadow-lg shadow-brandDark/30 flex items-center justify-center space-x-2 ${p.inputType ? 'opacity-40 cursor-not-allowed' : ''}" ${p.inputType ? 'disabled' : ''}>
             <i class="fas fa-bolt text-yellow-400"></i><span>Continue</span>
         </button>`;
 
@@ -624,7 +621,6 @@ function checkCustomInput() {
 
 function closeModal() { closeModalEl('details-modal'); }
 
-// ================= CHECKOUT =================
 function openCheckout() {
     const p = products.find(x => x.id === activeProductId);
     let customValue = null;
@@ -642,7 +638,7 @@ function openCheckout() {
     const methodCards = paySet.methods.filter(m => m.enabled).map(m => {
         let detailHTML = '';
         if (m.bank) {
-            detailHTML = `<div class="mt-2 bg-white rounded-lg p-3 border border-slate-100 space-y-1.5">
+            detailHTML = `<div class="mt-2 glass rounded-lg p-3 border border-white/60 space-y-1.5">
                 <div><p class="text-[10px] font-bold text-slate-400 uppercase">Bank</p><p class="font-bold text-sm">${esc(m.bank)}</p></div>
                 <div><p class="text-[10px] font-bold text-slate-400 uppercase">Account</p>
                     <div class="flex items-center justify-between"><p class="font-black text-sm text-brandDark">${esc(m.account)}</p>
@@ -651,7 +647,7 @@ function openCheckout() {
                 <div><p class="text-[10px] font-bold text-slate-400 uppercase">Name</p><p class="font-bold text-sm">${esc(m.holder)}</p></div>
             </div>`;
         } else if (m.network) {
-            detailHTML = `<div class="mt-2 bg-white rounded-lg p-3 border border-slate-100 space-y-1.5">
+            detailHTML = `<div class="mt-2 glass rounded-lg p-3 border border-white/60 space-y-1.5">
                 <div><p class="text-[10px] font-bold text-slate-400 uppercase">Network</p><p class="font-bold text-sm">${esc(m.network)}</p></div>
                 <div><p class="text-[10px] font-bold text-slate-400 uppercase">Wallet</p>
                     <div class="flex items-start justify-between gap-2"><p class="font-mono text-[10px] text-brandDark break-all leading-tight">${esc(m.account)}</p>
@@ -659,13 +655,13 @@ function openCheckout() {
                 </div>
             </div>`;
         } else {
-            detailHTML = `<div class="mt-2 bg-white rounded-lg p-3 border border-slate-100">
+            detailHTML = `<div class="mt-2 glass rounded-lg p-3 border border-white/60">
                 <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Number</p>
                 <div class="flex items-center justify-between"><p class="font-black text-base text-brandDark tracking-wide">${esc(m.account)}</p>
                 <button type="button" onclick="copyText('${esc(m.account)}','Number')" class="copy-btn w-8 h-8 rounded-lg ${esc(m.bg)} ${esc(m.color)} flex items-center justify-center"><i class="fas fa-copy text-xs"></i></button></div>
             </div>`;
         }
-        return `<div class="bg-white border ${esc(m.border)} rounded-2xl p-4">
+        return `<div class="glass border ${esc(m.border)} rounded-2xl p-4">
             <div class="flex items-center space-x-3 mb-1">
                 <div class="w-10 h-10 rounded-xl ${esc(m.bg)} ${esc(m.color)} flex items-center justify-center text-lg"><i class="${esc(m.icon)}"></i></div>
                 <div class="flex-1"><p class="font-black text-sm ${esc(m.color)}">${esc(m.name)}</p><p class="text-[10px] text-slate-500 font-bold uppercase">${esc(m.type)}</p></div>
@@ -675,7 +671,7 @@ function openCheckout() {
         </div>`;
     }).join('');
 
-    const customDisplay = customValue ? `<div class="bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-3 mb-3">
+    const customDisplay = customValue ? `<div class="bg-indigo-50/70 backdrop-blur border-2 border-indigo-200 rounded-2xl p-3 mb-3">
         <p class="text-[10px] font-bold text-indigo-500 uppercase mb-1"><i class="fas fa-edit mr-1"></i>${esc(p.inputLabel)}</p>
         <p class="font-black text-indigo-900 text-sm break-all">${esc(customValue)}</p>
     </div>` : '';
@@ -685,14 +681,14 @@ function openCheckout() {
             <h2 class="text-2xl font-black text-brandDark">Complete Payment</h2>
             <p class="text-xs text-slate-500 font-semibold mt-1">Send money, upload screenshot</p>
         </div>
-        <div class="bg-brandDark rounded-2xl p-4 mb-3 text-white">
+        <div class="bg-brandDark rounded-2xl p-4 mb-3 text-white shadow-lg shadow-brandDark/30">
             <div class="flex items-center space-x-3 mb-2">
                 <div class="w-10 h-10 ${esc(p.bg)} rounded-xl flex items-center justify-center"><i class="${esc(p.icon)} ${esc(p.color)}"></i></div>
                 <div><p class="font-black text-sm">${esc(p.title)}</p><p class="text-[11px] text-slate-300">Qty: ${selectedQuantity}</p></div>
             </div>
             <div class="border-t border-white/10 pt-2 flex justify-between items-end">
                 <div><p class="text-[10px] font-bold text-slate-300 uppercase">Amount</p><p class="text-2xl font-black text-yellow-400">${total}</p></div>
-                <button type="button" onclick="copyText('${total.replace(/[^0-9.]/g,'')}','Amount')" class="copy-btn px-3 py-1.5 bg-white/10 rounded-lg text-xs font-bold"><i class="fas fa-copy mr-1"></i>Copy</button>
+                <button type="button" onclick="copyText('${total.replace(/[^0-9.]/g,'')}','Amount')" class="copy-btn px-3 py-1.5 bg-white/10 rounded-lg text-xs font-bold backdrop-blur"><i class="fas fa-copy mr-1"></i>Copy</button>
             </div>
         </div>
         ${customDisplay}
@@ -700,7 +696,7 @@ function openCheckout() {
         <div class="space-y-2 mb-4">${methodCards}</div>
 
         <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-2"><i class="fas fa-camera mr-1"></i>Upload Screenshot</h3>
-        <div class="bg-slate-50 border-2 border-dashed border-slate-300 rounded-2xl p-4 text-center mb-3 upload-zone" id="upload-zone">
+        <div class="glass border-2 border-dashed border-white/70 rounded-2xl p-4 text-center mb-3 upload-zone" id="upload-zone">
             <input type="file" id="screenshot-input" accept="image/*" class="hidden" onchange="handleScreenshot(this)">
             <label for="screenshot-input" class="cursor-pointer block">
                 <div id="upload-icon"><i class="fas fa-cloud-upload-alt text-2xl text-slate-400 mb-1"></i></div>
@@ -711,20 +707,20 @@ function openCheckout() {
             <div id="scan-result" class="hidden mt-3"></div>
         </div>
 
-        <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-3">
+        <div class="glass border border-blue-200/70 rounded-xl p-3 mb-3">
             <p class="text-[10px] text-blue-900 font-semibold mb-1"><b>Your phone number (optional):</b></p>
-            <input type="tel" id="user-phone" placeholder="01XXXXXXXXX" class="w-full p-2.5 rounded-lg border-2 border-blue-200 font-bold text-sm">
+            <input type="tel" id="user-phone" placeholder="01XXXXXXXXX" class="w-full p-2.5 rounded-lg border-2 border-blue-200 bg-white/60 backdrop-blur font-bold text-sm">
         </div>
 
-        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-3">
+        <div class="bg-amber-50/80 backdrop-blur border border-amber-200 rounded-xl p-3 mb-3">
             <p class="text-[10px] text-amber-900 font-semibold leading-relaxed">
                 <i class="fas fa-exclamation-triangle mr-1"></i>
-                <b>Note:</b> Screenshot কোথাও save হবে না — শুধু text পড়া হবে। WhatsApp-এ নিজে screenshot পাঠাতে হবে।
+                <b>Note:</b> Your payment screenshot and Transaction ID go straight to the admin for verification.
             </p>
         </div>
 
         <button type="button" id="submit-btn" onclick="submitOrder()" disabled
-            class="w-full py-3.5 text-base font-black text-white bg-brandDark rounded-2xl shadow-lg opacity-40 cursor-not-allowed flex items-center justify-center space-x-2">
+            class="w-full py-3.5 text-base font-black text-white bg-brandDark rounded-2xl shadow-lg shadow-brandDark/30 opacity-40 cursor-not-allowed flex items-center justify-center space-x-2">
             <i class="fas fa-paper-plane"></i><span>Submit Order</span>
         </button>
     `;
@@ -744,7 +740,6 @@ function openCheckout() {
 
 function closeCheckout() { closeModalEl('checkout-modal'); }
 
-// ================= IMAGE PREPROCESSING & OCR =================
 function preprocessImage(file) {
     return new Promise((resolve) => {
         const img = new Image();
@@ -756,7 +751,6 @@ function preprocessImage(file) {
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const d = imageData.data;
             for (let i = 0; i < d.length; i += 4) {
@@ -774,95 +768,62 @@ function preprocessImage(file) {
 async function handleScreenshot(input) {
     selectedFile = input.files[0];
     if (!selectedFile) return;
-    
     const preview = document.getElementById('preview');
     preview.src = URL.createObjectURL(selectedFile);
     preview.classList.remove('hidden');
-    
     document.getElementById('upload-icon').innerHTML = '<i class="fas fa-spinner fa-spin text-2xl text-blue-500 mb-1"></i>';
     document.getElementById('upload-text').innerText = 'Scanning...';
     document.getElementById('upload-text').className = 'font-bold text-xs text-blue-600';
     document.getElementById('upload-hint').innerText = 'Reading all text...';
     document.getElementById('scan-result').classList.add('hidden');
-
     try {
         const processedImage = await preprocessImage(selectedFile);
         const worker = await getOCRWorker();
-        
-        await worker.setParameters({
-            tessedit_char_whitelist: '',
-            preserve_interword_spaces: '1'
-        });
-        
+        await worker.setParameters({ tessedit_char_whitelist: '', preserve_interword_spaces: '1' });
         const { data: { text } } = await worker.recognize(processedImage);
-        
-        console.log('=== FULL OCR TEXT ===');
-        console.log(text);
-        
         extractedData = extractPaymentInfo(text, _pendingOrder);
         extractedData.fullText = text.trim();
         extractedData.textLength = text.length;
         extractedData.wordCount = text.trim().split(/\s+/).length;
-        
         document.getElementById('upload-icon').innerHTML = '<i class="fas fa-check-circle text-2xl text-green-500 mb-1"></i>';
-        document.getElementById('upload-text').innerText = `Scanned ✓ (${extractedData.wordCount} words)`;
+        document.getElementById('upload-text').innerText = `Scanned (${extractedData.wordCount} words)`;
         document.getElementById('upload-text').className = 'font-bold text-xs text-green-600';
         document.getElementById('upload-hint').innerText = 'Full text saved';
         renderScanResult(extractedData);
-        
         const btn = document.getElementById('submit-btn');
         btn.disabled = false;
         btn.classList.remove('opacity-40','cursor-not-allowed');
-        showToast('Full text extracted ✓', 'bg-green-600');
+        showToast('Full text extracted', 'bg-green-600');
     } catch (err) {
         console.error('OCR failed:', err);
         document.getElementById('upload-icon').innerHTML = '<i class="fas fa-exclamation-triangle text-2xl text-amber-500 mb-1"></i>';
         document.getElementById('upload-text').innerText = 'Scan failed — still submit';
         document.getElementById('upload-text').className = 'font-bold text-xs text-amber-600';
-        document.getElementById('upload-hint').innerText = 'Attach screenshot in WhatsApp';
+        document.getElementById('upload-hint').innerText = 'Type the Transaction ID below';
         const btn = document.getElementById('submit-btn');
         btn.disabled = false;
         btn.classList.remove('opacity-40','cursor-not-allowed');
     }
 }
 
-// ================= EXTRACT PAYMENT INFO (UPDATED) =================
 function extractPaymentInfo(rawText, order) {
-    const info = {
-        raw: rawText.substring(0, 500),
-        fullText: rawText,
-        amount: null,
-        amountRaw: null,
-        trxId: null,
-        sender: null,
-        time: null,
-        date: null,
-        method: null,
-        matchesAmount: false
-    };
-    
+    const info = { raw: rawText.substring(0, 500), fullText: rawText, amount: null, amountRaw: null, trxId: null, sender: null, time: null, date: null, method: null, matchesAmount: false };
     const bn = '০১২৩৪৫৬৭৮৯';
     const en = '0123456789';
     const text = rawText.replace(/[০-৯]/g, ch => en[bn.indexOf(ch)]);
     const expected = parseFloat(order.amountNumeric);
     const lower = text.toLowerCase();
-    
-    // Method
     if (lower.includes('bkash') || lower.includes('বিকাশ')) info.method = 'bKash';
     else if (lower.includes('opay')) info.method = 'OPay';
     else if (lower.includes('nagad') || lower.includes('নগদ')) info.method = 'Nagad';
     else if (lower.includes('usdt') || lower.includes('tether')) info.method = 'USDT';
     else if (lower.includes('bank')) info.method = 'Bank';
-
-    // Amount
     const amountCandidates = [];
     let m;
     const pat1 = /(?:৳|Tk\.?|BDT|NGN|₦|Amount[:\s]*)\s*([0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]{1,2})?)/gi;
     while ((m = pat1.exec(text)) !== null) amountCandidates.push({ val: parseFloat(m[1].replace(/,/g, '')), raw: m[0] });
-    
     const pat2 = /\b([0-9]{1,3}(?:,[0-9]{3})*\.[0-9]{2})\b/g;
     while ((m = pat2.exec(text)) !== null) amountCandidates.push({ val: parseFloat(m[1].replace(/,/g, '')), raw: m[0] });
-    
     if (amountCandidates.length > 0) {
         amountCandidates.sort((a, b) => Math.abs(a.val - expected) - Math.abs(b.val - expected));
         const best = amountCandidates[0];
@@ -871,8 +832,6 @@ function extractPaymentInfo(rawText, order) {
         const tolerance = Math.max(1, expected * 0.02);
         if (Math.abs(best.val - expected) <= tolerance) info.matchesAmount = true;
     }
-
-    // TrxID
     const trxPatterns = [
         /(?:Trx\s*ID|Transaction\s*ID|Txn\s*ID|TrxId|ট্রানজেকশন আইডি|Transaction No\.?)[:\s]*([A-Z0-9]{8,30})/i,
         /\b([A-Z]{2,4}[0-9]{4,10}[A-Z0-9]*)\b/i,
@@ -882,33 +841,23 @@ function extractPaymentInfo(rawText, order) {
         const match = text.match(pat);
         if (match) {
             const candidate = match[1];
-            if (!/^0\d{10}$/.test(candidate) && !/^\d{2}\/\d{2}\/\d{2}$/.test(candidate)) {
-                info.trxId = candidate;
-                break;
-            }
+            if (!/^0\d{10}$/.test(candidate) && !/^\d{2}\/\d{2}\/\d{2}$/.test(candidate)) { info.trxId = candidate; break; }
         }
     }
-
-    // Sender
     const ownNumbers = Object.values(config.payments).flatMap(p => p.methods.map(m => (m.account || '').replace(/[^0-9]/g, ''))).filter(n => n.length >= 10);
     const maskedMatch = text.match(/([0-9]{3}\*{4}[0-9]{3})/);
-    if (maskedMatch) {
-        info.sender = maskedMatch[1];
-    } else {
+    if (maskedMatch) { info.sender = maskedMatch[1]; }
+    else {
         const phones = text.match(/(?:\+?880|0)1[3-9]\d{8}|\+?234[789][01]\d{8}|\b[789][01]\d{8}\b/g) || [];
         info.sender = phones.find(p => {
             const clean = p.replace(/^\+?880/, '0').replace(/\D/g, '');
             return !ownNumbers.some(o => o.includes(clean) || clean.includes(o.slice(-10)));
         }) || null;
     }
-
-    // Time & Date
     const timeMatch = text.match(/(\d{1,2}:\d{2}\s*(?:am|pm|AM|PM))/i) || text.match(/(\d{1,2}:\d{2}(?::\d{2})?)/);
     if (timeMatch) info.time = timeMatch[1];
-    
     const dateMatch = text.match(/(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/) || text.match(/((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2}(?:st|nd|rd|th)?,?\s*\d{2,4})/i);
     if (dateMatch) info.date = dateMatch[1];
-
     return info;
 }
 
@@ -916,43 +865,40 @@ function renderScanResult(info) {
     const el = document.getElementById('scan-result');
     let rows = '';
     const sym = symbolForMethod(info.method);
-    
     if (info.amount) {
         const color = info.matchesAmount ? 'text-green-600' : 'text-red-600';
         const icon = info.matchesAmount ? 'fa-check-circle' : 'fa-exclamation-circle';
-        rows += `<div class="flex justify-between items-center bg-white rounded p-1.5 border border-slate-100">
+        rows += `<div class="flex justify-between items-center bg-white/70 backdrop-blur rounded p-1.5 border border-white/60">
             <span class="text-[10px] font-bold text-slate-600"><i class="fas fa-money-bill text-green-500 mr-1"></i>Amount</span>
             <span class="text-xs font-black ${color}"><i class="fas ${icon} mr-1 text-[9px]"></i>${sym}${esc(info.amount)}</span>
         </div>`;
     }
-    if (info.trxId) rows += `<div class="flex justify-between items-center bg-white rounded p-1.5 border border-slate-100">
+    if (info.trxId) rows += `<div class="flex justify-between items-center bg-white/70 backdrop-blur rounded p-1.5 border border-white/60">
         <span class="text-[10px] font-bold text-slate-600"><i class="fas fa-key text-blue-500 mr-1"></i>TrxID</span>
         <span class="text-[10px] font-mono font-black text-brandDark">${esc(info.trxId)}</span></div>`;
-    if (info.sender) rows += `<div class="flex justify-between items-center bg-white rounded p-1.5 border border-slate-100">
+    if (info.sender) rows += `<div class="flex justify-between items-center bg-white/70 backdrop-blur rounded p-1.5 border border-white/60">
         <span class="text-[10px] font-bold text-slate-600"><i class="fas fa-phone text-purple-500 mr-1"></i>From</span>
         <span class="text-[10px] font-mono font-black text-brandDark">${esc(info.sender)}</span></div>`;
-    if (info.time) rows += `<div class="flex justify-between items-center bg-white rounded p-1.5 border border-slate-100">
+    if (info.time) rows += `<div class="flex justify-between items-center bg-white/70 backdrop-blur rounded p-1.5 border border-white/60">
         <span class="text-[10px] font-bold text-slate-600"><i class="fas fa-clock text-amber-500 mr-1"></i>Time</span>
         <span class="text-[10px] font-black text-brandDark">${esc(info.time)}</span></div>`;
-    if (info.date) rows += `<div class="flex justify-between items-center bg-white rounded p-1.5 border border-slate-100">
+    if (info.date) rows += `<div class="flex justify-between items-center bg-white/70 backdrop-blur rounded p-1.5 border border-white/60">
         <span class="text-[10px] font-bold text-slate-600"><i class="fas fa-calendar text-indigo-500 mr-1"></i>Date</span>
         <span class="text-[10px] font-black text-brandDark">${esc(info.date)}</span></div>`;
-    if (info.method) rows += `<div class="flex justify-between items-center bg-white rounded p-1.5 border border-slate-100">
+    if (info.method) rows += `<div class="flex justify-between items-center bg-white/70 backdrop-blur rounded p-1.5 border border-white/60">
         <span class="text-[10px] font-bold text-slate-600"><i class="fas fa-credit-card text-pink-500 mr-1"></i>Method</span>
         <span class="text-[10px] font-black text-brandDark">${esc(info.method)}</span></div>`;
-    
-    el.innerHTML = `<div class="bg-green-50 border border-green-200 rounded-xl p-2 text-left">
+    el.innerHTML = `<div class="bg-green-50/80 backdrop-blur border border-green-200 rounded-xl p-2 text-left">
         <p class="text-[10px] font-black text-green-900 mb-1">
             <i class="fas fa-robot mr-1"></i>Extracted (${info.wordCount || 0} words):
         </p>
-        <div class="space-y-1">${rows || '<p class="text-[10px] text-slate-500 text-center">⚠️ No structured data</p>'}</div>
+        <div class="space-y-1">${rows || '<p class="text-[10px] text-slate-500 text-center">No structured data</p>'}</div>
         ${info.amount && !info.matchesAmount ? '<p class="text-[9px] text-red-600 font-bold mt-1"><i class="fas fa-exclamation-triangle mr-1"></i>Mismatch! Expected ' + esc(_pendingOrder.amount) + '</p>' : ''}
-        
         <details class="mt-2">
             <summary class="text-[10px] font-bold text-blue-600 cursor-pointer py-1">
                 <i class="fas fa-file-alt mr-1"></i>View full text (${info.textLength || 0} chars)
             </summary>
-            <div class="bg-white rounded border border-slate-200 p-2 mt-1 max-h-48 overflow-y-auto">
+            <div class="bg-white/80 backdrop-blur rounded border border-white/60 p-2 mt-1 max-h-48 overflow-y-auto">
                 <pre class="text-[9px] text-slate-700 whitespace-pre-wrap break-words font-mono">${esc(info.fullText || 'No text extracted')}</pre>
             </div>
         </details>
@@ -960,96 +906,13 @@ function renderScanResult(info) {
     el.classList.remove('hidden');
 }
 
-// ================= SUBMIT ORDER =================
-async function submitOrder() {
-    if (!selectedFile) return showToast('Upload screenshot first', 'bg-red-600');
-
-    if (extractedData && extractedData.trxId) {
-        const dup = cachedOrders.some(o => o.extracted?.trxId === extractedData.trxId);
-        if (dup) return showToast('⚠️ This TrxID already used', 'bg-red-600');
-    }
-
-    const btn = document.getElementById('submit-btn');
-    btn.disabled = true;
-    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i><span>Saving...</span>`;
-
-    const orderId = 'ORD-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
-    const userPhone = document.getElementById('user-phone').value.trim();
-
-    const extractedForSave = extractedData ? {
-        fullText: extractedData.fullText || '',
-        textLength: extractedData.textLength || 0,
-        wordCount: extractedData.wordCount || 0,
-        amount: extractedData.amount,
-        amountRaw: extractedData.amountRaw,
-        trxId: extractedData.trxId,
-        sender: extractedData.sender,
-        time: extractedData.time,
-        date: extractedData.date,
-        method: extractedData.method,
-        matchesAmount: extractedData.matchesAmount
-    } : null;
-
-    try {
-        const { db, addDoc, serverTimestamp, collection } = window.__fb;
-        await addDoc(collection(db, 'orders'), {
-            orderId,
-            productId: _pendingOrder.productId,
-            productTitle: _pendingOrder.productTitle,
-            quantity: _pendingOrder.quantity,
-            amount: _pendingOrder.amount,
-            amountNumeric: _pendingOrder.amountNumeric,
-            currency: _pendingOrder.currency,
-            region: _pendingOrder.region,
-            customValue: _pendingOrder.customValue,
-            customLabel: _pendingOrder.customLabel,
-            userPhone: userPhone || null,
-            extracted: extractedForSave,
-            status: 'pending',
-            createdAt: serverTimestamp()
-        });
-    } catch (e) { console.error('Firestore save failed:', e); }
-
-    const order = { orderId, ..._pendingOrder, userPhone, extracted: extractedForSave, createdAt: Date.now(), status: 'pending' };
-    localOrders[orderId] = order;
-    save('naim_local_orders', localOrders);
-    _lastOrderId = orderId;
-
-    let msg = `🦅 *NEW ORDER*\n\n`;
-    msg += `📋 Order: *${orderId}*\n`;
-    msg += `📦 ${_pendingOrder.productTitle}\n`;
-    msg += `🔢 Qty: ${_pendingOrder.quantity}\n`;
-    msg += `💰 Amount: ${_pendingOrder.amount}\n`;
-    msg += `🌍 Region: ${_pendingOrder.region}\n`;
-    if (_pendingOrder.customValue) msg += `✏️ ${_pendingOrder.customLabel}: *${_pendingOrder.customValue}*\n`;
-    if (userPhone) msg += `📱 Phone: ${userPhone}\n`;
-
-    if (extractedData && (extractedData.amount || extractedData.trxId || extractedData.sender)) {
-        msg += `\n📸 *SCREENSHOT DATA:*\n`;
-        if (extractedData.amount) msg += `${extractedData.matchesAmount ? '✅' : '⚠️'} Amount: ${symbolForMethod(extractedData.method)}${extractedData.amount}\n`;
-        if (extractedData.trxId) msg += `🔑 TrxID: ${extractedData.trxId}\n`;
-        if (extractedData.sender) msg += `📱 From: ${extractedData.sender}\n`;
-        if (extractedData.time) msg += `🕐 Time: ${extractedData.time}\n`;
-        if (extractedData.date) msg += `📅 Date: ${extractedData.date}\n`;
-        if (extractedData.method) msg += `💳 Method: ${extractedData.method}\n`;
-    }
-    msg += `\n📎 *Screenshot attached in next message*\n✅ Please confirm.`;
-
-    _lastWaUrl = `https://wa.me/${config.whatsappNumber.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(msg)}`;
-
-    closeCheckout();
-    showSuccessModal(orderId);
-}
-
 function showSuccessModal(orderId) {
     document.getElementById('success-order-id').textContent = orderId;
-    document.getElementById('success-wa-btn').href = _lastWaUrl || '#';
     openModalEl('success-modal');
 }
 function closeSuccess() { closeModalEl('success-modal'); }
 function copyOrderId() { copyText(_lastOrderId, 'Order ID'); }
 
-// ================= ADMIN =================
 function openAdmin() {
     if (isAdminLoggedIn) {
         renderAdmin();
@@ -1084,7 +947,7 @@ async function doAdminLogin(e) {
         isAdminLoggedIn = true;
         document.getElementById('admin-pass').value = '';
         closeAdminLogin();
-        showToast('Welcome, admin ✓', 'bg-green-600');
+        showToast('Welcome, admin', 'bg-green-600');
         renderAdmin();
         openModalEl('admin-panel');
     } catch (e) {
@@ -1129,42 +992,23 @@ async function renderAdmin() {
                 <p class="text-xs font-bold text-slate-500 mb-3">${list.length} orders</p>
                 <div class="space-y-2">
                     ${list.map(o => `
-                        <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-sm">
+                        <div class="glass border border-white/60 rounded-xl p-3 shadow-sm">
                             <div class="flex justify-between items-start mb-1">
                                 <p class="font-bold text-xs">${esc(o.orderId)}</p>
-                                <span class="text-[10px] font-black px-2 py-0.5 rounded ${o.status === 'delivered' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${esc((o.status || 'pending').toUpperCase())}</span>
+                                <span class="text-[10px] font-black px-2 py-0.5 rounded ${o.status === 'delivered' ? 'bg-green-100 text-green-700' : (o.status === 'cancelled' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700')}">${esc((o.status || 'pending').toUpperCase())}</span>
                             </div>
                             <p class="text-[11px] text-slate-600 font-semibold">${esc(o.productTitle)} × ${esc(o.quantity)} — ${esc(o.amount)}</p>
-                            ${o.customValue ? `<p class="text-[10px] text-indigo-600 font-bold">✏️ ${esc(o.customLabel)}: ${esc(o.customValue)}</p>` : ''}
-                            ${o.userPhone ? `<p class="text-[10px] text-slate-500">📱 ${esc(o.userPhone)}</p>` : ''}
-                            
-                            ${o.extracted ? `
-                                <div class="mt-2 bg-green-50 border border-green-200 rounded-lg p-2">
-                                    <p class="text-[9px] font-black text-green-900 mb-1">
-                                        📸 SCANNED (${esc(o.extracted.wordCount || 0)} words)
-                                    </p>
+                            ${o.customValue ? `<p class="text-[10px] text-indigo-600 font-bold">${esc(o.customLabel)}: ${esc(o.customValue)}</p>` : ''}
+                            ${o.userPhone ? `<p class="text-[10px] text-slate-500">${esc(o.userPhone)}</p>` : ''}
+                            ${o.extracted ? `<div class="mt-2 bg-green-50/70 backdrop-blur border border-green-200 rounded-lg p-2">
+                                    <p class="text-[9px] font-black text-green-900 mb-1">SCANNED (${esc(o.extracted.wordCount || 0)} words)</p>
                                     <div class="space-y-0.5 text-[10px] mb-2">
                                         ${o.extracted.amount ? `<p class="text-green-700"><b>Amount:</b> ${esc(o.extracted.amount)}</p>` : ''}
                                         ${o.extracted.trxId ? `<p class="text-green-700"><b>TrxID:</b> ${esc(o.extracted.trxId)}</p>` : ''}
                                         ${o.extracted.sender ? `<p class="text-green-700"><b>From:</b> ${esc(o.extracted.sender)}</p>` : ''}
-                                        ${o.extracted.time ? `<p class="text-green-700"><b>Time:</b> ${esc(o.extracted.time)}</p>` : ''}
-                                        ${o.extracted.date ? `<p class="text-green-700"><b>Date:</b> ${esc(o.extracted.date)}</p>` : ''}
-                                        ${o.extracted.method ? `<p class="text-green-700"><b>Method:</b> ${esc(o.extracted.method)}</p>` : ''}
                                     </div>
-                                    ${o.extracted.fullText ? `
-                                        <details class="mt-1">
-                                            <summary class="text-[10px] font-bold text-blue-600 cursor-pointer">
-                                                <i class="fas fa-file-alt mr-1"></i>View full OCR text
-                                            </summary>
-                                            <div class="bg-white rounded border border-slate-200 p-2 mt-1 max-h-48 overflow-y-auto">
-                                                <pre class="text-[9px] text-slate-700 whitespace-pre-wrap break-words font-mono">${esc(o.extracted.fullText)}</pre>
-                                            </div>
-                                        </details>
-                                    ` : ''}
-                                </div>
-                            ` : '<p class="text-[10px] text-amber-600 mt-1">⚠️ No OCR data</p>'}
-                            
-                            ${o.status !== 'delivered' ? `<button type="button" onclick="markDelivered('${esc(o.id)}')" class="mt-2 w-full py-1.5 bg-green-500 text-white text-[10px] font-bold rounded-lg"><i class="fas fa-check mr-1"></i>Mark Delivered</button>` : ''}
+                                </div>` : '<p class="text-[10px] text-amber-600 mt-1">No OCR data</p>'}
+                            ${o.status === 'pending' ? `<button type="button" onclick="markDelivered('${esc(o.id)}')" class="mt-2 w-full py-1.5 bg-green-500 text-white text-[10px] font-bold rounded-lg"><i class="fas fa-check mr-1"></i>Mark Delivered</button>` : ''}
                         </div>`).join('')}
                 </div>`;
         } catch (e) {
@@ -1185,7 +1029,7 @@ async function markDelivered(docId) {
     try {
         const { db, doc, updateDoc } = window.__fb;
         await updateDoc(doc(db, 'orders', docId), { status: 'delivered' });
-        showToast('Marked delivered ✓', 'bg-green-600');
+        showToast('Marked delivered', 'bg-green-600');
         renderAdmin();
     } catch (e) { showToast('Failed: ' + e.message, 'bg-red-600'); }
 }
@@ -1195,34 +1039,34 @@ function renderProductsTab() {
         <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3">Products (${products.length})</h3>
         <div class="space-y-2 mb-4">
             ${products.map(p => `
-                <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                <div class="glass border border-white/60 rounded-xl shadow-sm overflow-hidden">
                     <div class="flex justify-between items-center p-3">
                         <div class="flex items-center space-x-3 flex-1">
                             <div class="w-10 h-10 ${esc(p.bg)} rounded-lg flex items-center justify-center"><i class="${esc(p.icon)} ${esc(p.color)}"></i></div>
                             <div class="flex-1"><p class="font-bold text-sm leading-tight">${esc(p.title)}</p><p class="text-xs text-slate-500">$${esc(p.priceUSD)}</p></div>
                         </div>
-                        <button type="button" onclick="deleteProduct(${p.id})" class="text-red-500 bg-red-50 p-2 rounded-lg hover:bg-red-100"><i class="fas fa-trash-alt"></i></button>
+                        <button type="button" onclick="deleteProduct(${p.id})" class="text-red-500 bg-red-50/80 backdrop-blur p-2 rounded-lg hover:bg-red-100"><i class="fas fa-trash-alt"></i></button>
                     </div>
-                    <div class="bg-slate-50 px-3 py-2 border-t border-slate-100 space-y-1">
-                        <input type="text" value="${esc(p.title)}" onchange="updateProductField(${p.id},'title',this.value)" class="w-full p-2 text-xs rounded border" placeholder="Title">
-                        <input type="text" value="${esc(p.subtitle)}" onchange="updateProductField(${p.id},'subtitle',this.value)" class="w-full p-2 text-xs rounded border" placeholder="Subtitle">
-                        <input type="number" step="0.01" value="${esc(p.priceUSD)}" onchange="updateProductField(${p.id},'priceUSD',parseFloat(this.value))" class="w-full p-2 text-xs rounded border" placeholder="Price USD">
-                        <textarea onchange="updateProductField(${p.id},'details',this.value)" rows="2" class="w-full p-2 text-xs rounded border" placeholder="Details">${esc(p.details || '')}</textarea>
+                    <div class="bg-white/40 backdrop-blur px-3 py-2 border-t border-white/50 space-y-1">
+                        <input type="text" value="${esc(p.title)}" onchange="updateProductField(${p.id},'title',this.value)" class="w-full p-2 text-xs rounded border bg-white/70" placeholder="Title">
+                        <input type="text" value="${esc(p.subtitle)}" onchange="updateProductField(${p.id},'subtitle',this.value)" class="w-full p-2 text-xs rounded border bg-white/70" placeholder="Subtitle">
+                        <input type="number" step="0.01" value="${esc(p.priceUSD)}" onchange="updateProductField(${p.id},'priceUSD',parseFloat(this.value))" class="w-full p-2 text-xs rounded border bg-white/70" placeholder="Price USD">
+                        <textarea onchange="updateProductField(${p.id},'details',this.value)" rows="2" class="w-full p-2 text-xs rounded border bg-white/70" placeholder="Details">${esc(p.details || '')}</textarea>
                     </div>
                 </div>`).join('')}
         </div>
         <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3">Add New Product</h3>
-        <div class="space-y-2 bg-slate-50 p-4 rounded-2xl border border-slate-200">
-            <input type="text" id="add-title" placeholder="Title" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold">
-            <input type="text" id="add-subtitle" placeholder="Subtitle" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold">
-            <input type="number" step="0.01" id="add-price" placeholder="Price USD" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold">
-            <textarea id="add-details" rows="2" placeholder="Details" class="w-full p-3 rounded-xl border border-slate-200 text-sm"></textarea>
-            <select id="add-input-type" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold">
+        <div class="space-y-2 glass p-4 rounded-2xl border border-white/60">
+            <input type="text" id="add-title" placeholder="Title" class="w-full p-3 rounded-xl border border-white/60 bg-white/70 text-sm font-bold">
+            <input type="text" id="add-subtitle" placeholder="Subtitle" class="w-full p-3 rounded-xl border border-white/60 bg-white/70 text-sm font-bold">
+            <input type="number" step="0.01" id="add-price" placeholder="Price USD" class="w-full p-3 rounded-xl border border-white/60 bg-white/70 text-sm font-bold">
+            <textarea id="add-details" rows="2" placeholder="Details" class="w-full p-3 rounded-xl border border-white/60 bg-white/70 text-sm"></textarea>
+            <select id="add-input-type" class="w-full p-3 rounded-xl border border-white/60 bg-white/70 text-sm font-bold">
                 <option value="">No custom input</option>
                 <option value="name">Name input</option>
                 <option value="page_name">Page name input</option>
             </select>
-            <button type="button" onclick="addNewProduct()" class="w-full py-3 bg-brandDark text-white font-bold rounded-xl shadow-md">+ Add Product & Save</button>
+            <button type="button" onclick="addNewProduct()" class="w-full py-3 bg-brandDark text-white font-bold rounded-xl shadow-md shadow-brandDark/30">+ Add Product & Save</button>
         </div>`;
 }
 
@@ -1233,11 +1077,11 @@ function renderPaymentsTab() {
         ${regions.map(r => {
             const set = config.payments[r];
             return `
-                <div class="mb-4 bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                <div class="mb-4 glass rounded-2xl p-4 border border-white/60">
                     <p class="font-black text-sm mb-3">${esc(set.label)} (${r})</p>
                     <div class="space-y-2">
                         ${set.methods.map((m, i) => `
-                            <div class="bg-white rounded-xl p-3 border border-slate-100">
+                            <div class="bg-white/60 backdrop-blur rounded-xl p-3 border border-white/50">
                                 <div class="flex items-center justify-between mb-2">
                                     <div class="flex items-center gap-2"><i class="${esc(m.icon)} ${esc(m.color)}"></i><span class="font-bold text-sm">${esc(m.name)}</span></div>
                                     <label class="relative inline-flex items-center cursor-pointer">
@@ -1245,15 +1089,15 @@ function renderPaymentsTab() {
                                         <div class="w-9 h-5 bg-slate-200 peer-checked:bg-green-500 rounded-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition peer-checked:after:translate-x-4"></div>
                                     </label>
                                 </div>
-                                ${m.bank ? `<input type="text" value="${esc(m.bank)}" placeholder="Bank" onchange="updateMethod('${r}',${i},'bank',this.value)" class="w-full p-2 text-xs rounded-lg border mb-1">` : ''}
-                                ${m.holder ? `<input type="text" value="${esc(m.holder)}" placeholder="Holder" onchange="updateMethod('${r}',${i},'holder',this.value)" class="w-full p-2 text-xs rounded-lg border mb-1">` : ''}
-                                ${m.network ? `<input type="text" value="${esc(m.network)}" placeholder="Network" onchange="updateMethod('${r}',${i},'network',this.value)" class="w-full p-2 text-xs rounded-lg border mb-1">` : ''}
-                                <input type="text" value="${esc(m.account)}" placeholder="Account" onchange="updateMethod('${r}',${i},'account',this.value)" class="w-full p-2 text-xs rounded-lg border font-mono">
+                                ${m.bank ? `<input type="text" value="${esc(m.bank)}" placeholder="Bank" onchange="updateMethod('${r}',${i},'bank',this.value)" class="w-full p-2 text-xs rounded-lg border bg-white/70 mb-1">` : ''}
+                                ${m.holder ? `<input type="text" value="${esc(m.holder)}" placeholder="Holder" onchange="updateMethod('${r}',${i},'holder',this.value)" class="w-full p-2 text-xs rounded-lg border bg-white/70 mb-1">` : ''}
+                                ${m.network ? `<input type="text" value="${esc(m.network)}" placeholder="Network" onchange="updateMethod('${r}',${i},'network',this.value)" class="w-full p-2 text-xs rounded-lg border bg-white/70 mb-1">` : ''}
+                                <input type="text" value="${esc(m.account)}" placeholder="Account" onchange="updateMethod('${r}',${i},'account',this.value)" class="w-full p-2 text-xs rounded-lg border bg-white/70 font-mono">
                             </div>`).join('')}
                     </div>
                 </div>`;
         }).join('')}
-        <button type="button" onclick="saveConfigToFirebase()" class="w-full py-3 bg-green-600 text-white font-bold rounded-xl shadow-md mt-4">
+        <button type="button" onclick="saveConfigToFirebase()" class="w-full py-3 bg-green-600 text-white font-bold rounded-xl shadow-md shadow-green-600/30 mt-4">
             <i class="fas fa-cloud-upload-alt mr-1"></i>Save All Payments
         </button>`;
 }
@@ -1262,31 +1106,48 @@ function renderSupportTab() {
     const s = config.support;
     return `
         <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3">Support Info</h3>
-        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-4 space-y-3">
+        <div class="glass p-4 rounded-2xl border border-white/60 mb-4 space-y-3">
             <div><label class="text-[10px] font-bold text-slate-600 mb-1 block">WhatsApp</label>
-                <input type="text" value="${esc(s.whatsapp||'')}" onchange="updateSupport('whatsapp',this.value)" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold font-mono"></div>
+                <input type="text" value="${esc(s.whatsapp||'')}" onchange="updateSupport('whatsapp',this.value)" class="w-full p-3 rounded-xl border border-white/60 bg-white/70 text-sm font-bold font-mono"></div>
             <div><label class="text-[10px] font-bold text-slate-600 mb-1 block">Telegram</label>
-                <input type="text" value="${esc(s.telegram||'')}" onchange="updateSupport('telegram',this.value)" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold font-mono"></div>
+                <input type="text" value="${esc(s.telegram||'')}" onchange="updateSupport('telegram',this.value)" class="w-full p-3 rounded-xl border border-white/60 bg-white/70 text-sm font-bold font-mono"></div>
             <div><label class="text-[10px] font-bold text-slate-600 mb-1 block">Email</label>
-                <input type="email" value="${esc(s.email||'')}" onchange="updateSupport('email',this.value)" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold"></div>
+                <input type="email" value="${esc(s.email||'')}" onchange="updateSupport('email',this.value)" class="w-full p-3 rounded-xl border border-white/60 bg-white/70 text-sm font-bold"></div>
         </div>
-        <button type="button" onclick="saveConfigToFirebase()" class="w-full py-3 bg-green-600 text-white font-bold rounded-xl shadow-md">
+        <button type="button" onclick="saveConfigToFirebase()" class="w-full py-3 bg-green-600 text-white font-bold rounded-xl shadow-md shadow-green-600/30">
             <i class="fas fa-cloud-upload-alt mr-1"></i>Save Support
         </button>`;
 }
 
 function renderSettingsTab() {
+    const tg = config.telegram || {};
     return `
-        <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3">WhatsApp Number</h3>
-        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-6">
-            <label class="text-xs font-bold text-slate-600 mb-1 block">WhatsApp Number (no +)</label>
-            <input type="text" value="${esc(config.whatsappNumber)}" placeholder="8801773204904" onchange="config.whatsappNumber=this.value.replace(/[^0-9]/g,'');persistAll();showToast('Saved ✓','bg-green-600')" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold font-mono mb-2">
+        <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3">Telegram Notifications</h3>
+        <div class="glass p-4 rounded-2xl border border-white/60 mb-4 space-y-3">
+            <div class="flex items-center justify-between">
+                <span class="font-bold text-sm">Enable Telegram alerts</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" ${tg.enabled ? 'checked' : ''} onchange="config.telegram=config.telegram||{};config.telegram.enabled=this.checked;persistAll()" class="sr-only peer">
+                    <div class="w-9 h-5 bg-slate-200 peer-checked:bg-green-500 rounded-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition peer-checked:after:translate-x-4"></div>
+                </label>
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-slate-600 mb-1 block">Bot Token (from @BotFather)</label>
+                <input type="text" value="${esc(tg.token || '')}" onchange="config.telegram=config.telegram||{};config.telegram.token=this.value.trim();persistAll()" class="w-full p-3 rounded-xl border border-white/60 bg-white/70 text-xs font-mono" placeholder="123456:ABC-DEF...">
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-slate-600 mb-1 block">Chat ID</label>
+                <input type="text" value="${esc(tg.chatId || '')}" onchange="config.telegram=config.telegram||{};config.telegram.chatId=this.value.trim();persistAll()" class="w-full p-3 rounded-xl border border-white/60 bg-white/70 text-xs font-mono" placeholder="e.g. 123456789">
+            </div>
+            <button type="button" onclick="nxTgTest()" class="w-full py-2 bg-blue-500 text-white text-xs font-bold rounded-lg shadow-md shadow-blue-500/30">
+                <i class="fas fa-paper-plane mr-1"></i>Send Test Message
+            </button>
         </div>
-        <button type="button" onclick="saveConfigToFirebase()" class="w-full py-3 bg-green-600 text-white font-bold rounded-xl shadow-md mb-2">
+        <button type="button" onclick="saveConfigToFirebase()" class="w-full py-3 bg-green-600 text-white font-bold rounded-xl shadow-md shadow-green-600/30 mb-2">
             <i class="fas fa-cloud-upload-alt mr-1"></i>Save Settings
         </button>
         <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3 mt-6">Danger</h3>
-        <button type="button" onclick="resetAll()" class="w-full py-3 bg-red-500 text-white font-bold rounded-xl shadow-md">
+        <button type="button" onclick="resetAll()" class="w-full py-3 bg-red-500 text-white font-bold rounded-xl shadow-md shadow-red-500/30">
             <i class="fas fa-rotate-left mr-2"></i>Reset Local Data
         </button>
         <p class="text-[10px] text-slate-400 text-center mt-2">Firestore data safe</p>`;
@@ -1297,11 +1158,11 @@ async function saveConfigToFirebase() {
         const { db, doc, setDoc } = window.__fb;
         await setDoc(doc(db, 'settings', 'config'), {
             payments: config.payments,
-            whatsappNumber: config.whatsappNumber,
-            support: config.support
+            support: config.support,
+            telegram: config.telegram || { enabled: false, token: '', chatId: '' }
         });
         await setDoc(doc(db, 'settings', 'products'), { list: products });
-        showToast('Saved to cloud ✓', 'bg-green-600');
+        showToast('Saved to cloud', 'bg-green-600');
     } catch (e) { showToast('Save failed: ' + e.message, 'bg-red-600'); }
 }
 
@@ -1317,7 +1178,7 @@ async function updateProductField(id, field, val) {
     try {
         const { db, doc, setDoc } = window.__fb;
         await setDoc(doc(db, 'settings', 'products'), { list: products });
-        showToast('Saved ✓', 'bg-green-600');
+        showToast('Saved', 'bg-green-600');
         renderGrid();
     } catch (e) { showToast('Save failed: ' + e.message, 'bg-amber-600'); }
 }
@@ -1340,7 +1201,7 @@ async function addNewProduct() {
     try {
         const { db, doc, setDoc } = window.__fb;
         await setDoc(doc(db, 'settings', 'products'), { list: products });
-        showToast('Product added & saved ✓', 'bg-green-600');
+        showToast('Product added & saved', 'bg-green-600');
     } catch (e) { showToast('Added locally — save failed', 'bg-amber-600'); }
     ['add-title','add-subtitle','add-price','add-details'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('add-input-type').value = '';
@@ -1354,7 +1215,7 @@ async function deleteProduct(id) {
     try {
         const { db, doc, setDoc } = window.__fb;
         await setDoc(doc(db, 'settings', 'products'), { list: products });
-        showToast('Deleted & saved ✓', 'bg-green-600');
+        showToast('Deleted & saved', 'bg-green-600');
     } catch (e) { showToast('Deleted locally', 'bg-amber-600'); }
     renderGrid(); renderAdmin();
 }
@@ -1366,7 +1227,7 @@ function resetAll() {
     products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
     localOrders = {};
     renderGrid(); renderSupport(); renderAdmin();
-    showToast('Reset done ✓', 'bg-green-600');
+    showToast('Reset done', 'bg-green-600');
 }
 
 function openRegionModal() { openModalEl('region-modal'); }
@@ -1374,5 +1235,551 @@ function closeRegionModal() { closeModalEl('region-modal'); }
 
 document.addEventListener('DOMContentLoaded', initApp);
 </script>
+
+<!-- ============ LOGIN / SIGNUP ============ -->
+<div id="nx-auth" class="nx-m fixed inset-0 z-[66] items-center justify-center pointer-events-none opacity-0">
+  <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeModalEl('nx-auth')"></div>
+  <form onsubmit="nxAuth(event)" class="relative glass-strong w-11/12 max-w-sm rounded-3xl p-6 shadow-2xl pointer-events-auto">
+    <h2 id="nx-title" class="text-xl font-black text-center mb-2">Login</h2>
+    <input id="nx-name" class="nx-i hidden" placeholder="Full name">
+    <input id="nx-email" type="email" required class="nx-i" placeholder="Email" autocomplete="username">
+    <input id="nx-pass" type="password" required minlength="6" class="nx-i" placeholder="Password (min 6)" autocomplete="current-password">
+    <p id="nx-err" class="text-xs text-red-600 font-bold mt-2 hidden"></p>
+    <button id="nx-go" class="w-full py-3 mt-3 bg-brandDark text-white font-black rounded-xl shadow-lg shadow-brandDark/30">Login</button>
+    <button type="button" id="nx-sw" onclick="nxMode()" class="w-full mt-2 text-xs font-bold text-blue-600">New here? Create account</button>
+  </form>
+</div>
+
+<div id="nx-acc" class="nx-m fixed inset-0 z-[62] items-stretch sm:items-center justify-center pointer-events-none opacity-0">
+  <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModalEl('nx-acc')"></div>
+  <div class="relative w-full max-w-3xl glass-strong sm:rounded-3xl shadow-2xl pointer-events-auto flex flex-col h-full sm:h-[94vh]">
+    <div class="px-6 pt-5 pb-2 flex justify-between items-center"><h2 id="nx-acc-title" class="text-xl font-black">My Dashboard</h2>
+      <button type="button" onclick="closeModalEl('nx-acc')" class="w-8 h-8 glass rounded-full text-slate-500"><i class="fas fa-times"></i></button></div>
+    <div id="nx-acc-body" class="overflow-y-auto px-6 pb-8"></div>
+  </div>
+</div>
+
+<div id="nx-rep" class="nx-m fixed inset-0 z-[68] items-center justify-center pointer-events-none opacity-0">
+  <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeModalEl('nx-rep')"></div>
+  <div class="relative glass-strong w-11/12 max-w-sm rounded-3xl p-6 shadow-2xl pointer-events-auto">
+    <h2 class="text-lg font-black mb-2">Replace request</h2>
+    <textarea id="nx-prob" rows="4" class="nx-i" placeholder="What is the problem with this account?"></textarea>
+    <button type="button" onclick="nxRepSend()" class="w-full py-3 mt-3 bg-orange-500 text-white font-black rounded-xl shadow-lg shadow-orange-500/30">Submit</button>
+  </div>
+</div>
+
+<script type="module">
+import { getApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import * as A from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import * as F from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+const app = getApp();
+window.NX = { ...A, ...F, auth: A.getAuth(app), db: F.getFirestore(app) };
+window.dispatchEvent(new Event('nx-ready'));
+</script>
+
+<script>
+const ADMIN_EMAIL = 'naimeboss999@gmail.com';
+const HOUR = 36e5, $ = id => document.getElementById(id);
+const ST = {
+    pending:'bg-yellow-100 text-yellow-700',
+    delivered:'bg-green-100 text-green-700',
+    replace_requested:'bg-orange-100 text-orange-700',
+    cancelled:'bg-red-100 text-red-700'
+};
+const chip = s => `<span class="text-[10px] font-black px-2 py-0.5 rounded ${ST[s]||ST.pending}">${(s==='delivered'?'completed':(s==='replace_requested'?'replace':(s||'pending')).toUpperCase())}</span>`;
+let me = null, myOrders = [], adminOrders = [], unsubs = [], signup = false, repId = null;
+const isAdmin = () => !!me && me.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+const NXready = () => new Promise(r => window.NX ? r() : addEventListener('nx-ready', r));
+
+const hb = document.createElement('button');
+hb.type = 'button'; hb.className = 'h-10 px-3 rounded-full bg-blue-600 text-white flex items-center gap-1.5 text-xs font-bold';
+hb.onclick = () => me ? (openModalEl('nx-acc'), nxAcc()) : nxOpenAuth();
+document.querySelector('header .space-x-2').append(hb);
+function nxBtn() { hb.innerHTML = '<i class="fas fa-user"></i><span>' + (me ? esc((me.displayName || 'Me').split(' ')[0]) : 'Login') + '</span>'; }
+nxBtn();
+
+function nxNotify(t, b) {
+  showToast(t + ' ' + b, 'bg-green-600');
+  try { const a = new AudioContext(), o = a.createOscillator(); o.connect(a.destination); o.frequency.value = 880; o.start(); setTimeout(() => o.stop(), 200); } catch {}
+  if (window.Notification && Notification.permission === 'granted') new Notification(t, { body: b });
+}
+
+function nxOpenAuth() { $('nx-err').classList.add('hidden'); openModalEl('nx-auth'); }
+function nxMode() {
+  signup = !signup;
+  $('nx-name').classList.toggle('hidden', !signup); $('nx-name').required = signup;
+  $('nx-title').textContent = $('nx-go').textContent = signup ? 'Create account' : 'Login';
+  $('nx-sw').textContent = signup ? 'Have an account? Login' : 'New here? Create account';
+}
+async function nxAuth(e) {
+  e.preventDefault(); const X = NX, em = $('nx-email').value.trim(), pw = $('nx-pass').value, nm = $('nx-name').value.trim();
+  try {
+    if (signup) {
+      const c = await X.createUserWithEmailAndPassword(X.auth, em, pw);
+      await X.updateProfile(c.user, { displayName: nm });
+      await X.setDoc(X.doc(X.db, 'users', c.user.uid), { name: nm, email: em, createdAt: X.serverTimestamp() });
+      nxBtn();
+    } else await X.signInWithEmailAndPassword(X.auth, em, pw);
+    $('nx-pass').value = ''; closeModalEl('nx-auth'); showToast('Welcome', 'bg-green-600');
+    if (window.Notification && Notification.permission === 'default') Notification.requestPermission();
+  } catch (err) {
+    const m = { 'auth/email-already-in-use':'Email already registered', 'auth/weak-password':'Password min 6 characters', 'auth/invalid-credential':'Wrong email or password', 'auth/wrong-password':'Wrong email or password', 'auth/user-not-found':'No account with this email' };
+    $('nx-err').textContent = m[err.code] || err.message; $('nx-err').classList.remove('hidden');
+  }
+}
+function nxOut() { NX.signOut(NX.auth); closeModalEl('nx-acc'); showToast('Logged out', 'bg-slate-700'); }
+
+NXready().then(() => {
+  const X = NX;
+  X.onAuthStateChanged(X.auth, u => {
+    me = u; unsubs.forEach(f => f()); unsubs = []; myOrders = []; adminOrders = []; nxBtn();
+    let fu = true, fa = true; if (!u) return;
+    const col = X.collection(X.db, 'orders');
+    unsubs.push(X.onSnapshot(X.query(col, X.where('userId', '==', u.uid)), s => {
+      if (!fu) s.docChanges().forEach(c => {
+        const d = c.doc.data();
+        if (c.type === 'modified') {
+          if (d.status === 'delivered') nxNotify('Delivered!', d.productTitle + ' — open My Orders');
+          else if (d.status === 'cancelled') nxNotify('Order cancelled', d.orderId + (d.cancelReason ? ' — ' + d.cancelReason : ''));
+        }
+      });
+      fu = false; myOrders = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.createdMs || 0) - (a.createdMs || 0)); nxAcc();
+    }));
+    if (isAdmin()) unsubs.push(X.onSnapshot(X.query(col, X.orderBy('createdAt', 'desc')), s => {
+      if (!fa) s.docChanges().forEach(c => { const d = c.doc.data(); if (c.type === 'added') nxNotify('New order', d.productTitle + ' × ' + d.quantity + ' — ' + d.amount); else if (c.type === 'modified' && d.status === 'replace_requested') nxNotify('Replace request', d.orderId); });
+      fa = false; adminOrders = s.docs.map(d => ({ id: d.id, ...d.data() })); nxAdm();
+    }));
+  });
+});
+
+const _oc = openCheckout;
+openCheckout = function () { if (!me) { closeModal(); showToast('Login to place order', 'bg-slate-700'); nxOpenAuth(); return; } _oc(); };
+
+function nxShrink(f) {
+  return new Promise(r => { const i = new Image(); i.onload = () => {
+    const s = Math.min(1, 900 / i.width), c = document.createElement('canvas'); c.width = i.width * s; c.height = i.height * s;
+    c.getContext('2d').drawImage(i, 0, 0, c.width, c.height);
+    let d = c.toDataURL('image/jpeg', .6); if (d.length > 700000) d = c.toDataURL('image/jpeg', .35); r(d);
+  }; i.src = URL.createObjectURL(f); });
+}
+
+submitOrder = async function () {
+  if (!me) return nxOpenAuth();
+  if (!selectedFile) return showToast('Upload screenshot first', 'bg-red-600');
+  const tx = $('scan-trx'); if (tx) extractedData = { ...(extractedData || {}), trxId: tx.value.trim().toUpperCase() || null };
+  if (!extractedData || !extractedData.trxId || extractedData.trxId.length < 6) return showToast('Enter the Transaction ID', 'bg-red-600');
+  const X = NX, btn = $('submit-btn'), tid = extractedData && extractedData.trxId, o = _pendingOrder;
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Saving...</span>';
+  try {
+    if (tid && (await X.getDoc(X.doc(X.db, 'used_trx', tid))).exists()) throw new Error('This TrxID was already used');
+    const proofImg = await nxShrink(selectedFile), orderId = 'ORD-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
+    await X.addDoc(X.collection(X.db, 'orders'), {
+      orderId, productId: o.productId, productTitle: o.productTitle, quantity: o.quantity, amount: o.amount, amountNumeric: o.amountNumeric,
+      currency: o.currency, region: o.region, customValue: o.customValue, customLabel: o.customLabel,
+      userId: me.uid, userName: me.displayName || '', userEmail: me.email, userPhone: $('user-phone').value.trim() || null,
+      extracted: extractedData ? { ...extractedData } : null, proofImg, status: 'pending', createdAt: X.serverTimestamp(), createdMs: Date.now()
+    });
+    if (tid) await X.setDoc(X.doc(X.db, 'used_trx', tid), { orderId, uid: me.uid });
+    _lastOrderId = orderId;
+    nxTgNewOrder({ orderId, productTitle: o.productTitle, quantity: o.quantity, amount: o.amount, userName: me.displayName || '', userEmail: me.email || '', userPhone: $('user-phone').value.trim(), customLabel: o.customLabel, customValue: o.customValue, extracted: extractedData });
+    closeCheckout(); showSuccessModal(orderId);
+  } catch (e) {
+    showToast(e.message, 'bg-red-600'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i><span>Submit Order</span>';
+  }
+};
+
+/* ---------- CUSTOMER DASHBOARD ---------- */
+function nxNormDelivery(d) {
+    if (!d) return [];
+    if (Array.isArray(d.fields)) return d.fields;
+    const out = [];
+    if (d.uid) out.push({ label: 'UID', value: d.uid });
+    if (d.pass) out.push({ label: 'Password', value: d.pass });
+    return out;
+}
+
+function nxAcc() {
+  if (!me || !$('nx-acc').classList.contains('modal-open')) return;
+  const cp = (v, l) => `<button type="button" data-c="${esc(v)}" onclick="copyText(this.dataset.c,'${l}')" class="ml-1 text-[10px] bg-white/70 backdrop-blur border border-white/60 rounded px-2 py-0.5 font-bold">copy</button>`;
+  $('nx-acc-body').innerHTML = nxTabs('acc') +
+    (nxFilt(myOrders, accTab).map(o => {
+      const d = o.delivery, left = o.deliveredAt ? HOUR - (Date.now() - o.deliveredAt) : 0, can = o.status === 'delivered' && !o.replaced && left > 0;
+      const sent = nxNormDelivery(d);
+      return `<div class="glass border border-white/60 rounded-xl p-3 mb-2 space-y-1">
+        <div class="flex justify-between"><b class="text-xs">${esc(o.orderId)}</b>${chip(o.status)}</div>
+        <p class="text-[11px] font-semibold">${esc(o.productTitle)} × ${esc(o.quantity)} — ${esc(o.amount)}</p>
+        ${o.status === 'pending' ? '<p class="text-[10px] text-amber-700 font-bold">Admin is checking your payment</p>' : ''}
+        ${o.status === 'cancelled' ? `<p class="text-[10px] text-red-700 font-bold bg-red-50/80 backdrop-blur rounded p-2"><i class="fas fa-ban mr-1"></i>Order cancelled${o.cancelReason ? ' — ' + esc(o.cancelReason) : ''}</p>` : ''}
+        ${o.status === 'replace_requested' ? '<p class="text-[10px] text-orange-700 font-bold">Replace requested — admin will send a new account</p>' : ''}
+        ${o.status === 'delivered' && sent.length ? `<div class="bg-green-50/80 backdrop-blur border border-green-200 rounded-lg p-2 text-[11px] space-y-1.5">${sent.map(f => {
+            const is2fa = /2fa|totp|auth|secret/i.test(f.label);
+            return `<div>
+                <p class="text-[9px] font-bold text-slate-500 uppercase">${esc(f.label)}</p>
+                <p class="font-mono font-bold break-all flex items-start flex-wrap gap-1">${esc(f.value)}${cp(f.value, f.label)}</p>
+                ${is2fa ? `<div data-totp-box data-totp-secret="${esc(f.value)}" class="mt-1"></div>` : ''}
+            </div>`;
+        }).join('')}</div>` : ''}
+        ${can ? `<button type="button" onclick="nxRep('${o.id}')" class="w-full py-2 bg-orange-500 text-white text-[11px] font-bold rounded-lg shadow-md shadow-orange-500/30">Replace (${Math.ceil(left / 6e4)} min left)</button>` : ''}
+      </div>`;
+    }).join('') || '<p class="text-center text-slate-400 py-8 font-bold">No orders yet</p>') +
+    '<button type="button" onclick="nxOut()" class="w-full mt-3 py-2 bg-red-50/80 backdrop-blur text-red-600 rounded-lg text-xs font-bold border border-red-200/60">Logout</button>';
+}
+setInterval(() => nxAcc(), 30000);
+function nxRep(id) { repId = id; $('nx-prob').value = ''; openModalEl('nx-rep'); }
+async function nxRepSend() {
+  const p = $('nx-prob').value.trim(); if (!p) return showToast('Write the problem', 'bg-red-600');
+  try {
+    await NX.updateDoc(NX.doc(NX.db, 'orders', repId), { status: 'replace_requested', replace: { problem: p, at: Date.now() } });
+    closeModalEl('nx-rep'); showToast('Sent to admin', 'bg-green-600');
+  } catch (e) { showToast('Replace window closed', 'bg-red-600'); }
+}
+
+/* ---------- ADMIN DASHBOARD ---------- */
+const _ra = renderAdmin;
+renderAdmin = function () { currentTab === 'orders' ? nxAdm(true) : _ra(); };
+openAdmin = function () {
+  if (!me) { showToast('Admin: login first', 'bg-slate-700'); return nxOpenAuth(); }
+  if (!isAdmin()) return showToast('Admin only', 'bg-red-600');
+  $('admin-who').textContent = 'Logged: ' + me.email; renderAdmin(); openModalEl('admin-panel');
+};
+
+function nxAdm(force) {
+    const b = $('admin-body'), ae = document.activeElement;
+    if (currentTab !== 'orders' || !$('admin-panel').classList.contains('modal-open')) return;
+    if (!force && ae && b.contains(ae) && /INPUT|TEXTAREA/.test(ae.tagName)) return;
+    b.innerHTML = nxTabs('adm') + '<div class="space-y-2">' + nxFilt(adminOrders, admTab).map(o => {
+        const x = o.extracted || {}, d = o.delivery, sent = nxNormDelivery(d);
+        const canDeliver = !['delivered', 'cancelled'].includes(o.status);
+        const canCancel = o.status === 'pending';
+        return `<div class="glass border border-white/60 rounded-xl p-3 shadow-sm space-y-1">
+            <div class="flex justify-between"><b class="text-xs">${esc(o.orderId)}</b>${chip(o.status)}</div>
+            <p class="text-[11px] font-semibold">${esc(o.productTitle)} × ${esc(o.quantity)} — ${esc(o.amount)}</p>
+            <p class="text-[10px] text-slate-500">${esc(o.userName)} · ${esc(o.userEmail)}${o.userPhone ? ' · ' + esc(o.userPhone) : ''}</p>
+            ${o.customValue ? `<p class="text-[10px] text-indigo-600 font-bold">${esc(o.customLabel)}: ${esc(o.customValue)}</p>` : ''}
+            <p class="text-[10px] text-green-700">${x.amount ? 'Paid ' + esc(x.amount) : ''}${x.trxId ? ' · TrxID ' + esc(x.trxId) : ''}${x.matchesAmount === false ? ' amount mismatch' : ''}${x.receiverMatch === false ? ' receiver not found' : ''}</p>
+            ${o.proofImg ? `<details><summary class="text-[10px] font-bold text-blue-600 cursor-pointer">Payment proof</summary><img src="${o.proofImg}" class="mt-1 rounded-lg max-w-full"></details>` : ''}
+            ${o.replace ? `<p class="text-[11px] bg-orange-50/80 backdrop-blur border border-orange-200 rounded p-2 font-semibold">Problem: ${esc(o.replace.problem)}</p>` : ''}
+            ${o.cancelReason ? `<p class="text-[10px] text-red-700 bg-red-50/70 backdrop-blur rounded p-2 font-bold">Cancelled: ${esc(o.cancelReason)}</p>` : ''}
+            ${sent.length ? `<div class="text-[10px] font-mono break-all bg-white/40 backdrop-blur border border-white/50 rounded p-2 space-y-0.5">
+                ${sent.map(f => `<div><b>${esc(f.label)}:</b> ${esc(f.value)}</div>`).join('')}</div>` : ''}
+            ${canDeliver ? `<div id="dbox-${o.id}" class="mt-1 space-y-1">
+                <input data-df="uid" data-label="UID" placeholder="UID / Email *" class="nx-i">
+                <input data-df="pass" data-label="Password" placeholder="Password *" class="nx-i">
+                <input data-df="2fa" data-label="2FA Secret" placeholder="2FA Secret (base32) — auto-generates code" class="nx-i" oninput="nx2faTyping('${o.id}', this.value)">
+                <div id="d2fa-${o.id}" data-totp-box class="hidden mt-1"></div>
+                <input data-df="optional" data-label="Optional" placeholder="Optional / Note (recovery email, etc.)" class="nx-i">
+                <div id="dextra-${o.id}" class="space-y-1"></div>
+                <button type="button" onclick="nxAddField('${o.id}')" class="w-full py-1.5 bg-white/60 backdrop-blur text-slate-700 text-[10px] font-bold rounded-lg border border-white/60"><i class="fas fa-plus mr-1"></i>Add custom field</button>
+                <button type="button" onclick="nxDeliver('${o.id}')" class="w-full py-2 mt-1 bg-green-500 text-white text-[11px] font-bold rounded-lg shadow-md shadow-green-500/30"><i class="fas fa-paper-plane mr-1"></i>${o.status === 'replace_requested' ? 'Send replacement' : 'Submit & deliver to user'}</button>
+            </div>` : ''}
+            ${canCancel ? `<button type="button" onclick="nxCancel('${o.id}')" class="w-full py-2 mt-1 bg-red-500/90 hover:bg-red-600 text-white text-[11px] font-bold rounded-lg shadow-md shadow-red-500/30"><i class="fas fa-ban mr-1"></i>Cancel Order (Fake / Unpaid)</button>` : ''}
+        </div>`;
+    }).join('') + '</div>';
+}
+
+function nxAddField(orderId) {
+    const box = $('dextra-' + orderId); if (!box) return;
+    const div = document.createElement('div');
+    div.className = 'flex gap-1';
+    div.innerHTML = `<input placeholder="Label" class="nx-i flex-1" style="margin-top:0" data-cf-label>
+        <input placeholder="Value" class="nx-i flex-1" style="margin-top:0" data-cf-value>
+        <button type="button" onclick="this.parentElement.remove()" class="px-2 bg-red-50/80 backdrop-blur text-red-600 rounded-lg text-xs shrink-0"><i class="fas fa-times"></i></button>`;
+    box.appendChild(div);
+}
+
+async function nxDeliver(id) {
+    const box = $('dbox-' + id); if (!box) return;
+    const fields = [];
+    ['uid', 'pass', '2fa', 'optional'].forEach(k => {
+        const inp = box.querySelector(`[data-df="${k}"]`);
+        if (inp && inp.value.trim()) fields.push({ label: inp.dataset.label, value: inp.value.trim() });
+    });
+    box.querySelectorAll('[data-cf-label]').forEach(li => {
+        const vi = li.parentElement.querySelector('[data-cf-value]');
+        const l = li.value.trim(), v = vi ? vi.value.trim() : '';
+        if (l && v) fields.push({ label: l, value: v });
+    });
+    const hasUid = fields.some(f => /uid|email|user/i.test(f.label));
+    const hasPass = fields.some(f => /pass/i.test(f.label));
+    if (!hasUid || !hasPass) return showToast('UID & Password are required', 'bg-red-600');
+    const o = adminOrders.find(x => x.id === id);
+    try {
+        await NX.updateDoc(NX.doc(NX.db, 'orders', id), {
+            status: 'delivered',
+            delivery: { fields, uid: fields[0].value, pass: (fields.find(f => /pass/i.test(f.label)) || {}).value || '' },
+            deliveredAt: Date.now(),
+            replaced: o.status === 'replace_requested' || !!o.replaced
+        });
+        showToast('Sent to user', 'bg-green-600');
+        nxAdm(true);
+    } catch (e) { showToast(e.message, 'bg-red-600'); }
+}
+
+/* ---------- CANCEL ORDER (NEW) ---------- */
+async function nxCancel(id) {
+    if (!confirm('Cancel this order?\n\nIt will be marked as CANCELLED and shown to the customer.')) return;
+    const reason = prompt('Reason for cancellation (optional, shown to customer):') || '';
+    try {
+        await NX.updateDoc(NX.doc(NX.db, 'orders', id), {
+            status: 'cancelled',
+            cancelReason: reason,
+            cancelledAt: Date.now()
+        });
+        showToast('Order cancelled', 'bg-red-600');
+        nxAdm(true);
+    } catch (e) { showToast('Failed: ' + e.message, 'bg-red-600'); }
+}
+</script>
+
+<script>
+/* ===== NAIM v2: menu, tabs, notifications, fast OCR, TOTP, Telegram ===== */
+let accTab = 'pending', admTab = 'pending', accView = 'orders', notifs = JSON.parse(localStorage.getItem('nx_n') || '[]');
+const nxSave = () => localStorage.setItem('nx_n', JSON.stringify(notifs.slice(0, 40)));
+const unread = () => notifs.filter(n => !n.r).length;
+const nxFilt = (l, t) => l.filter(o => t === 'done' ? ['delivered','cancelled'].includes(o.status) : !['delivered','cancelled'].includes(o.status));
+function nxTabs(w) {
+  const L = w === 'adm' ? adminOrders : myOrders, t = w === 'adm' ? admTab : accTab;
+  const b = (k, l) => `<button type="button" onclick="nxTab('${w}','${k}')" class="flex-1 py-2 rounded-xl text-xs font-black transition ${t === k ? 'bg-brandDark text-white shadow-lg shadow-brandDark/30' : 'glass text-slate-700 border border-white/60'}">${l} (${nxFilt(L, k).length})</button>`;
+  return `<div class="flex gap-2 mb-3">${b('pending', 'Pending')}${b('done', 'Done')}</div>`;
+}
+function nxTab(w, t) { w === 'adm' ? (admTab = t, nxAdm(true)) : (accTab = t, nxAcc()); }
+
+document.body.insertAdjacentHTML('beforeend', `<div id="nx-menu" class="nx-m fixed inset-0 z-[63] justify-end pointer-events-none opacity-0">
+  <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModalEl('nx-menu')"></div>
+  <div id="nx-menu-body" class="relative w-80 max-w-[85%] h-full glass-strong shadow-2xl pointer-events-auto flex flex-col p-5 overflow-y-auto rounded-l-3xl"></div></div>`);
+hb.className = 'relative h-10 w-10 rounded-full bg-brandDark text-white flex items-center justify-center shadow-md shadow-brandDark/30'; hb.onclick = () => nxMenu();
+nxBtn = function () { const u = unread(); hb.innerHTML = '<i class="fas fa-bars"></i>' + (u ? `<span class="absolute -top-1 -right-1 bg-red-500 text-[9px] font-black rounded-full min-w-[16px] h-4 px-1 flex items-center justify-center">${u}</span>` : ''); };
+nxBtn();
+function nxMenu() {
+  const pc = myOrders.filter(o => !['delivered','cancelled'].includes(o.status)).length, apc = adminOrders.filter(o => !['delivered','cancelled'].includes(o.status)).length;
+  const it = (ic, l, fn, bd) => `<button type="button" onclick="${fn}" class="w-full flex items-center gap-3 p-3 rounded-2xl glass hover:bg-white/90 text-sm font-bold text-left border border-white/40"><i class="${ic} w-5 text-center text-slate-500"></i><span class="flex-1">${l}</span>${bd ? `<span class="bg-red-500 text-white text-[10px] font-black rounded-full px-2 py-0.5">${bd}</span>` : ''}</button>`;
+  $('nx-menu-body').innerHTML = `<div class="flex justify-between items-center mb-4"><h2 class="font-black text-xl tracking-tight">Menu</h2><button type="button" onclick="closeModalEl('nx-menu')" class="w-8 h-8 glass rounded-full text-slate-500 border border-white/60"><i class="fas fa-times"></i></button></div>
+    <div class="bg-gradient-to-br from-brandDark to-slate-800 text-white rounded-2xl p-4 mb-3 text-xs font-bold shadow-lg shadow-brandDark/30">${me ? esc(me.displayName || 'User') + '<br><span class="font-medium text-slate-300">' + esc(me.email) + '</span>' : 'Guest — login to order'}</div>
+    <div class="space-y-1.5">
+    ${it('fas fa-store', 'Shop', "closeModalEl('nx-menu')")}
+    ${isAdmin() ? '' : it('fas fa-box', 'My Dashboard', "nxGo('orders')", pc)}
+    ${it('fas fa-bell', 'Notifications', "nxGo('notifs')", unread())}
+    ${it('fas fa-headset', 'Support', "closeModalEl('nx-menu');$('support-section').scrollIntoView({behavior:'smooth'})")}
+    ${isAdmin() ? it('fas fa-shield-halved', 'Admin Dashboard', "closeModalEl('nx-menu');openAdmin()", apc) : ''}
+    ${window.Notification && Notification.permission !== 'granted' ? it('fas fa-bell-concierge', 'Enable notifications', 'nxAsk()') : ''}
+    ${me ? it('fas fa-sign-out-alt', 'Logout', "closeModalEl('nx-menu');nxOut()") : it('fas fa-right-to-bracket', 'Login / Sign up', "closeModalEl('nx-menu');nxOpenAuth()")}
+    </div>`;
+  openModalEl('nx-menu');
+}
+function nxGo(v) {
+  closeModalEl('nx-menu'); if (v === 'orders' && !me) return nxOpenAuth();
+  accView = v; openModalEl('nx-acc'); nxAcc();
+}
+const _oa = nxAcc;
+nxAcc = function () { if (!$('nx-acc').classList.contains('modal-open')) return; if (accView === 'notifs') return nxNV(); $('nx-acc-title').textContent = 'My Dashboard'; _oa(); };
+function nxNV() {
+  $('nx-acc-title').textContent = 'Notifications'; notifs.forEach(n => n.r = 1); nxSave(); nxBtn();
+  $('nx-acc-body').innerHTML = (notifs.map(n => `<div class="glass border border-white/60 rounded-xl p-3 mb-2"><p class="text-xs font-black">${esc(n.t)}</p><p class="text-[11px] text-slate-600 font-semibold">${esc(n.b)}</p><p class="text-[9px] text-slate-400 mt-1">${new Date(n.ts).toLocaleString()}</p></div>`).join('') || '<p class="text-center text-slate-400 py-8 font-bold">No notifications yet</p>') +
+    (notifs.length ? '<button type="button" onclick="notifs=[];nxSave();nxNV()" class="w-full py-2 bg-white/60 backdrop-blur rounded-lg text-xs font-bold border border-white/60">Clear all</button>' : '');
+}
+
+navigator.serviceWorker && navigator.serviceWorker.register('sw.js').catch(() => {});
+function nxPop(t, b, html) {
+  let e = $('nx-pop'); if (!e) { e = document.createElement('div'); e.id = 'nx-pop'; e.className = 'fixed top-3 left-1/2 -translate-x-1/2 z-[90] w-[92%] max-w-sm'; document.body.appendChild(e); }
+  const c = document.createElement('div'); c.className = 'toast glass-strong border border-white/70 shadow-2xl rounded-2xl p-3 mb-2 flex gap-3 items-start';
+  c.innerHTML = `<div class="w-9 h-9 rounded-xl bg-brandDark flex items-center justify-center shrink-0 shadow-md shadow-brandDark/30"><i class="fas fa-bell text-white text-sm"></i></div><div class="min-w-0 flex-1"><p class="text-xs font-black">${esc(t)}</p><p class="text-[11px] text-slate-600 font-semibold">${esc(b)}</p>${html || ''}</div>`;
+  c.onclick = ev => { if (!ev.target.closest('button')) c.remove(); }; e.prepend(c); setTimeout(() => c.remove(), html ? 15000 : 5500); return c;
+}
+async function nxSys(t, b) {
+  if (!window.Notification || Notification.permission !== 'granted') return;
+  try { const r = navigator.serviceWorker && await navigator.serviceWorker.getRegistration(); if (r) return r.showNotification(t, { body: b, vibrate: [100, 50, 100] }); } catch {}
+  try { new Notification(t, { body: b }); } catch {}
+}
+nxNotify = function (t, b) {
+  notifs.unshift({ t, b, ts: Date.now(), r: 0 }); nxSave(); nxBtn(); nxPop(t, b); nxSys(t, b);
+  try { const a = new AudioContext(), o = a.createOscillator(); o.connect(a.destination); o.frequency.value = 880; o.start(); setTimeout(() => o.stop(), 200); } catch {}
+  if (accView === 'notifs') nxAcc();
+};
+function nxAsk() { if (!window.Notification) return showToast('Not supported on this browser', 'bg-red-600'); Notification.requestPermission().then(p => { showToast(p === 'granted' ? 'Notifications on' : 'Notifications blocked', p === 'granted' ? 'bg-green-600' : 'bg-red-600'); nxMenu(); }); }
+setTimeout(() => {
+  if (window.Notification && Notification.permission === 'default' && !localStorage.nx_ask) {
+    localStorage.nx_ask = 1;
+    const c = nxPop('Turn on notifications?', 'Get alerts for delivery, replacements and new products.', '<div class="flex gap-2 mt-2"><button type="button" class="px-3 py-1.5 bg-brandDark text-white rounded-lg text-[11px] font-bold shadow-md" id="nx-yes">Allow</button><button type="button" class="px-3 py-1.5 bg-white/60 backdrop-blur rounded-lg text-[11px] font-bold border border-white/60" id="nx-no">Later</button></div>');
+    c.querySelector('#nx-yes').onclick = () => { c.remove(); nxAsk(); }; c.querySelector('#nx-no').onclick = () => c.remove();
+  }
+}, 4000);
+
+NXready().then(() => NX.onSnapshot(NX.doc(NX.db, 'settings', 'products'), s => {
+  const l = s.exists() ? (s.data().list || []) : [], seen = JSON.parse(localStorage.getItem('nx_p') || 'null');
+  if (seen) l.filter(p => !seen.includes(p.id)).forEach(p => nxNotify('New product', p.title + ' — ' + formatPrice(p.priceUSD)));
+  localStorage.setItem('nx_p', JSON.stringify(l.map(p => p.id)));
+  if (l.length) { products = l; renderGrid(); }
+}));
+
+let nxW = null;
+const nxWorker = () => nxW || (nxW = Tesseract.createWorker('eng').then(async w => { await w.setParameters({ tessedit_pageseg_mode: '6', preserve_interword_spaces: '1', user_defined_dpi: '300' }); return w; }));
+setTimeout(() => nxWorker().catch(() => {}), 1200);
+function nxPrep(file, bin) {
+  return new Promise(r => { const i = new Image(); i.onload = () => {
+    const L = Math.max(i.width, i.height), s = L < 1400 ? 1400 / L : L > 2200 ? 2200 / L : 1, c = document.createElement('canvas');
+    c.width = Math.round(i.width * s); c.height = Math.round(i.height * s);
+    const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(i, 0, 0, c.width, c.height);
+    const im = x.getImageData(0, 0, c.width, c.height), d = im.data, n = d.length / 4, h = new Uint32Array(256); let sum = 0;
+    for (let k = 0; k < d.length; k += 4) { const g = (d[k] * .299 + d[k + 1] * .587 + d[k + 2] * .114) | 0; d[k] = g; sum += g; }
+    const dark = sum / n < 110;
+    for (let k = 0; k < d.length; k += 4) { if (dark) d[k] = 255 - d[k]; h[d[k]]++; }
+    let t = 128; if (bin) { let tot = 0, sB = 0, wB = 0, mx = 0; for (let a = 0; a < 256; a++) tot += a * h[a];
+      for (let a = 0; a < 256; a++) { wB += h[a]; const wF = n - wB; if (!wB) continue; if (!wF) break; sB += a * h[a]; const v = wB * wF * Math.pow(sB / wB - (tot - sB) / wF, 2); if (v > mx) { mx = v; t = a; } } }
+    for (let k = 0; k < d.length; k += 4) { const g = bin ? (d[k] > t ? 255 : 0) : Math.min(255, Math.max(0, (d[k] - 90) * 1.6)); d[k] = d[k + 1] = d[k + 2] = g; }
+    x.putImageData(im, 0, 0); r(c);
+  }; i.src = URL.createObjectURL(file); });
+}
+extractPaymentInfo = function (raw, order) {
+  const bn = '০১২৩৪৫৬৭৮৯', t = raw.replace(/[০-৯]/g, c => '0123456789'[bn.indexOf(c)]), lo = t.toLowerCase(), exp = parseFloat(order.amountNumeric);
+  const i = { raw: raw.slice(0, 500), fullText: raw, amount: null, amountRaw: null, trxId: null, sender: null, time: null, date: null, method: null, matchesAmount: false, receiverMatch: false, score: 0 };
+  i.method = /bkash|বিকাশ/.test(lo) ? 'bKash' : /nagad|নগদ/.test(lo) ? 'Nagad' : /opay/.test(lo) ? 'OPay' : /usdt|tether/.test(lo) ? 'USDT' : null;
+  const cs = [], p = /(?:৳|tk\.?|bdt|ngn|₦|amount|total|sent|send money)\D{0,12}?([0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]{1,2})?|[0-9]+(?:\.[0-9]{1,2})?)/gi; let m;
+  while ((m = p.exec(t))) cs.push(parseFloat(m[1].replace(/,/g, '')));
+  (t.match(/\b[0-9]{1,3}(?:,[0-9]{3})*\.[0-9]{2}\b/g) || []).forEach(v => cs.push(parseFloat(v.replace(/,/g, ''))));
+  const ok = cs.filter(v => v > 0 && v < 1e7).sort((a, b) => Math.abs(a - exp) - Math.abs(b - exp));
+  if (ok.length) { i.amount = ok[0].toLocaleString('en-US', { maximumFractionDigits: 2 }); i.matchesAmount = Math.abs(ok[0] - exp) <= Math.max(1, exp * .02); }
+  const lab = t.match(/(?:trx\s*id|txn\s*id|transaction\s*(?:id|no\.?)|order\s*no\.?|reference)\s*[:#-]?\s*([A-Z0-9]{8,32})/i); let id = lab && lab[1];
+  if (!id) id = (t.match(/\b[A-Z0-9]{8,12}\b/g) || []).find(s => /[A-Z]/.test(s) && /\d/.test(s) && !/^0\d{10}$/.test(s)) || (t.match(/\b\d{15,25}\b/) || [])[0];
+  i.trxId = id ? id.toUpperCase() : null;
+  const ms = Object.values(config.payments).flatMap(r => r.methods), own = ms.map(x => (x.account || '').replace(/\D/g, '')).filter(n => n.length >= 10).map(n => n.slice(-10)), dg = t.replace(/\D/g, '');
+  i.receiverMatch = own.some(n => dg.includes(n)) || ms.some(x => /^0x/i.test(x.account || '') && lo.includes(x.account.slice(-8).toLowerCase()));
+  const mk = t.match(/[0-9]{3}\*{4}[0-9]{3}/); i.sender = mk ? mk[0] : null;
+  const tm = t.match(/\d{1,2}:\d{2}\s*(?:am|pm)?/i), dt = t.match(/\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}/); i.time = tm ? tm[0] : null; i.date = dt ? dt[0] : null;
+  i.score = (i.matchesAmount ? 40 : 0) + (i.receiverMatch ? 30 : 0) + (i.trxId ? 30 : 0); return i;
+};
+renderScanResult = function (i) {
+  $('upload-icon').innerHTML = '<i class="fas fa-check-circle text-2xl text-green-500 mb-1"></i>'; $('upload-text').innerText = 'Scanned — confirm below'; $('upload-text').className = 'font-bold text-xs text-green-600';
+  const c = i.score >= 70 ? 'text-green-700' : 'text-amber-600';
+  $('scan-result').innerHTML = `<div class="text-left bg-green-50/80 backdrop-blur border border-green-200 rounded-xl p-2">
+    <p class="text-[10px] font-black ${c} mb-1">Auto-check ${i.score}/100</p>
+    <label class="text-[10px] font-bold text-slate-600">Transaction ID (check &amp; fix if wrong) *</label>
+    <input id="scan-trx" class="nx-i" style="text-transform:uppercase" value="${esc(i.trxId || '')}" placeholder="Type TrxID from screenshot">
+    <p class="text-[10px] font-bold mt-1 ${i.matchesAmount ? 'text-green-700' : 'text-red-600'}">${i.amount ? 'Paid ' + esc(i.amount) + (i.matchesAmount ? ' - matches' : ' - expected ' + esc(_pendingOrder.amount)) : 'Amount not detected'}</p>
+    <p class="text-[10px] font-bold ${i.receiverMatch ? 'text-green-700' : 'text-amber-600'}">${i.receiverMatch ? 'Sent to our account' : 'Our account number not detected'}</p></div>`;
+  $('scan-result').classList.remove('hidden');
+};
+handleScreenshot = async function (input) {
+  selectedFile = input.files[0]; if (!selectedFile) return;
+  $('preview').src = URL.createObjectURL(selectedFile); $('preview').classList.remove('hidden');
+  $('upload-icon').innerHTML = '<i class="fas fa-spinner fa-spin text-2xl text-blue-500 mb-1"></i>'; $('upload-text').innerText = 'Scanning...'; $('upload-text').className = 'font-bold text-xs text-blue-600'; $('scan-result').classList.add('hidden');
+  let info = null, txt = '';
+  try {
+    const w = await nxWorker();
+    for (const bin of [true, false]) {
+      const { data } = await w.recognize(await nxPrep(selectedFile, bin)), c = extractPaymentInfo(data.text, _pendingOrder);
+      if (!info || c.score > info.score) { info = c; txt = data.text; }
+      if (info.score >= 70 && info.trxId) break;
+    }
+  } catch (e) { console.error(e); }
+  info = info || extractPaymentInfo('', _pendingOrder);
+  info.fullText = txt.trim(); info.textLength = txt.length; info.wordCount = txt.trim() ? txt.trim().split(/\s+/).length : 0; extractedData = info;
+  renderScanResult(info);
+  const b = $('submit-btn'); b.disabled = false; b.classList.remove('opacity-40', 'cursor-not-allowed');
+};
+
+/* ============ TOTP 2FA GENERATOR ============ */
+function _b32(s) {
+    s = String(s || '').toUpperCase().replace(/[^A-Z2-7]/g, '').replace(/=+$/, '');
+    const A = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+    let bits = 0, val = 0; const out = [];
+    for (const c of s) {
+        val = (val << 5) | A.indexOf(c); bits += 5;
+        if (bits >= 8) { out.push((val >>> (bits - 8)) & 0xff); bits -= 8; }
+    }
+    return new Uint8Array(out);
+}
+async function totp(secret, period = 30, digits = 6) {
+    try {
+        const key = _b32(secret); if (!key.length) return null;
+        const c = Math.floor(Date.now() / 1000 / period);
+        const buf = new ArrayBuffer(8), v = new DataView(buf);
+        v.setUint32(0, Math.floor(c / 0x100000000)); v.setUint32(4, c);
+        const ck = await crypto.subtle.importKey('raw', key, { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']);
+        const sig = await crypto.subtle.sign('HMAC', ck, buf);
+        const b = new Uint8Array(sig), o = b[19] & 0xf;
+        const n = ((b[o] & 0x7f) << 24) | ((b[o + 1] & 0xff) << 16) | ((b[o + 2] & 0xff) << 8) | (b[o + 3] & 0xff);
+        return String(n % Math.pow(10, digits)).padStart(digits, '0');
+    } catch { return null; }
+}
+const totpRemain = (p = 30) => p - (Math.floor(Date.now() / 1000) % p);
+async function nxRenderTotp(el, secret) {
+    if (!el || !secret) return;
+    const code = await totp(secret);
+    if (!code) {
+        if (el.dataset.cur !== 'invalid') { el.dataset.cur = 'invalid'; el.innerHTML = '<span class="text-red-600 text-[10px] font-bold">Invalid 2FA secret</span>'; }
+        return;
+    }
+    const rem = totpRemain();
+    if (el.dataset.cur === code) {
+        const r = el.querySelector('.totp-rem'); if (r) r.textContent = rem + 's';
+        return;
+    }
+    el.dataset.cur = code;
+    el.innerHTML = `<div class="flex items-center justify-between gap-2 bg-green-50/80 backdrop-blur border border-green-200 rounded-lg px-2 py-1.5">
+        <div class="text-[11px]"><span class="text-slate-500 font-bold">2FA Code:</span>
+            <span class="font-mono font-black tracking-widest text-green-900">${code}</span></div>
+        <div class="flex items-center gap-1">
+            <span class="totp-rem text-[9px] text-slate-500 font-bold">${rem}s</span>
+            <button type="button" data-c="${code}" onclick="copyText(this.dataset.c,'2FA code')" class="px-2 py-0.5 bg-green-600 text-white text-[10px] font-bold rounded">copy</button>
+        </div></div>`;
+}
+setInterval(() => {
+    document.querySelectorAll('[data-totp-box][data-totp-secret]').forEach(el => {
+        if (el.dataset.totpSecret) nxRenderTotp(el, el.dataset.totpSecret);
+    });
+}, 4000);
+function nx2faTyping(orderId, secret) {
+    const box = document.getElementById('d2fa-' + orderId); if (!box) return;
+    secret = (secret || '').trim();
+    if (secret.length < 8) { box.classList.add('hidden'); box.dataset.totpSecret = ''; box.dataset.cur = ''; return; }
+    box.classList.remove('hidden');
+    box.dataset.totpSecret = secret;
+    box.dataset.cur = '';
+    nxRenderTotp(box, secret);
+}
+
+/* ============ TELEGRAM ============ */
+async function nxTgSend(text) {
+    const tg = config.telegram || {};
+    if (!tg.enabled || !tg.token || !tg.chatId) return false;
+    try {
+        const r = await fetch(`https://api.telegram.org/bot${tg.token}/sendMessage`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: tg.chatId, text, parse_mode: 'HTML', disable_web_page_preview: true })
+        });
+        const j = await r.json().catch(() => ({}));
+        if (!j.ok) console.warn('TG API error:', j);
+        return !!j.ok;
+    } catch (e) { console.warn('TG send failed:', e); return false; }
+}
+async function nxTgNewOrder(o) {
+    const tg = config.telegram || {};
+    if (!tg.enabled || !tg.token || !tg.chatId) return;
+    const x = o.extracted || {};
+    let m = `🛒 <b>New Order</b>\n🆔 <code>${esc(o.orderId)}</code>\n📦 ${esc(o.productTitle)} × ${esc(o.quantity)}\n💰 ${esc(o.amount)}\n👤 ${esc(o.userName || 'Guest')} (${esc(o.userEmail)})`;
+    if (o.userPhone) m += `\n📱 ${esc(o.userPhone)}`;
+    if (o.customValue) m += `\n📝 ${esc(o.customLabel)}: ${esc(o.customValue)}`;
+    if (x.trxId) m += `\n🔑 TrxID: <code>${esc(x.trxId)}</code>`;
+    if (x.amount) m += `\n${x.matchesAmount ? '✅' : '⚠️'} Paid: ${esc(x.amount)}${x.matchesAmount ? '' : ' (expected ' + esc(o.amount) + ')'}`;
+    if (x.receiverMatch === false) m += `\n⚠️ Our account number not found in screenshot`;
+    await nxTgSend(m);
+}
+async function nxTgTest() {
+    const tg = config.telegram || {};
+    if (!tg.token || !tg.chatId) return showToast('Fill token + chat ID first', 'bg-red-600');
+    const ok = await nxTgSend('✅ <b>NAIM test message</b>\nTelegram notifications are working.');
+    showToast(ok ? 'Test sent' : 'Test failed — check token / chat ID', ok ? 'bg-green-600' : 'bg-red-600');
+}
+</script>
+
+<script>
+/* login -> role based landing */
+const _na2 = nxAuth;
+nxAuth = async function (e) { await _na2(e); const u = NX.auth.currentUser; if (u && !$('nx-auth').classList.contains('modal-open')) { me = u; nxLand(); } };
+function nxLand() {
+  if (isAdmin()) { $('admin-who').textContent = 'Logged: ' + me.email; renderAdmin(); openModalEl('admin-panel'); }
+  else { accView = 'orders'; openModalEl('nx-acc'); nxAcc(); }
+}
+</script>
 </body>
-	</html>
+    </html>
