@@ -1,7 +1,0 @@
-node_modules/
-.env
-data/
-orders.json
-stocks.json
-*.log
-.DS_Store
