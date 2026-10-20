@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!-- ফিক্স ১: Viewport জুম ফিক্স করা হয়েছে -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NAIM 🦅 — Premium Digital Accounts Store</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -21,15 +20,23 @@ tailwind.config = {
 }
 </script>
 <style>
-/* ফিক্স ৪: টাচ ডিভাইসে ডাবল ট্যাপ জুম ডিলে বন্ধ করার জন্য touch-action যুক্ত করা হয়েছে */
-* { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+* {
+    -webkit-tap-highlight-color: rgba(26,86,219,0.15);
+    touch-action: manipulation;
+}
 body { background-color: #f1f5f9; }
 ::-webkit-scrollbar { display: none; }
-/* ফিক্স ২: মোবাইল বাগ এড়াতে backdrop-filter রিমুভ করে সলিড অপাসিটি দেওয়া হয়েছে */
-.glass-nav { background: rgba(255,255,255,0.96); border-bottom: 1px solid rgba(226, 232, 240, 0.6); }
+.glass-nav { background: rgba(255,255,255,0.88); backdrop-filter: blur(20px); }
 
-#details-modal, #admin-login, #admin-panel, #region-modal, #checkout-modal, #success-modal, #product-details-modal {
-    transition: opacity 0.25s ease-in-out;
+/* Modal display control */
+#details-modal, #checkout-modal, #product-details-modal, #success-modal,
+#admin-panel, #admin-login, #region-modal {
+    display: none;
+}
+#details-modal.modal-open, #checkout-modal.modal-open, #product-details-modal.modal-open,
+#success-modal.modal-open, #admin-panel.modal-open, #admin-login.modal-open,
+#region-modal.modal-open {
+    display: flex;
 }
 #modal-content, #admin-content, #checkout-content, #success-content, #pd-content {
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -39,14 +46,26 @@ body { background-color: #f1f5f9; }
 .modal-open #success-content, .modal-open #pd-content {
     transform: translateY(0);
 }
+
+/* Mobile touch fixes */
+button, a, [onclick] {
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+}
+button i, button svg, a i, a svg { pointer-events: none; }
+button:active:not(:disabled) { transform: scale(0.96); }
+body.modal-active { overflow: hidden; }
+
 .toast { animation: slideUp 0.3s ease; }
 @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 @keyframes bounceIn { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
-
 .product-card { transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
 .product-card:hover { transform: translateY(-4px); box-shadow: 0 15px 35px -12px rgba(0,0,0,0.15); }
+.product-card:active { transform: scale(0.98); }
 .hero-glow { animation: float 8s ease-in-out infinite; }
 .shimmer-text {
     background: linear-gradient(90deg, #facc15 0%, #fff 50%, #facc15 100%);
@@ -56,29 +75,22 @@ body { background-color: #f1f5f9; }
     animation: shimmer 3s linear infinite;
 }
 .tab-btn.active { background: #0f172a !important; color: white !important; box-shadow: 0 4px 15px rgba(15,23,42,0.3); }
-
-/* ফিক্স ৩: শুধু ডেস্কটপের জন্য ক্লিকে বাটন ছোট হওয়ার অ্যানিমেশন রাখা হয়েছে, যাতে মোবাইলে টাচ মিস না হয় */
-@media (hover: hover) and (pointer: fine) {
-    .product-card:active { transform: scale(0.98); }
-    .qty-btn:active { transform: scale(0.85); }
-    .copy-btn:active { transform: scale(0.9); }
-    .support-btn:active { transform: scale(0.94); }
-}
-
+.qty-btn:active { transform: scale(0.85); }
+.copy-btn:active { transform: scale(0.9); }
 .upload-zone { transition: all 0.25s ease; }
 .upload-zone:hover, .upload-zone.dragover { border-color: #1a56db; background: #eff6ff; }
 .bounce-in { animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
 .support-btn { transition: all 0.15s ease; }
-input:focus, textarea:focus { outline: none; border-color: #1a56db; box-shadow: 0 0 0 3px rgba(26,86,219,0.12); }
+.support-btn:active { transform: scale(0.94); }
+input:focus, textarea:focus, select:focus { outline: none; border-color: #1a56db; box-shadow: 0 0 0 3px rgba(26,86,219,0.12); }
 .detail-text { line-height: 1.7; white-space: pre-wrap; }
-button { cursor: pointer; user-select: none; }
 button:disabled { cursor: not-allowed; opacity: 0.5; }
 </style>
 </head>
 <body class="text-slate-900 antialiased min-h-screen flex flex-col pb-6">
 
 <!-- HEADER -->
-<header class="glass-nav sticky top-0 z-40 shadow-sm">
+<header class="glass-nav sticky top-0 z-40 border-b border-slate-200/60 shadow-sm">
     <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         <div class="flex items-center space-x-3">
             <div class="bg-brandDark w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg text-white">
@@ -87,10 +99,10 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
             <div class="font-black text-2xl tracking-tighter text-brandDark flex items-center">NAIM <span class="ml-1.5 text-sm">🦅</span></div>
         </div>
         <div class="flex items-center space-x-2">
-            <button onclick="openRegionModal()" class="h-10 px-3 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center gap-1.5 text-xs font-bold text-slate-700 transition">
+            <button type="button" onclick="openRegionModal()" class="h-10 px-3 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center gap-1.5 text-xs font-bold text-slate-700 transition">
                 <i class="fas fa-globe"></i><span id="region-label">...</span>
             </button>
-            <button onclick="openAdmin()" class="w-10 h-10 rounded-full bg-brandDark flex items-center justify-center text-white shadow-md hover:bg-slate-800 transition">
+            <button type="button" onclick="openAdmin()" class="w-10 h-10 rounded-full bg-brandDark flex items-center justify-center text-white shadow-md hover:bg-slate-800 transition">
                 <i class="fas fa-lock text-sm"></i>
             </button>
         </div>
@@ -103,13 +115,13 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
         <div class="absolute top-0 right-0 w-72 h-72 bg-blue-500 rounded-full filter blur-3xl opacity-25 -translate-y-1/2 translate-x-1/2 hero-glow"></div>
         <div class="absolute bottom-0 left-0 w-64 h-64 bg-purple-500 rounded-full filter blur-3xl opacity-20 translate-y-1/2 -translate-x-1/2 hero-glow" style="animation-delay:2s"></div>
         <div class="relative z-10">
-            <span class="inline-block py-1 px-3 rounded-full bg-white/20 text-white text-[10px] font-black tracking-widest uppercase mb-3 border border-white/20">
-                <i class="fas fa-bolt text-yellow-400 mr-1"></i> Smart Scanner
+            <span class="inline-block py-1 px-3 rounded-full bg-white/10 text-white text-[10px] font-black tracking-widest uppercase mb-3 backdrop-blur-md border border-white/20">
+                <i class="fas fa-bolt text-yellow-400 mr-1"></i> Naim Rahman
             </span>
             <h1 class="text-3xl sm:text-5xl font-black text-white leading-tight mb-2 tracking-tight">
                 Digital Accounts <span class="shimmer-text">Hub</span>
             </h1>
-            <p class="text-slate-300 text-xs sm:text-sm font-medium max-w-lg">Pay → Upload screenshot → AI reads it → WhatsApp order.</p>
+            <p class="text-slate-300 text-xs sm:text-sm font-medium max-w-lg">Pay → Upload screenshot → WhatsApp order.</p>
         </div>
     </div>
 
@@ -123,34 +135,34 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
     <div id="support-section" class="mt-8 mb-4"></div>
 
     <div class="mt-6 text-center text-[10px] text-slate-400 font-semibold pb-4">
-        <p>🦅 NAIM — Trusted Digital Account Store · © 2026</p>
+        <p>🦅 NAIM — Trusted Digital Account Store · © 2025</p>
     </div>
 </main>
 
-<!-- PRODUCT DETAILS MODAL (ফাস্ট ক্লিক রেসপন্স এবং বাগ ফিক্স করা হয়েছে) -->
-<div id="product-details-modal" class="fixed inset-0 z-[58] flex items-end justify-center pointer-events-none opacity-0">
-    <div class="absolute inset-0 bg-slate-900/60" onclick="closeProductDetails()"></div>
+<!-- PRODUCT DETAILS MODAL -->
+<div id="product-details-modal" class="fixed inset-0 z-[58] items-end justify-center pointer-events-none opacity-0">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeProductDetails()"></div>
     <div id="pd-content" class="relative w-full max-w-md bg-white rounded-t-3xl shadow-2xl pointer-events-auto flex flex-col max-h-[85vh]">
         <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-200 rounded-full"></div></div>
-        <button onclick="closeProductDetails()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 z-10"><i class="fas fa-times"></i></button>
+        <button type="button" onclick="closeProductDetails()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 z-10"><i class="fas fa-times"></i></button>
         <div id="pd-body" class="overflow-y-auto px-6 pb-8 pt-4"></div>
     </div>
 </div>
 
 <!-- REGION MODAL -->
-<div id="region-modal" class="fixed inset-0 z-[60] flex items-center justify-center pointer-events-none opacity-0">
-    <div class="absolute inset-0 bg-slate-900/70" onclick="closeRegionModal()"></div>
+<div id="region-modal" class="fixed inset-0 z-[60] items-center justify-center pointer-events-none opacity-0">
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeRegionModal()"></div>
     <div class="relative bg-white w-11/12 max-w-sm rounded-3xl p-6 shadow-2xl pointer-events-auto">
         <h3 class="text-xl font-black mb-1">Select Region</h3>
         <p class="text-xs text-slate-500 font-semibold mb-5">Currency & payment will change</p>
         <div class="space-y-3">
-            <button onclick="setRegion('BD')" class="w-full flex items-center justify-between p-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition">
+            <button type="button" onclick="setRegion('BD')" class="w-full flex items-center justify-between p-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition">
                 <span class="font-bold">Bangladesh (BDT)</span><span class="text-2xl">🇧🇩</span>
             </button>
-            <button onclick="setRegion('NG')" class="w-full flex items-center justify-between p-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition">
+            <button type="button" onclick="setRegion('NG')" class="w-full flex items-center justify-between p-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition">
                 <span class="font-bold">Nigeria (NGN)</span><span class="text-2xl">🇳🇬</span>
             </button>
-            <button onclick="setRegion('US')" class="w-full flex items-center justify-between p-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition">
+            <button type="button" onclick="setRegion('US')" class="w-full flex items-center justify-between p-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition">
                 <span class="font-bold">Global (USDT)</span><span class="text-2xl">🌍</span>
             </button>
         </div>
@@ -158,28 +170,28 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 </div>
 
 <!-- DETAILS MODAL -->
-<div id="details-modal" class="fixed inset-0 z-50 flex items-end justify-center pointer-events-none opacity-0">
-    <div class="absolute inset-0 bg-slate-900/60" onclick="closeModal()"></div>
+<div id="details-modal" class="fixed inset-0 z-50 items-end justify-center pointer-events-none opacity-0">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModal()"></div>
     <div id="modal-content" class="relative w-full max-w-md bg-white rounded-t-3xl shadow-2xl pointer-events-auto flex flex-col max-h-[90vh]">
         <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-200 rounded-full"></div></div>
-        <button onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500"><i class="fas fa-times"></i></button>
+        <button type="button" onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500"><i class="fas fa-times"></i></button>
         <div id="modal-body" class="overflow-y-auto px-6 pb-8 pt-2"></div>
     </div>
 </div>
 
 <!-- CHECKOUT MODAL -->
-<div id="checkout-modal" class="fixed inset-0 z-[55] flex items-end justify-center pointer-events-none opacity-0">
-    <div class="absolute inset-0 bg-slate-900/60" onclick="closeCheckout()"></div>
+<div id="checkout-modal" class="fixed inset-0 z-[55] items-end justify-center pointer-events-none opacity-0">
+    <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeCheckout()"></div>
     <div id="checkout-content" class="relative w-full max-w-md bg-white rounded-t-3xl shadow-2xl pointer-events-auto flex flex-col max-h-[92vh]">
         <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-200 rounded-full"></div></div>
-        <button onclick="closeCheckout()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 z-10"><i class="fas fa-times"></i></button>
+        <button type="button" onclick="closeCheckout()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 z-10"><i class="fas fa-times"></i></button>
         <div id="checkout-body" class="overflow-y-auto px-6 pb-8 pt-4"></div>
     </div>
 </div>
 
 <!-- SUCCESS MODAL -->
-<div id="success-modal" class="fixed inset-0 z-[65] flex items-center justify-center pointer-events-none opacity-0">
-    <div class="absolute inset-0 bg-slate-900/80"></div>
+<div id="success-modal" class="fixed inset-0 z-[65] items-center justify-center pointer-events-none opacity-0">
+    <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm"></div>
     <div id="success-content" class="relative bg-white w-11/12 max-w-sm rounded-3xl p-6 shadow-2xl pointer-events-auto text-center bounce-in">
         <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
             <i class="fas fa-check text-4xl"></i>
@@ -188,22 +200,22 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
         <p class="text-sm text-slate-500 font-semibold mb-4">Your order ID:</p>
         <div class="bg-brandDark rounded-2xl p-4 text-white mb-4">
             <p class="text-lg font-black text-yellow-400 mb-2" id="success-order-id">ORD-...</p>
-            <button onclick="copyOrderId()" class="text-xs bg-white/20 px-3 py-1.5 rounded-lg font-bold"><i class="fas fa-copy mr-1"></i>Copy</button>
+            <button type="button" onclick="copyOrderId()" class="text-xs bg-white/20 px-3 py-1.5 rounded-lg font-bold"><i class="fas fa-copy mr-1"></i>Copy</button>
         </div>
         <p class="text-xs text-slate-500 mb-3">Send the message + screenshot to admin on WhatsApp</p>
         <a id="success-wa-btn" href="#" target="_blank" rel="noopener"
             class="block w-full py-3 bg-green-500 text-white font-black rounded-xl mb-2 hover:bg-green-600 transition">
             <i class="fab fa-whatsapp mr-1"></i> Open WhatsApp & Send
         </a>
-        <button onclick="closeSuccess()" class="w-full py-2 text-sm text-slate-500 font-bold">Close</button>
+        <button type="button" onclick="closeSuccess()" class="w-full py-2 text-sm text-slate-500 font-bold">Close</button>
     </div>
 </div>
 
 <!-- ADMIN LOGIN -->
-<div id="admin-login" class="fixed inset-0 z-[70] flex items-center justify-center pointer-events-none opacity-0">
-    <div class="absolute inset-0 bg-slate-900/80" onclick="closeAdminLogin()"></div>
+<div id="admin-login" class="fixed inset-0 z-[70] items-center justify-center pointer-events-none opacity-0">
+    <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm" onclick="closeAdminLogin()"></div>
     <div class="relative bg-white w-11/12 max-w-sm rounded-3xl p-6 shadow-2xl pointer-events-auto">
-        <button onclick="closeAdminLogin()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500"><i class="fas fa-times"></i></button>
+        <button type="button" onclick="closeAdminLogin()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500"><i class="fas fa-times"></i></button>
         <div class="text-center mb-6">
             <div class="w-14 h-14 bg-brandDark rounded-2xl flex items-center justify-center text-white mx-auto mb-3"><i class="fas fa-lock text-2xl"></i></div>
             <h2 class="text-xl font-black">Admin Login</h2>
@@ -230,25 +242,25 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 </div>
 
 <!-- ADMIN PANEL -->
-<div id="admin-panel" class="fixed inset-0 z-50 flex items-end justify-center pointer-events-none opacity-0">
-    <div class="absolute inset-0 bg-slate-900/60" onclick="closeAdmin()"></div>
+<div id="admin-panel" class="fixed inset-0 z-50 items-end justify-center pointer-events-none opacity-0">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeAdmin()"></div>
     <div id="admin-content" class="relative w-full max-w-lg bg-white rounded-t-3xl shadow-2xl pointer-events-auto flex flex-col h-[92vh]">
         <div class="w-full flex justify-center pt-3 pb-1"><div class="w-12 h-1.5 bg-slate-200 rounded-full"></div></div>
-        <button onclick="closeAdmin()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 z-10"><i class="fas fa-times"></i></button>
+        <button type="button" onclick="closeAdmin()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 z-10"><i class="fas fa-times"></i></button>
         <div class="px-6 pb-3 border-b border-slate-100">
             <div class="flex justify-between items-start">
                 <div>
                     <h2 class="text-2xl font-black text-brandDark"><i class="fas fa-shield-halved mr-2"></i>Admin</h2>
                     <p class="text-[10px] text-slate-500 font-bold mt-0.5" id="admin-who">Logged in</p>
                 </div>
-                <button onclick="logoutAdmin()" class="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-bold"><i class="fas fa-sign-out-alt mr-1"></i>Logout</button>
+                <button type="button" onclick="logoutAdmin()" class="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-bold"><i class="fas fa-sign-out-alt mr-1"></i>Logout</button>
             </div>
             <div class="flex gap-2 mt-3 overflow-x-auto">
-                <button onclick="switchTab('orders')" id="tab-orders" class="tab-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 whitespace-nowrap">Orders</button>
-                <button onclick="switchTab('products')" id="tab-products" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 whitespace-nowrap">Products</button>
-                <button onclick="switchTab('payments')" id="tab-payments" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 whitespace-nowrap">Payments</button>
-                <button onclick="switchTab('support')" id="tab-support" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 whitespace-nowrap">Support</button>
-                <button onclick="switchTab('settings')" id="tab-settings" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 whitespace-nowrap">Settings</button>
+                <button type="button" onclick="switchTab('orders')" id="tab-orders" class="tab-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 whitespace-nowrap">Orders</button>
+                <button type="button" onclick="switchTab('products')" id="tab-products" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 whitespace-nowrap">Products</button>
+                <button type="button" onclick="switchTab('payments')" id="tab-payments" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 whitespace-nowrap">Payments</button>
+                <button type="button" onclick="switchTab('support')" id="tab-support" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 whitespace-nowrap">Support</button>
+                <button type="button" onclick="switchTab('settings')" id="tab-settings" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 whitespace-nowrap">Settings</button>
             </div>
         </div>
         <div id="admin-body" class="overflow-y-auto p-6 flex-grow"></div>
@@ -278,17 +290,17 @@ const auth = getAuth(app);
 
 window.__fb = { db, auth, addDoc, serverTimestamp, getDocs, query, orderBy, doc, getDoc, setDoc, updateDoc, collection, signInWithEmailAndPassword, signOut, onAuthStateChanged };
 window.__fbReady = true;
-console.log('✅ Firebase initialized (no storage)');
+console.log('✅ Firebase ready');
 </script>
 
 <script>
 // ============ HELPERS ============
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function roundPrice(n) { return Math.round(n * 100) / 100; }
-function symbolForMethod(method) {
-    if (method === 'bKash' || method === 'Nagad') return '৳';
-    if (method === 'OPay') return '₦';
-    if (method === 'USDT') return '$';
+function symbolForMethod(m) {
+    if (m === 'bKash' || m === 'Nagad') return '৳';
+    if (m === 'OPay') return '₦';
+    if (m === 'USDT') return '$';
     return currentSymbol;
 }
 function waitFirebase(timeoutMs = 8000) {
@@ -302,6 +314,29 @@ function waitFirebase(timeoutMs = 8000) {
         };
         check();
     });
+}
+
+// ============ OCR WORKER (REUSE FOR SPEED) ============
+let tesseractWorker = null;
+async function getOCRWorker() {
+    if (!tesseractWorker) {
+        tesseractWorker = await Tesseract.createWorker('eng+ben');
+    }
+    return tesseractWorker;
+}
+
+// ============ MODAL HELPERS ============
+function openModalEl(id) {
+    document.body.classList.add('modal-active');
+    const el = document.getElementById(id);
+    el.classList.remove('pointer-events-none', 'opacity-0');
+    el.classList.add('modal-open');
+}
+function closeModalEl(id) {
+    document.body.classList.remove('modal-active');
+    const el = document.getElementById(id);
+    el.classList.remove('modal-open');
+    el.classList.add('opacity-0', 'pointer-events-none');
 }
 
 // ============ STATE ============
@@ -322,11 +357,7 @@ let _lastWaUrl = null;
 
 const DEFAULT_CONFIG = {
     whatsappNumber: '8801773204904',
-    support: {
-        whatsapp: '8801773204904',
-        telegram: 'naim_store',
-        email: 'support@naim.com'
-    },
+    support: { whatsapp: '8801773204904', telegram: 'naim_store', email: 'support@naim.com' },
     payments: {
         BD: { label: 'Bangladesh', methods: [
             { id: 'bkash', name: 'bKash', type: 'Personal', icon: 'fas fa-mobile-screen', color: 'text-pink-600', bg: 'bg-pink-50', border: 'border-pink-200', account: '01773204904', enabled: true },
@@ -435,9 +466,7 @@ async function initApp() {
             isAdminLoggedIn = !!user;
             if (user) document.getElementById('admin-who').textContent = 'Logged: ' + user.email;
         });
-    } catch (e) {
-        console.warn('Firebase unavailable:', e);
-    }
+    } catch (e) { console.warn('Firebase unavailable:', e); }
 }
 
 function setRegion(code, closeMenu = true) {
@@ -456,13 +485,8 @@ function renderSupport() {
         <div class="bg-white rounded-2xl p-4 shadow-sleek border border-slate-100">
             <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-headset text-sm"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm font-black text-brandDark">Need Help?</p>
-                        <p class="text-[10px] text-slate-500 font-semibold">Contact support</p>
-                    </div>
+                    <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center"><i class="fas fa-headset text-sm"></i></div>
+                    <div><p class="text-sm font-black text-brandDark">Need Help?</p><p class="text-[10px] text-slate-500 font-semibold">Contact support</p></div>
                 </div>
                 <span class="text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">ONLINE</span>
             </div>
@@ -484,35 +508,28 @@ function renderSupport() {
     `;
 }
 
-// ============ GRID ============
+// ============ GRID (MOBILE FIX) ============
 function renderGrid() {
     document.getElementById('item-count').innerText = `${products.length} Items`;
     const grid = document.getElementById('product-grid');
-    // ফিক্স ৫: ইভেন্ট অবজেক্ট পাস করা হয়েছে
     grid.innerHTML = products.map(p => `
         <div class="product-card bg-white rounded-2xl p-3 shadow-sleek border border-slate-100 flex flex-col">
-            <div onclick="openModal(${p.id})" class="cursor-pointer flex-grow">
+            <button type="button" onclick="openModal(${p.id})" class="flex-grow text-center flex flex-col items-center w-full bg-transparent border-0 p-0">
                 <div class="h-14 w-14 mx-auto mt-1 mb-3 ${esc(p.bg)} rounded-xl flex items-center justify-center"><i class="${esc(p.icon)} ${esc(p.color)} text-2xl"></i></div>
-                <div class="text-center">
-                    <h3 class="text-xs font-black text-brandDark uppercase line-clamp-1">${esc(p.title)}</h3>
-                    <p class="text-[10px] text-slate-500 mt-0.5 mb-2 font-semibold truncate">${esc(p.subtitle)}</p>
-                    <div class="text-base font-black text-brandDark mb-2">${formatPrice(p.priceUSD)}</div>
-                </div>
-            </div>
-            <button onclick="openProductDetails(event, ${p.id})" class="w-full py-1.5 mb-1.5 text-[10px] font-bold text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition flex items-center justify-center gap-1">
+                <h3 class="text-xs font-black text-brandDark uppercase line-clamp-1">${esc(p.title)}</h3>
+                <p class="text-[10px] text-slate-500 mt-0.5 mb-2 font-semibold truncate">${esc(p.subtitle)}</p>
+                <div class="text-base font-black text-brandDark mb-2">${formatPrice(p.priceUSD)}</div>
+            </button>
+            <button type="button" onclick="openProductDetails(${p.id})" class="w-full py-1.5 mb-1.5 text-[10px] font-bold text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition flex items-center justify-center gap-1">
                 <i class="fas fa-info-circle text-[9px]"></i> Details
             </button>
-            <button onclick="openModal(${p.id})" class="w-full py-2 text-[11px] font-bold text-white bg-brandDark rounded-lg hover:bg-slate-800 transition">Buy Now</button>
+            <button type="button" onclick="openModal(${p.id})" class="w-full py-2 text-[11px] font-bold text-white bg-brandDark rounded-lg hover:bg-slate-800 transition">Buy Now</button>
         </div>
     `).join('');
 }
 
 // ============ PRODUCT DETAILS ============
-// ফিক্স ৫: ইভেন্ট সঠিকভাবে রিসিভ করা হয়েছে
-function openProductDetails(e, id) {
-    if(e) {
-        e.stopPropagation();
-    }
+function openProductDetails(id) {
     const p = products.find(x => x.id === id);
     if (!p) return;
     document.getElementById('pd-body').innerHTML = `
@@ -535,23 +552,17 @@ function openProductDetails(e, id) {
             <p class="text-xs font-bold text-emerald-900 mb-1"><i class="fas fa-edit mr-1"></i>Input Required</p>
             <p class="text-[11px] text-emerald-800 font-semibold">Order করার সময় "${esc(p.inputLabel)}" দিতে হবে।</p>
         </div>` : ''}
-        <button onclick="closeProductDetails();openModal(${p.id})" class="w-full py-4 text-base font-black text-white bg-brandDark rounded-2xl shadow-lg flex items-center justify-center space-x-2">
+        <button type="button" onclick="closeProductDetails();openModal(${p.id})" class="w-full py-4 text-base font-black text-white bg-brandDark rounded-2xl shadow-lg flex items-center justify-center space-x-2">
             <i class="fas fa-shopping-cart"></i><span>Buy Now</span>
         </button>
     `;
-    const m = document.getElementById('product-details-modal');
-    m.classList.remove('pointer-events-none', 'opacity-0');
-    m.classList.add('modal-open');
+    openModalEl('product-details-modal');
 }
-function closeProductDetails() {
-    const m = document.getElementById('product-details-modal');
-    m.classList.remove('modal-open'); m.classList.add('opacity-0');
-    setTimeout(() => m.classList.add('pointer-events-none'), 300);
-}
+function closeProductDetails() { closeModalEl('product-details-modal'); }
 
 // ============ BUY MODAL ============
 function changeQty(c) {
-    if (selectedQuantity + c >= 1 && selectedQuantity + c <= 10) {
+    if (selectedQuantity + c >= 1 && selectedQuantity + c <= 100) {
         selectedQuantity += c;
         document.getElementById('qty-display').innerText = selectedQuantity;
         document.getElementById('modal-total-price').innerText = formatPrice(products.find(x => x.id === activeProductId).priceUSD, selectedQuantity);
@@ -590,22 +601,20 @@ function openModal(id) {
         <div class="flex justify-between items-center bg-gradient-to-br from-slate-50 to-white p-4 rounded-2xl border border-slate-100 mb-5">
             <div><p class="text-xs font-bold text-slate-400 uppercase mb-1">Total</p><div class="text-2xl font-black text-brandDark" id="modal-total-price">${formatPrice(p.priceUSD, 1)}</div></div>
             <div class="flex items-center space-x-3 bg-white px-3 py-2 rounded-xl shadow-sm border border-slate-100">
-                <button onclick="changeQty(-1)" class="qty-btn w-8 h-8 bg-slate-100 rounded-lg font-black text-lg">−</button>
+                <button type="button" onclick="changeQty(-1)" class="qty-btn w-8 h-8 bg-slate-100 rounded-lg font-black text-lg">−</button>
                 <span id="qty-display" class="font-black text-lg w-8 text-center">1</span>
-                <button onclick="changeQty(1)" class="qty-btn w-8 h-8 bg-brandDark text-white rounded-lg font-black text-lg">+</button>
+                <button type="button" onclick="changeQty(1)" class="qty-btn w-8 h-8 bg-brandDark text-white rounded-lg font-black text-lg">+</button>
             </div>
         </div>
         <div class="mb-5">
             <h3 class="text-xs font-bold text-brandDark uppercase tracking-widest mb-2">Payment (${esc(currentCurrency)})</h3>
             <div class="grid grid-cols-2 gap-2">${methodsHTML}</div>
         </div>
-        <button id="continue-btn" onclick="openCheckout()" class="w-full py-3.5 text-base font-black text-white bg-brandDark rounded-2xl shadow-lg flex items-center justify-center space-x-2 ${p.inputType ? 'opacity-40 cursor-not-allowed' : ''}" ${p.inputType ? 'disabled' : ''}>
+        <button type="button" id="continue-btn" onclick="openCheckout()" class="w-full py-3.5 text-base font-black text-white bg-brandDark rounded-2xl shadow-lg flex items-center justify-center space-x-2 ${p.inputType ? 'opacity-40 cursor-not-allowed' : ''}" ${p.inputType ? 'disabled' : ''}>
             <i class="fas fa-bolt text-yellow-400"></i><span>Continue</span>
         </button>`;
 
-    const m = document.getElementById('details-modal');
-    m.classList.remove('pointer-events-none', 'opacity-0');
-    m.classList.add('modal-open');
+    openModalEl('details-modal');
 }
 
 function checkCustomInput() {
@@ -617,11 +626,7 @@ function checkCustomInput() {
     else { btn.disabled = true; btn.classList.add('opacity-40','cursor-not-allowed'); }
 }
 
-function closeModal() {
-    const m = document.getElementById('details-modal');
-    m.classList.remove('modal-open'); m.classList.add('opacity-0');
-    setTimeout(() => m.classList.add('pointer-events-none'), 300);
-}
+function closeModal() { closeModalEl('details-modal'); }
 
 // ============ CHECKOUT ============
 function openCheckout() {
@@ -645,7 +650,7 @@ function openCheckout() {
                 <div><p class="text-[10px] font-bold text-slate-400 uppercase">Bank</p><p class="font-bold text-sm">${esc(m.bank)}</p></div>
                 <div><p class="text-[10px] font-bold text-slate-400 uppercase">Account</p>
                     <div class="flex items-center justify-between"><p class="font-black text-sm text-brandDark">${esc(m.account)}</p>
-                    <button onclick="copyText('${esc(m.account)}','Account')" class="copy-btn w-7 h-7 rounded-lg ${esc(m.bg)} ${esc(m.color)} flex items-center justify-center"><i class="fas fa-copy text-[10px]"></i></button></div>
+                    <button type="button" onclick="copyText('${esc(m.account)}','Account')" class="copy-btn w-7 h-7 rounded-lg ${esc(m.bg)} ${esc(m.color)} flex items-center justify-center"><i class="fas fa-copy text-[10px]"></i></button></div>
                 </div>
                 <div><p class="text-[10px] font-bold text-slate-400 uppercase">Name</p><p class="font-bold text-sm">${esc(m.holder)}</p></div>
             </div>`;
@@ -654,14 +659,14 @@ function openCheckout() {
                 <div><p class="text-[10px] font-bold text-slate-400 uppercase">Network</p><p class="font-bold text-sm">${esc(m.network)}</p></div>
                 <div><p class="text-[10px] font-bold text-slate-400 uppercase">Wallet</p>
                     <div class="flex items-start justify-between gap-2"><p class="font-mono text-[10px] text-brandDark break-all leading-tight">${esc(m.account)}</p>
-                    <button onclick="copyText('${esc(m.account)}','Wallet')" class="copy-btn shrink-0 w-7 h-7 rounded-lg ${esc(m.bg)} ${esc(m.color)} flex items-center justify-center"><i class="fas fa-copy text-[10px]"></i></button></div>
+                    <button type="button" onclick="copyText('${esc(m.account)}','Wallet')" class="copy-btn shrink-0 w-7 h-7 rounded-lg ${esc(m.bg)} ${esc(m.color)} flex items-center justify-center"><i class="fas fa-copy text-[10px]"></i></button></div>
                 </div>
             </div>`;
         } else {
             detailHTML = `<div class="mt-2 bg-white rounded-lg p-3 border border-slate-100">
                 <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Number</p>
                 <div class="flex items-center justify-between"><p class="font-black text-base text-brandDark tracking-wide">${esc(m.account)}</p>
-                <button onclick="copyText('${esc(m.account)}','Number')" class="copy-btn w-8 h-8 rounded-lg ${esc(m.bg)} ${esc(m.color)} flex items-center justify-center"><i class="fas fa-copy text-xs"></i></button></div>
+                <button type="button" onclick="copyText('${esc(m.account)}','Number')" class="copy-btn w-8 h-8 rounded-lg ${esc(m.bg)} ${esc(m.color)} flex items-center justify-center"><i class="fas fa-copy text-xs"></i></button></div>
             </div>`;
         }
         return `<div class="bg-white border ${esc(m.border)} rounded-2xl p-4">
@@ -691,7 +696,7 @@ function openCheckout() {
             </div>
             <div class="border-t border-white/10 pt-2 flex justify-between items-end">
                 <div><p class="text-[10px] font-bold text-slate-300 uppercase">Amount</p><p class="text-2xl font-black text-yellow-400">${total}</p></div>
-                <button onclick="copyText('${total.replace(/[^0-9.]/g,'')}','Amount')" class="copy-btn px-3 py-1.5 bg-white/10 rounded-lg text-xs font-bold"><i class="fas fa-copy mr-1"></i>Copy</button>
+                <button type="button" onclick="copyText('${total.replace(/[^0-9.]/g,'')}','Amount')" class="copy-btn px-3 py-1.5 bg-white/10 rounded-lg text-xs font-bold"><i class="fas fa-copy mr-1"></i>Copy</button>
             </div>
         </div>
         ${customDisplay}
@@ -718,11 +723,11 @@ function openCheckout() {
         <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-3">
             <p class="text-[10px] text-amber-900 font-semibold leading-relaxed">
                 <i class="fas fa-exclamation-triangle mr-1"></i>
-                <b>Note:</b> Screenshot কোথাও save হবে না — শুধু text পড়া হবে। Admin verify করবে। WhatsApp-এ নিজে screenshot পাঠাতে হবে।
+                <b>Note:</b> SENT ME YOUR ODER ID WHATSAPP :+881773204904
             </p>
         </div>
 
-        <button id="submit-btn" onclick="submitOrder()" disabled
+        <button type="button" id="submit-btn" onclick="submitOrder()" disabled
             class="w-full py-3.5 text-base font-black text-white bg-brandDark rounded-2xl shadow-lg opacity-40 cursor-not-allowed flex items-center justify-center space-x-2">
             <i class="fas fa-paper-plane"></i><span>Submit Order</span>
         </button>
@@ -738,15 +743,10 @@ function openCheckout() {
     selectedFile = null;
     extractedData = null;
 
-    const cm = document.getElementById('checkout-modal');
-    cm.classList.remove('pointer-events-none', 'opacity-0'); cm.classList.add('modal-open');
+    openModalEl('checkout-modal');
 }
 
-function closeCheckout() {
-    const m = document.getElementById('checkout-modal');
-    m.classList.remove('modal-open'); m.classList.add('opacity-0');
-    setTimeout(() => m.classList.add('pointer-events-none'), 300);
-}
+function closeCheckout() { closeModalEl('checkout-modal'); }
 
 async function handleScreenshot(input) {
     selectedFile = input.files[0];
@@ -761,16 +761,9 @@ async function handleScreenshot(input) {
     document.getElementById('scan-result').classList.add('hidden');
 
     try {
-        const result = await Tesseract.recognize(selectedFile, 'eng+ben', {
-            logger: m => {
-                if (m.status === 'recognizing text') {
-                    document.getElementById('upload-hint').innerText = `Scanning... ${Math.round(m.progress * 100)}%`;
-                } else if (m.status && m.status.includes('loading')) {
-                    document.getElementById('upload-hint').innerText = 'Loading OCR engine (~10MB, first time)...';
-                }
-            }
-        });
-        extractedData = extractPaymentInfo(result.data.text, _pendingOrder);
+        const worker = await getOCRWorker();
+        const { data: { text } } = await worker.recognize(selectedFile);
+        extractedData = extractPaymentInfo(text, _pendingOrder);
         document.getElementById('upload-icon').innerHTML = '<i class="fas fa-check-circle text-2xl text-green-500 mb-1"></i>';
         document.getElementById('upload-text').innerText = 'Scanned ✓ (hint only)';
         document.getElementById('upload-text').className = 'font-bold text-xs text-green-600';
@@ -873,15 +866,13 @@ function renderScanResult(info) {
     el.classList.remove('hidden');
 }
 
-// ============ SUBMIT ORDER (TEXT-ONLY) ============
+// ============ SUBMIT ORDER ============
 async function submitOrder() {
     if (!selectedFile) return showToast('Upload screenshot first', 'bg-red-600');
 
     if (extractedData && extractedData.trxId) {
         const dup = cachedOrders.some(o => o.extracted?.trxId === extractedData.trxId);
-        if (dup) {
-            return showToast('⚠️ This TrxID was already used. Contact support.', 'bg-red-600');
-        }
+        if (dup) return showToast('⚠️ This TrxID was already used.', 'bg-red-600');
     }
 
     const btn = document.getElementById('submit-btn');
@@ -891,7 +882,6 @@ async function submitOrder() {
     const orderId = 'ORD-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
     const userPhone = document.getElementById('user-phone').value.trim();
 
-    // Save text-only to Firestore
     try {
         const { db, addDoc, serverTimestamp, collection } = window.__fb;
         await addDoc(collection(db, 'orders'), {
@@ -910,11 +900,7 @@ async function submitOrder() {
             status: 'pending',
             createdAt: serverTimestamp()
         });
-        console.log('✅ Order + scanned text saved');
-    } catch (e) {
-        console.error('Firestore save failed:', e);
-        showToast('Save failed — WhatsApp will still open', 'bg-amber-600');
-    }
+    } catch (e) { console.error('Firestore save failed:', e); }
 
     const order = { orderId, ..._pendingOrder, userPhone, extracted: extractedData, createdAt: Date.now(), status: 'pending' };
     localOrders[orderId] = order;
@@ -931,17 +917,14 @@ async function submitOrder() {
     if (userPhone) msg += `📱 Phone: ${userPhone}\n`;
 
     if (extractedData && (extractedData.amount || extractedData.trxId || extractedData.sender)) {
-        msg += `\n📸 *SCREENSHOT TEXT (auto-read):*\n`;
+        msg += `\n📸 *SCREENSHOT TEXT:*\n`;
         if (extractedData.amount) msg += `${extractedData.matchesAmount ? '✅' : '⚠️'} Amount: ${symbolForMethod(extractedData.method)}${extractedData.amount}\n`;
         if (extractedData.trxId) msg += `🔑 TrxID: ${extractedData.trxId}\n`;
         if (extractedData.sender) msg += `📱 From: ${extractedData.sender}\n`;
         if (extractedData.time) msg += `🕐 Time: ${extractedData.time}\n`;
-        if (extractedData.date) msg += `📅 Date: ${extractedData.date}\n`;
         if (extractedData.method) msg += `💳 Method: ${extractedData.method}\n`;
     }
-
-    msg += `\n📎 *Screenshot attached in next message*\n`;
-    msg += `✅ Please confirm and send my account.`;
+    msg += `\n📎 *Screenshot attached in next message*\n✅ Please confirm.`;
 
     _lastWaUrl = `https://wa.me/${config.whatsappNumber.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(msg)}`;
 
@@ -952,31 +935,23 @@ async function submitOrder() {
 function showSuccessModal(orderId) {
     document.getElementById('success-order-id').textContent = orderId;
     document.getElementById('success-wa-btn').href = _lastWaUrl || '#';
-    const m = document.getElementById('success-modal');
-    m.classList.remove('pointer-events-none', 'opacity-0');
-    m.classList.add('modal-open');
+    openModalEl('success-modal');
 }
-function closeSuccess() {
-    const m = document.getElementById('success-modal');
-    m.classList.remove('modal-open'); m.classList.add('opacity-0');
-    setTimeout(() => m.classList.add('pointer-events-none'), 300);
-}
+function closeSuccess() { closeModalEl('success-modal'); }
 function copyOrderId() { copyText(_lastOrderId, 'Order ID'); }
 
 // ============ ADMIN ============
 function openAdmin() {
     if (isAdminLoggedIn) {
         renderAdmin();
-        const ap = document.getElementById('admin-panel');
-        ap.classList.remove('pointer-events-none', 'opacity-0');
-        ap.classList.add('modal-open');
+        openModalEl('admin-panel');
     } else {
-        document.getElementById('admin-login').classList.remove('pointer-events-none', 'opacity-0');
+        openModalEl('admin-login');
         setTimeout(() => document.getElementById('admin-email').focus(), 100);
     }
 }
 function closeAdminLogin() {
-    document.getElementById('admin-login').classList.add('pointer-events-none', 'opacity-0');
+    closeModalEl('admin-login');
     document.getElementById('admin-pass').value = '';
     document.getElementById('login-error').classList.add('hidden');
 }
@@ -1002,9 +977,7 @@ async function doAdminLogin(e) {
         closeAdminLogin();
         showToast('Welcome, admin ✓', 'bg-green-600');
         renderAdmin();
-        const ap = document.getElementById('admin-panel');
-        ap.classList.remove('pointer-events-none', 'opacity-0');
-        ap.classList.add('modal-open');
+        openModalEl('admin-panel');
     } catch (e) {
         let msg = 'Login failed';
         if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') msg = 'Wrong credentials';
@@ -1017,11 +990,7 @@ async function doAdminLogin(e) {
     }
 }
 
-function closeAdmin() {
-    const ap = document.getElementById('admin-panel');
-    ap.classList.remove('modal-open'); ap.classList.add('opacity-0');
-    setTimeout(() => ap.classList.add('pointer-events-none'), 300);
-}
+function closeAdmin() { closeModalEl('admin-panel'); }
 async function logoutAdmin() {
     if (!confirm('Logout?')) return;
     const { auth, signOut } = window.__fb;
@@ -1054,15 +1023,14 @@ async function renderAdmin() {
                         <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-sm">
                             <div class="flex justify-between items-start mb-1">
                                 <p class="font-bold text-xs">${esc(o.orderId)}</p>
-                                <span class="text-[10px] font-black px-2 py-0.5 rounded ${o.status === 'delivered' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">
-                                    ${esc((o.status || 'pending').toUpperCase())}
-                                </span>
+                                <span class="text-[10px] font-black px-2 py-0.5 rounded ${o.status === 'delivered' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${esc((o.status || 'pending').toUpperCase())}</span>
                             </div>
-                            <p class="text-[11px] text-slate-600 font-semibold">${esc(o.productTitle)} ×${esc(o.quantity)} — ${esc(o.amount)}</p>${o.customValue ? `<p class="text-[10px] text-indigo-600 font-bold">✏️ ${esc(o.customLabel)}: ${esc(o.customValue)}</p>` : ''}
+                            <p class="text-[11px] text-slate-600 font-semibold">${esc(o.productTitle)} × ${esc(o.quantity)} — ${esc(o.amount)}</p>
+                            ${o.customValue ? `<p class="text-[10px] text-indigo-600 font-bold">✏️ ${esc(o.customLabel)}: ${esc(o.customValue)}</p>` : ''}
                             ${o.userPhone ? `<p class="text-[10px] text-slate-500">📱 ${esc(o.userPhone)}</p>` : ''}
                             ${o.extracted && (o.extracted.amount || o.extracted.trxId) ? `
                                 <div class="mt-2 bg-green-50 border border-green-200 rounded-lg p-2">
-                                    <p class="text-[9px] font-black text-green-900 mb-1">📸 SCANNED FROM SCREENSHOT:</p>
+                                    <p class="text-[9px] font-black text-green-900 mb-1">📸 SCANNED:</p>
                                     <div class="space-y-0.5 text-[10px]">
                                         ${o.extracted.amount ? `<p class="text-green-700"><b>Amount:</b> ${esc(o.extracted.amount)}</p>` : ''}
                                         ${o.extracted.trxId ? `<p class="text-green-700"><b>TrxID:</b> ${esc(o.extracted.trxId)}</p>` : ''}
@@ -1071,8 +1039,8 @@ async function renderAdmin() {
                                         ${o.extracted.method ? `<p class="text-green-700"><b>Method:</b> ${esc(o.extracted.method)}</p>` : ''}
                                     </div>
                                 </div>
-                            ` : '<p class="text-[10px] text-amber-600 mt-1">⚠️ No text extracted from screenshot</p>'}
-                            ${o.status !== 'delivered' ? `<button onclick="markDelivered('${esc(o.id)}')" class="mt-2 w-full py-1.5 bg-green-500 text-white text-[10px] font-bold rounded-lg"><i class="fas fa-check mr-1"></i>Mark Delivered</button>` : ''}
+                            ` : '<p class="text-[10px] text-amber-600 mt-1">⚠️ No text extracted</p>'}
+                            ${o.status !== 'delivered' ? `<button type="button" onclick="markDelivered('${esc(o.id)}')" class="mt-2 w-full py-1.5 bg-green-500 text-white text-[10px] font-bold rounded-lg"><i class="fas fa-check mr-1"></i>Mark Delivered</button>` : ''}
                         </div>`).join('')}
                 </div>`;
         } catch (e) {
@@ -1093,11 +1061,9 @@ async function markDelivered(docId) {
     try {
         const { db, doc, updateDoc } = window.__fb;
         await updateDoc(doc(db, 'orders', docId), { status: 'delivered' });
-        showToast('Marked as delivered ✓', 'bg-green-600');
+        showToast('Marked delivered ✓', 'bg-green-600');
         renderAdmin();
-    } catch (e) {
-        showToast('Failed: ' + e.message, 'bg-red-600');
-    }
+    } catch (e) { showToast('Failed: ' + e.message, 'bg-red-600'); }
 }
 
 function renderProductsTab() {
@@ -1108,18 +1074,20 @@ function renderProductsTab() {
                 <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
                     <div class="flex justify-between items-center p-3">
                         <div class="flex items-center space-x-3 flex-1">
-                            <div class="w-10 h-10 ${esc(p.bg)} rounded-lg flex items-center justify-center"><i class="${esc(p.icon)}${esc(p.color)}"></i></div>
-                            <div class="flex-1"><p class="font-bold text-sm leading-tight">${esc(p.title)}</p><p class="text-xs text-slate-500">$${esc(p.priceUSD)}${p.inputType ? '· '+esc(p.inputLabel) : ''}</p></div>
+                            <div class="w-10 h-10 ${esc(p.bg)} rounded-lg flex items-center justify-center"><i class="${esc(p.icon)} ${esc(p.color)}"></i></div>
+                            <div class="flex-1"><p class="font-bold text-sm leading-tight">${esc(p.title)}</p><p class="text-xs text-slate-500">$${esc(p.priceUSD)}</p></div>
                         </div>
-                        <button onclick="deleteProduct(${p.id})" class="text-red-500 bg-red-50 p-2 rounded-lg hover:bg-red-100"><i class="fas fa-trash-alt"></i></button>
+                        <button type="button" onclick="deleteProduct(${p.id})" class="text-red-500 bg-red-50 p-2 rounded-lg hover:bg-red-100"><i class="fas fa-trash-alt"></i></button>
                     </div>
-                    <div class="bg-slate-50 px-3 py-2 border-t border-slate-100">
-                        <label class="text-[10px] font-bold text-slate-500 uppercase mb-1 block">Details</label>
-                        <textarea onchange="updateProductDetails(${p.id}, this.value)" rows="2" class="w-full p-2 text-xs rounded-lg border border-slate-200">${esc(p.details || '')}</textarea>
+                    <div class="bg-slate-50 px-3 py-2 border-t border-slate-100 space-y-1">
+                        <input type="text" value="${esc(p.title)}" onchange="updateProductField(${p.id},'title',this.value)" class="w-full p-2 text-xs rounded border" placeholder="Title">
+                        <input type="text" value="${esc(p.subtitle)}" onchange="updateProductField(${p.id},'subtitle',this.value)" class="w-full p-2 text-xs rounded border" placeholder="Subtitle">
+                        <input type="number" step="0.01" value="${esc(p.priceUSD)}" onchange="updateProductField(${p.id},'priceUSD',parseFloat(this.value))" class="w-full p-2 text-xs rounded border" placeholder="Price USD">
+                        <textarea onchange="updateProductField(${p.id},'details',this.value)" rows="2" class="w-full p-2 text-xs rounded border" placeholder="Details">${esc(p.details || '')}</textarea>
                     </div>
                 </div>`).join('')}
         </div>
-        <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3 mt-4">Add Product</h3>
+        <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3">Add New Product</h3>
         <div class="space-y-2 bg-slate-50 p-4 rounded-2xl border border-slate-200">
             <input type="text" id="add-title" placeholder="Title" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold">
             <input type="text" id="add-subtitle" placeholder="Subtitle" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold">
@@ -1130,7 +1098,7 @@ function renderProductsTab() {
                 <option value="name">Name input</option>
                 <option value="page_name">Page name input</option>
             </select>
-            <button onclick="addNewProduct()" class="w-full py-3 bg-brandDark text-white font-bold rounded-xl shadow-md">+ Add Product</button>
+            <button type="button" onclick="addNewProduct()" class="w-full py-3 bg-brandDark text-white font-bold rounded-xl shadow-md">+ Add Product & Save</button>
         </div>`;
 }
 
@@ -1161,8 +1129,8 @@ function renderPaymentsTab() {
                     </div>
                 </div>`;
         }).join('')}
-        <button onclick="saveConfigToFirebase()" class="w-full py-3 bg-green-600 text-white font-bold rounded-xl shadow-md mt-4">
-            <i class="fas fa-cloud-upload-alt mr-1"></i>Save Payments
+        <button type="button" onclick="saveConfigToFirebase()" class="w-full py-3 bg-green-600 text-white font-bold rounded-xl shadow-md mt-4">
+            <i class="fas fa-cloud-upload-alt mr-1"></i>Save All Payments
         </button>`;
 }
 
@@ -1178,26 +1146,26 @@ function renderSupportTab() {
             <div><label class="text-[10px] font-bold text-slate-600 mb-1 block">Email</label>
                 <input type="email" value="${esc(s.email||'')}" onchange="updateSupport('email',this.value)" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold"></div>
         </div>
-        <button onclick="saveConfigToFirebase()" class="w-full py-3 bg-green-600 text-white font-bold rounded-xl shadow-md">
+        <button type="button" onclick="saveConfigToFirebase()" class="w-full py-3 bg-green-600 text-white font-bold rounded-xl shadow-md">
             <i class="fas fa-cloud-upload-alt mr-1"></i>Save Support
         </button>`;
 }
 
 function renderSettingsTab() {
     return `
-        <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3">WhatsApp Settings</h3>
+        <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3">WhatsApp Number</h3>
         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-6">
             <label class="text-xs font-bold text-slate-600 mb-1 block">WhatsApp Number (no +)</label>
             <input type="text" value="${esc(config.whatsappNumber)}" placeholder="8801773204904" onchange="config.whatsappNumber=this.value.replace(/[^0-9]/g,'');persistAll();showToast('Saved ✓','bg-green-600')" class="w-full p-3 rounded-xl border border-slate-200 text-sm font-bold font-mono mb-2">
         </div>
-        <button onclick="saveConfigToFirebase()" class="w-full py-3 bg-green-600 text-white font-bold rounded-xl shadow-md mb-2">
+        <button type="button" onclick="saveConfigToFirebase()" class="w-full py-3 bg-green-600 text-white font-bold rounded-xl shadow-md mb-2">
             <i class="fas fa-cloud-upload-alt mr-1"></i>Save Settings
         </button>
         <h3 class="font-bold text-slate-500 uppercase tracking-wider text-xs mb-3 mt-6">Danger</h3>
-        <button onclick="resetAll()" class="w-full py-3 bg-red-500 text-white font-bold rounded-xl shadow-md">
+        <button type="button" onclick="resetAll()" class="w-full py-3 bg-red-500 text-white font-bold rounded-xl shadow-md">
             <i class="fas fa-rotate-left mr-2"></i>Reset Local Data
         </button>
-        <p class="text-[10px] text-slate-400 text-center mt-2">Firestore data is not deleted</p>`;
+        <p class="text-[10px] text-slate-400 text-center mt-2">Firestore data safe</p>`;
 }
 
 async function saveConfigToFirebase() {
@@ -1210,19 +1178,27 @@ async function saveConfigToFirebase() {
         });
         await setDoc(doc(db, 'settings', 'products'), { list: products });
         showToast('Saved to cloud ✓', 'bg-green-600');
-    } catch (e) {
-        showToast('Save failed: ' + e.message, 'bg-red-600');
-    }
+    } catch (e) { showToast('Save failed: ' + e.message, 'bg-red-600'); }
 }
 
-function toggleMethod(region, idx, val) { config.payments[region].methods[idx].enabled = val; persistAll(); }
-function updateMethod(region, idx, field, val) { config.payments[region].methods[idx][field] = val; persistAll(); }
-function updateSupport(field, val) { config.support[field] = val; persistAll(); renderSupport(); }
-function updateProductDetails(id, val) {
+function toggleMethod(r, i, val) { config.payments[r].methods[i].enabled = val; persistAll(); }
+function updateMethod(r, i, f, val) { config.payments[r].methods[i][f] = val; persistAll(); }
+function updateSupport(f, val) { config.support[f] = val; persistAll(); renderSupport(); }
+
+async function updateProductField(id, field, val) {
     const p = products.find(x => x.id === id);
-    if (p) { p.details = val; persistAll(); showToast('Saved locally — click Save to Cloud', 'bg-amber-600'); }
+    if (!p) return;
+    p[field] = val;
+    persistAll();
+    try {
+        const { db, doc, setDoc } = window.__fb;
+        await setDoc(doc(db, 'settings', 'products'), { list: products });
+        showToast('Saved ✓', 'bg-green-600');
+        renderGrid();
+    } catch (e) { showToast('Save failed: ' + e.message, 'bg-amber-600'); }
 }
-function addNewProduct() {
+
+async function addNewProduct() {
     const title = document.getElementById('add-title').value.trim();
     const subtitle = document.getElementById('add-subtitle').value.trim() || 'Digital Asset';
     const price = parseFloat(document.getElementById('add-price').value);
@@ -1237,17 +1213,28 @@ function addNewProduct() {
         inputPlaceholder: inputType === 'page_name' ? 'e.g. My Business Page' : (inputType === 'name' ? 'e.g. John Smith' : null)
     });
     persistAll();
+    try {
+        const { db, doc, setDoc } = window.__fb;
+        await setDoc(doc(db, 'settings', 'products'), { list: products });
+        showToast('Product added & saved ✓', 'bg-green-600');
+    } catch (e) { showToast('Added locally — save failed', 'bg-amber-600'); }
     ['add-title','add-subtitle','add-price','add-details'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('add-input-type').value = '';
     renderGrid(); renderAdmin();
-    showToast('Added — click Save to Cloud', 'bg-green-600');
 }
-function deleteProduct(id) {
-    if (!confirm('Delete?')) return;
+
+async function deleteProduct(id) {
+    if (!confirm('Delete this product?')) return;
     products = products.filter(p => p.id !== id);
-    persistAll(); renderGrid(); renderAdmin();
-    showToast('Deleted locally', 'bg-red-600');
+    persistAll();
+    try {
+        const { db, doc, setDoc } = window.__fb;
+        await setDoc(doc(db, 'settings', 'products'), { list: products });
+        showToast('Deleted & saved ✓', 'bg-green-600');
+    } catch (e) { showToast('Deleted locally', 'bg-amber-600'); }
+    renderGrid(); renderAdmin();
 }
+
 function resetAll() {
     if (!confirm('Reset local data?')) return;
     ['naim_config','naim_products','naim_local_orders'].forEach(k => localStorage.removeItem(k));
@@ -1258,10 +1245,10 @@ function resetAll() {
     showToast('Reset done ✓', 'bg-green-600');
 }
 
-function openRegionModal() { document.getElementById('region-modal').classList.remove('pointer-events-none', 'opacity-0'); }
-function closeRegionModal() { document.getElementById('region-modal').classList.add('pointer-events-none', 'opacity-0'); }
+function openRegionModal() { openModalEl('region-modal'); }
+function closeRegionModal() { closeModalEl('region-modal'); }
 
 document.addEventListener('DOMContentLoaded', initApp);
 </script>
 </body>
-    </html>
+	</html>
