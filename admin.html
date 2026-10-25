@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Admin — NAIM</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script>
+tailwind.config = { theme: { extend: { fontFamily: { sans: ['Outfit', 'sans-serif'] } }}}
+</script>
+<style>
+body {
+  background: radial-gradient(ellipse at 8% 0%, rgba(22,119,255,.35), transparent 34%),
+    radial-gradient(ellipse at 92% 18%, rgba(55,224,255,.19), transparent 30%),
+    radial-gradient(ellipse at 80% 90%, rgba(133,89,255,.2), transparent 34%),
+    linear-gradient(145deg, #040a16 0%, #0a1a33 46%, #06101f 100%);
+  background-attachment: fixed; min-height: 100vh; color: #f3f8ff;
+}
+::-webkit-scrollbar { display: none; }
+.glass {
+  background: linear-gradient(135deg, rgba(255,255,255,.17), rgba(113,177,255,.075) 42%, rgba(255,255,255,.055));
+  border: 1px solid rgba(224,243,255,.27);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 12px 30px rgba(0,0,0,.17);
+  backdrop-filter: blur(14px) saturate(145%);
+  -webkit-backdrop-filter: blur(14px) saturate(145%);
+}
+.glass-nav { background: rgba(8,22,43,.78); border-bottom: 1px solid rgba(180,225,255,.2); backdrop-filter: blur(14px); }
+.input-lite {
+  width: 100%; padding: 11px 12px; border-radius: 12px;
+  border: 1px solid rgba(200,230,255,.25);
+  background: rgba(5,18,37,.62); color: #f4f9ff; font-weight: 700;
+  font-size: 13px;
+}
+.input-lite:focus { outline: none; border-color: #67d9ff; box-shadow: 0 0 0 3px rgba(55,190,255,.17); }
+.tab-btn { transition: all .15s ease; }
+.tab-btn.active { background: linear-gradient(120deg,#188dff,#45d8ef); color: #fff; box-shadow: 0 4px 20px rgba(48,160,255,.3); }
+.btn-primary { background: linear-gradient(135deg,#168dff,#31c8ed); color: white; font-weight: 900; box-shadow: 0 4px 14px rgba(30,151,255,.3); }
+.btn-primary:hover { filter: brightness(1.1); }
+.btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+.btn-danger { background: rgba(255,91,127,.17); border: 1px solid rgba(255,148,172,.35); color: #ffd9e2; font-weight: 900; }
+.btn-secondary { background: rgba(177,222,255,.13); border: 1px solid rgba(216,241,255,.28); color: #e9f8ff; font-weight: 900; }
+.stat-card {
+  position: relative; overflow: hidden; padding: 14px; border-radius: 22px;
+  border: 1px solid rgba(218,242,255,.29);
+  background: linear-gradient(135deg, rgba(210,238,255,.17), rgba(80,161,255,.085) 50%, rgba(255,255,255,.065));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.17), 0 8px 24px rgba(0,0,0,.15);
+  transition: transform .15s ease;
+}
+.stat-card:active { transform: scale(0.98); }
+.stat-icon {
+  display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center;
+  border-radius: 14px; font-size: 16px;
+  background: linear-gradient(145deg,rgba(119,204,255,.42),rgba(118,112,255,.23));
+  color: #dff8ff; border: 1px solid rgba(228,248,255,.28);
+}
+.order-card {
+  padding: 14px; border-radius: 20px;
+  border: 1px solid rgba(218,242,255,.29);
+  background: linear-gradient(135deg, rgba(210,238,255,.17), rgba(80,161,255,.085) 50%, rgba(255,255,255,.065));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.17), 0 8px 24px rgba(0,0,0,.15);
+}
+.chip { font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 99px; border: 1px solid; }
+@keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+.pulse-dot { animation: pulse-dot 1.5s infinite; }
+</style>
+</head>
+<body class="antialiased pb-10">
+
+<header class="glass-nav sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3">
+      <div class="bg-blue-600 w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/30">
+        <i class="fas fa-shield-halved text-xl text-white"></i>
+      </div>
+      <div>
+        <p class="font-black text-xl text-white leading-none">NAIM</p>
+        <p class="text-[10px] font-bold text-blue-300 leading-none mt-1">ADMIN</p>
+      </div>
+    </a>
+    <div class="flex items-center gap-2">
+      <span class="text-[10px] font-bold text-green-400 flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 bg-green-400 rounded-full pulse-dot"></span>ONLINE
+      </span>
+      <button id="logout-btn" class="h-10 px-3 rounded-full bg-red-500/15 border border-red-400/30 text-red-300 flex items-center gap-1.5 text-xs font-bold">
+        <i class="fas fa-sign-out-alt"></i><span class="hidden sm:inline">Logout</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <div id="loading" class="glass rounded-2xl p-8 text-center">
+    <i class="fas fa-spinner fa-spin text-3xl text-blue-400"></i>
+    <p class="mt-3 text-slate-300 text-sm">Loading admin panel...</p>
+  </div>
+  <div id="content" class="hidden"></div>
+</main>
+
+<script type="module">
+import {
+  auth, onAuthStateChanged, signOut, ADMIN_EMAIL,
+  db, collection, query, orderBy, where, onSnapshot,
+  doc, getDoc, setDoc, updateDoc, deleteDoc
+} from './js/firebase.js';
+import { cachedConfig, cacheConfig, cacheProducts, cachedProducts } from './js/store.js';
+import { DEFAULT_CONFIG, DEFAULT_PRODUCTS } from './js/products.js';
+import { renderHeader, showToast, esc } from './js/ui.js';
+
+let currentUser = null;
+let allOrders = [];
+let products = cachedProducts() || DEFAULT_PRODUCTS;
+let config = cachedConfig() || JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+let activeTab = 'dashboard';
+let orderFilter = 'pending';
+
+/* ============ AUTH GUARD ============ */
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    location.href = 'login.html?next=admin.html';
+    return;
+  }
+  if (user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+    showToast('Admin only — redirecting', 'bg-red-600');
+    setTimeout(() => location.href = 'dashboard.html', 800);
+    return;
+  }
+  currentUser = user;
+  loadData();
+});
+
+function loadData() {
+  // Load config
+  getDoc(doc(db, 'settings', 'config')).then(snap => {
+    if (snap.exists()) {
+      config = snap.data();
+      cacheConfig(config);
+    }
+  }).catch(() => {});
+
+  // Load products
+  getDoc(doc(db, 'settings', 'products')).then(snap => {
+    if (snap.exists() && Array.isArray(snap.data().list)) {
+      products = snap.data().list;
+      cacheProducts(products);
+    }
+  }).catch(() => {});
+
+  // Live orders
+  const q = query(collection(db, 'orders'), orderBy('createdMs', 'desc'));
+  onSnapshot(q, (snap) => {
+    allOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('content').classList.remove('hidden');
+    render();
+  }, (err) => {
+    document.getElementById('loading').innerHTML = `
+      <p class="text-red-400 font-bold">Error: ${esc(err.message)}</p>
+      <p class="text-xs text-slate-400 mt-2">Check Firestore rules and internet.</p>`;
+  });
+}
+
+/* ============ RENDER ============ */
+function render() {
+  const c = document.getElementById('content');
+  c.innerHTML = `
+    <div class="flex gap-2 mb-4 overflow-x-auto pb-1">
+      ${tabBtn('dashboard', 'fa-gauge', 'Dashboard')}
+      ${tabBtn('orders', 'fa-shopping-bag', 'Orders')}
+      ${tabBtn('products', 'fa-box', 'Products')}
+      ${tabBtn('payments', 'fa-credit-card', 'Payments')}
+      ${tabBtn('support', 'fa-headset', 'Support')}
+    </div>
+    <div id="tab-content"></div>
+  `;
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.onclick = () => { activeTab = b.dataset.tab; render(); };
+  });
+  renderTab();
+}
+
+function tabBtn(tab, icon, label) {
+  return `<button data-tab="${tab}" class="tab-btn ${activeTab === tab ? 'active' : 'glass text-white'} px-4 py-2.5 rounded-xl text-xs font-black whitespace-nowrap flex items-center gap-1.5">
+    <i class="fas ${icon}"></i>${label}
+  </button>`;
+}
+
+function renderTab() {
+  const c = document.getElementById('tab-content');
+  if (activeTab === 'dashboard') c.innerHTML = renderDashboard();
+  else if (activeTab === 'orders') c.innerHTML = renderOrders();
+  else if (activeTab === 'products') c.innerHTML = renderProducts();
+  else if (activeTab === 'payments') c.innerHTML = renderPayments();
+  else if (activeTab === 'support') c.innerHTML = renderSupport();
+
+  // Attach handlers
+  document.querySelectorAll('[data-action]').forEach(el => {
+    el.onclick = () => handleAction(el.dataset.action, el.dataset.id);
+  });
+}
+
+/* ============ DASHBOARD ============ */
+function renderDashboard() {
+  const now = new Date();
+  const isToday = o => {
+    const d = o.createdMs ? new Date(o.createdMs) : null;
+    return d && d.toDateString() === now.toDateString();
+  };
+  const stats = [
+    { key: 'delivered', label: 'Completed', icon: 'fa-circle-check', count: allOrders.filter(o => o.status === 'delivered').length, color: '#6ee7b7', bg: 'rgba(110,231,183,.15)' },
+    { key: 'pending', label: 'Pending', icon: 'fa-clock', count: allOrders.filter(o => !['delivered','cancelled','replace_requested'].includes(o.status)).length, color: '#7dd3fc', bg: 'rgba(125,211,252,.15)' },
+    { key: 'today', label: 'Today', icon: 'fa-calendar-day', count: allOrders.filter(isToday).length, color: '#67e8f9', bg: 'rgba(103,232,249,.15)' },
+    { key: 'cancelled', label: 'Cancelled', icon: 'fa-circle-xmark', count: allOrders.filter(o => o.status === 'cancelled').length, color: '#fda4af', bg: 'rgba(253,164,175,.15)' },
+    { key: 'replace_requested', label: 'Replace', icon: 'fa-arrows-rotate', count: allOrders.filter(o => o.status === 'replace_requested').length, color: '#c4b5fd', bg: 'rgba(196,181,253,.15)' }
+  ];
+
+  return `
+    <div class="glass rounded-2xl p-5 mb-4" style="background:linear-gradient(125deg,rgba(44,132,255,.37),rgba(68,220,255,.17) 45%,rgba(156,132,255,.16))">
+      <p class="text-[10px] uppercase tracking-[.2em] font-bold text-sky-200">NAIM STORE</p>
+      <h1 class="text-2xl font-black text-white mt-1">Welcome Back</h1>
+      <p class="text-xs text-slate-300 mt-1">Your store at a glance</p>
+      <div class="inline-block mt-3 px-3 py-1.5 rounded-full bg-white/15 border border-white/20 text-[10px] font-black text-white">
+        <i class="fas fa-layer-group mr-1"></i>${allOrders.length} Total Orders
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+      ${stats.map(s => `
+        <button data-action="filter-orders" data-id="${s.key}" class="stat-card text-left">
+          <span class="stat-icon" style="color:${s.color};background:${s.bg}"><i class="fas ${s.icon}"></i></span>
+          <p class="text-[11px] font-bold text-slate-300 mt-3">${s.label}</p>
+          <p class="text-3xl font-black text-white mt-1">${s.count}</p>
+          <p class="text-[10px] font-bold text-slate-400 mt-2">Open <i class="fas fa-arrow-right ml-1"></i></p>
+        </button>
+      `).join('')}
+    </div>
+
+    <div class="mt-4 glass rounded-2xl p-4">
+      <h2 class="font-black text-sm text-white mb-2"><i class="fas fa-bolt text-yellow-400 mr-1"></i>Recent Orders</h2>
+      ${allOrders.slice(0, 3).length ? allOrders.slice(0, 3).map(o => `
+        <div class="py-2 border-b border-white/10 last:border-0">
+          <div class="flex justify-between text-xs">
+            <span class="font-bold text-white">${esc(o.orderId || o.id)}</span>
+            <span class="text-slate-400">${esc(o.status)}</span>
+          </div>
+          <p class="text-[11px] text-slate-300">${esc(o.productTitle)} × ${esc(o.quantity)} — ${esc(o.amount)}</p>
+        </div>
+      `).join('') : '<p class="text-xs text-slate-400 text-center py-3">No orders yet</p>'}
+    </div>
+  `;
+}
+
+/* ============ ORDERS ============ */
+function renderOrders() {
+  const now = new Date();
+  const isToday = o => {
+    const d = o.createdMs ? new Date(o.createdMs) : null;
+    return d && d.toDateString() === now.toDateString();
+  };
+  let filtered = allOrders;
+  if (orderFilter === 'pending') filtered = allOrders.filter(o => !['delivered','cancelled','replace_requested'].includes(o.status));
+  else if (orderFilter === 'delivered') filtered = allOrders.filter(o => o.status === 'delivered');
+  else if (orderFilter === 'cancelled') filtered = allOrders.filter(o => o.status === 'cancelled');
+  else if (orderFilter === 'replace_requested') filtered = allOrders.filter(o => o.status === 'replace_requested');
+  else if (orderFilter === 'today') filtered = allOrders.filter(isToday);
+
+  return `
+    <div class="flex gap-2 mb-4 overflow-x-auto pb-1">
+      ${filterBtn('pending', 'Pending')}
+      ${filterBtn('delivered', 'Completed')}
+      ${filterBtn('cancelled', 'Cancelled')}
+      ${filterBtn('replace_requested', 'Replace')}
+      ${filterBtn('today', 'Today')}
+      ${filterBtn('all', 'All')}
+    </div>
+    <p class="text-xs font-bold text-slate-400 mb-3">${filtered.length} order${filtered.length !== 1 ? 's' : ''}</p>
+    <div class="space-y-3">
+      ${filtered.length ? filtered.map(o => orderCard(o)).join('') : `
+        <div class="glass rounded-2xl p-8 text-center">
+          <i class="fas fa-inbox text-3xl text-slate-500 mb-2"></i>
+          <p class="font-bold text-white">No orders in this category</p>
+        </div>
+      `}
+    </div>
+  `;
+}
+
+function filterBtn(key, label) {
+  return `<button data-action="filter" data-id="${key}" class="px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap ${orderFilter === key ? 'bg-blue-600 text-white' : 'glass text-white'}">
+    ${label}
+  </button>`;
+}
+
+function orderCard(o) {
+  const stMap = {
+    pending: ['bg-yellow-500/20 text-yellow-300 border-yellow-400/30', 'PENDING'],
+    delivered: ['bg-green-500/20 text-green-300 border-green-400/30', 'COMPLETED'],
+    replace_requested: ['bg-orange-500/20 text-orange-300 border-orange-400/30', 'REPLACE'],
+    cancelled: ['bg-red-500/20 text-red-300 border-red-400/30', 'CANCELLED']
+  };
+  const [stCls, stLbl] = stMap[o.status] || stMap.pending;
+  const x = o.extracted || {};
+  const canDeliver = !['delivered', 'cancelled'].includes(o.status);
+  const canCancel = o.status === 'pending';
+
+  return `<div class="order-card">
+    <div class="flex justify-between items-start gap-2 mb-2">
+      <p class="font-black text-xs text-white break-all">${esc(o.orderId || o.id)}</p>
+      <span class="chip ${stCls}">${stLbl}</span>
+    </div>
+    <p class="text-sm font-black text-white">${esc(o.productTitle)} × ${esc(o.quantity)} <span class="text-blue-400">— ${esc(o.amount)}</span></p>
+    <p class="text-[11px] text-slate-400 mt-1">${esc(o.userName || 'Customer')} · ${esc(o.userEmail || '')}${o.userPhone ? ' · ' + esc(o.userPhone) : ''}</p>
+    ${o.customValue ? `<p class="text-[10px] text-indigo-300 font-bold mt-1">${esc(o.customLabel)}: ${esc(o.customValue)}</p>` : ''}
+    <div class="text-[10px] font-bold text-cyan-200 mt-2 p-1.5 rounded-lg bg-cyan-500/10 break-all">
+      ${x.amount ? 'Paid ' + esc(x.amount) : 'Amount not detected'}${x.trxId ? ' · TrxID ' + esc(x.trxId) : ''}${x.matchesAmount === false ? ' · ⚠️ mismatch' : ''}
+    </div>
+    ${o.replace ? `<p class="text-[11px] bg-amber-500/10 border border-amber-400/20 rounded-xl p-2 mt-2 text-amber-200 font-semibold">Replacement issue: ${esc(o.replace.problem)}</p>` : ''}
+    ${o.cancelReason ? `<p class="text-[11px] bg-red-500/10 border border-red-400/20 rounded-xl p-2 mt-2 text-red-200 font-semibold">Reason: ${esc(o.cancelReason)}</p>` : ''}
+
+    ${canDeliver ? `
+      <div class="mt-3 space-y-2">
+        <p class="text-[10px] font-bold text-slate-300">Delivery details (one per line: Label: Value)</p>
+        <textarea id="dbox-${o.id}" rows="4" class="input-lite" placeholder="Email: customer@email.com&#10;UID: 123456&#10;Password: your-password&#10;2FA: SECRET"></textarea>
+        <button data-action="deliver" data-id="${o.id}" class="btn-primary w-full py-2.5 rounded-xl text-xs">
+          <i class="fas fa-paper-plane mr-1"></i>${o.status === 'replace_requested' ? 'Send Replacement' : 'Submit & Deliver'}
+        </button>
+      </div>
+    ` : ''}
+    ${canCancel ? `<button data-action="cancel" data-id="${o.id}" class="btn-danger w-full py-2 rounded-xl text-xs mt-2">
+      <i class="fas fa-ban mr-1"></i>Cancel Order
+    </button>` : ''}
+    ${o.status === 'delivered' && o.delivery?.fields ? `
+      <details class="mt-2">
+        <summary class="text-[11px] font-bold text-green-300 cursor-pointer py-1">
+          <i class="fas fa-check-circle mr-1"></i>View delivered details
+        </summary>
+        <div class="bg-green-500/10 border border-green-400/20 rounded-xl p-2 mt-1 space-y-1 text-[11px]">
+          ${o.delivery.fields.map(f => `<div><b class="text-green-300">${esc(f.label)}:</b> <span class="font-mono">${esc(f.value)}</span></div>`).join('')}
+        </div>
+      </details>
+    ` : ''}
+  </div>`;
+}
+
+/* ============ PRODUCTS ============ */
+function renderProducts() {
+  return `
+    <h2 class="font-black text-sm text-white mb-3">Products (${products.length})</h2>
+    <div class="space-y-2 mb-6">
+      ${products.map(p => `
+        <div class="glass rounded-2xl p-3">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-3 flex-1">
+              <div class="w-10 h-10 ${p.bg} rounded-lg flex items-center justify-center">
+                <i class="${p.icon} ${p.color}"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="font-bold text-sm text-white">${esc(p.title)}</p>
+                <p class="text-xs text-slate-400">$${esc(p.priceUSD)}</p>
+              </div>
+            </div>
+            <button data-action="del-product" data-id="${p.id}" class="btn-danger px-3 py-2 rounded-lg text-xs">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          <details>
+            <summary class="text-[11px] font-bold text-blue-300 cursor-pointer py-1">Edit details</summary>
+            <div class="space-y-2 mt-2">
+              <input type="text" value="${esc(p.title)}" onchange="window.__updateProduct(${p.id},'title',this.value)" class="input-lite" placeholder="Title">
+              <input type="text" value="${esc(p.subtitle)}" onchange="window.__updateProduct(${p.id},'subtitle',this.value)" class="input-lite" placeholder="Subtitle">
+              <input type="number" step="0.01" value="${esc(p.priceUSD)}" onchange="window.__updateProduct(${p.id},'priceUSD',parseFloat(this.value))" class="input-lite" placeholder="Price USD">
+              <textarea onchange="window.__updateProduct(${p.id},'details',this.value)" rows="2" class="input-lite" placeholder="Details">${esc(p.details || '')}</textarea>
+            </div>
+          </details>
+        </div>
+      `).join('')}
+    </div>
+
+    <h2 class="font-black text-sm text-white mb-3">Add New Product</h2>
+    <div class="glass rounded-2xl p-4 space-y-2">
+      <input type="text" id="add-title" class="input-lite" placeholder="Title">
+      <input type="text" id="add-subtitle" class="input-lite" placeholder="Subtitle">
+      <input type="number" step="0.01" id="add-price" class="input-lite" placeholder="Price USD">
+      <textarea id="add-details" rows="2" class="input-lite" placeholder="Details"></textarea>
+      <select id="add-input-type" class="input-lite">
+        <option value="">No custom input</option>
+        <option value="name">Name input</option>
+        <option value="page_name">Page name input</option>
+      </select>
+      <button data-action="add-product" class="btn-primary w-full py-3 rounded-xl text-sm">
+        <i class="fas fa-plus mr-1"></i>Add Product & Save
+      </button>
+    </div>
+  `;
+}
+
+/* ============ PAYMENTS ============ */
+function renderPayments() {
+  const regions = ['BD', 'NG', 'US'];
+  return `
+    <h2 class="font-black text-sm text-white mb-3">Payment Accounts</h2>
+    ${regions.map(r => {
+      const set = config.payments[r] || { label: r, methods: [] };
+      return `<div class="glass rounded-2xl p-4 mb-3">
+        <p class="font-black text-sm text-white mb-3">${esc(set.label)} (${r})</p>
+        <div class="space-y-2">
+          ${set.methods.map((m, i) => `
+            <div class="bg-white/5 rounded-xl p-3 border border-white/10">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <i class="${m.icon} ${m.color}"></i>
+                  <span class="font-bold text-sm text-white">${esc(m.name)}</span>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" ${m.enabled ? 'checked' : ''} onchange="window.__toggleMethod('${r}',${i},this.checked)" class="sr-only peer">
+                  <div class="w-9 h-5 bg-slate-600 peer-checked:bg-green-500 rounded-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition peer-checked:after:translate-x-4"></div>
+                </label>
+              </div>
+              ${m.bank ? `<input type="text" value="${esc(m.bank)}" onchange="window.__updateMethod('${r}',${i},'bank',this.value)" class="input-lite mb-1" placeholder="Bank">` : ''}
+              ${m.holder ? `<input type="text" value="${esc(m.holder)}" onchange="window.__updateMethod('${r}',${i},'holder',this.value)" class="input-lite mb-1" placeholder="Holder">` : ''}
+              ${m.network ? `<input type="text" value="${esc(m.network)}" onchange="window.__updateMethod('${r}',${i},'network',this.value)" class="input-lite mb-1" placeholder="Network">` : ''}
+              <input type="text" value="${esc(m.account)}" onchange="window.__updateMethod('${r}',${i},'account',this.value)" class="input-lite font-mono" placeholder="Account">
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+    }).join('')}
+    <button data-action="save-config" class="btn-primary w-full py-3 rounded-xl text-sm mt-4">
+      <i class="fas fa-cloud-upload-alt mr-1"></i>Save All Payments
+    </button>
+  `;
+}
+
+/* ============ SUPPORT ============ */
+function renderSupport() {
+  const s = config.support || {};
+  return `
+    <h2 class="font-black text-sm text-white mb-3">Support Info</h2>
+    <div class="glass rounded-2xl p-4 space-y-3 mb-4">
+      <div>
+        <label class="text-[10px] font-bold text-slate-400 block mb-1">WhatsApp (with country code, no +)</label>
+        <input type="text" value="${esc(s.whatsapp || '')}" onchange="window.__updateSupport('whatsapp',this.value)" class="input-lite font-mono">
+      </div>
+      <div>
+        <label class="text-[10px] font-bold text-slate-400 block mb-1">Telegram username (without @)</label>
+        <input type="text" value="${esc(s.telegram || '')}" onchange="window.__updateSupport('telegram',this.value)" class="input-lite font-mono">
+      </div>
+      <div>
+        <label class="text-[10px] font-bold text-slate-400 block mb-1">Email</label>
+        <input type="email" value="${esc(s.email || '')}" onchange="window.__updateSupport('email',this.value)" class="input-lite">
+      </div>
+    </div>
+    <button data-action="save-config" class="btn-primary w-full py-3 rounded-xl text-sm">
+      <i class="fas fa-cloud-upload-alt mr-1"></i>Save Support Info
+    </button>
+
+    <h2 class="font-black text-sm text-white mb-3 mt-6">Danger Zone</h2>
+    <button data-action="reset-local" class="btn-danger w-full py-3 rounded-xl text-sm">
+      <i class="fas fa-rotate-left mr-2"></i>Reset Local Cache
+    </button>
+    <p class="text-[10px] text-slate-400 text-center mt-2">Firestore data safe — only local cache cleared</p>
+  `;
+}
+
+/* ============ ACTIONS ============ */
+async function handleAction(action, id) {
+  if (action === 'filter') {
+    orderFilter = id;
+    render();
+  } else if (action === 'filter-orders') {
+    activeTab = 'orders';
+    orderFilter = id;
+    render();
+  } else if (action === 'deliver') {
+    await deliverOrder(id);
+  } else if (action === 'cancel') {
+    await cancelOrder(id);
+  } else if (action === 'del-product') {
+    await deleteProduct(Number(id));
+  } else if (action === 'add-product') {
+    await addProduct();
+  } else if (action === 'save-config') {
+    await saveConfig();
+  } else if (action === 'reset-local') {
+    if (confirm('Clear local cache? Firebase data stays safe.')) {
+      ['naim_config_cache', 'naim_products_cache', 'naim_draft_order'].forEach(k => localStorage.removeItem(k));
+      showToast('Local cache cleared', 'bg-green-600');
+    }
+  }
+}
+
+async function deliverOrder(id) {
+  const box = document.getElementById('dbox-' + id);
+  if (!box) return;
+  const lines = box.value.split(/\r?\n/);
+  const fields = [];
+  lines.forEach(line => {
+    const m = line.match(/^\s*([^:=]{1,40})\s*[:=]\s*(.+?)\s*$/);
+    if (m && m[2]) fields.push({ label: m[1].trim(), value: m[2].trim() });
+  });
+  if (!fields.length) return showToast('Add at least one delivery field', 'bg-red-600');
+  const hasUid = fields.some(f => /uid|email|user|login/i.test(f.label));
+  const hasPass = fields.some(f => /pass/i.test(f.label));
+  if (!hasUid || !hasPass) return showToast('UID + Password required', 'bg-red-600');
+
+  try {
+    await updateDoc(doc(db, 'orders', id), {
+      status: 'delivered',
+      delivery: {
+        fields,
+        uid: fields[0].value,
+        pass: (fields.find(f => /pass/i.test(f.label)) || {}).value || ''
+      },
+      deliveredAt: Date.now(),
+      replaced: false
+    });
+    showToast('Delivered to customer', 'bg-green-600');
+  } catch (e) {
+    showToast('Failed: ' + e.message, 'bg-red-600');
+  }
+}
+
+async function cancelOrder(id) {
+  if (!confirm('Cancel this order? Customer will see it as cancelled.')) return;
+  const reason = prompt('Reason (optional, shown to customer):') || '';
+  try {
+    await updateDoc(doc(db, 'orders', id), {
+      status: 'cancelled',
+      cancelReason: reason,
+      cancelledAt: Date.now()
+    });
+    showToast('Order cancelled', 'bg-red-600');
+  } catch (e) {
+    showToast('Failed: ' + e.message, 'bg-red-600');
+  }
+}
+
+async function deleteProduct(pid) {
+  if (!confirm('Delete this product?')) return;
+  products = products.filter(p => p.id !== pid);
+  try {
+    await setDoc(doc(db, 'settings', 'products'), { list: products });
+    cacheProducts(products);
+    showToast('Product deleted', 'bg-green-600');
+    render();
+  } catch (e) {
+    showToast('Delete failed: ' + e.message, 'bg-red-600');
+  }
+}
+
+async function addProduct() {
+  const title = document.getElementById('add-title').value.trim();
+  const subtitle = document.getElementById('add-subtitle').value.trim() || 'Digital Asset';
+  const price = parseFloat(document.getElementById('add-price').value);
+  const details = document.getElementById('add-details').value.trim();
+  const inputType = document.getElementById('add-input-type').value || null;
+
+  if (!title || isNaN(price)) return showToast('Title + price required', 'bg-red-600');
+
+  products.push({
+    id: Date.now(),
+    title, subtitle, priceUSD: price, details,
+    icon: 'fas fa-box', color: 'text-slate-600', bg: 'bg-slate-100',
+    inputType,
+    inputLabel: inputType === 'page_name' ? 'Your Page Name' : (inputType === 'name' ? 'Your Desired Name' : null),
+    inputPlaceholder: inputType === 'page_name' ? 'e.g. My Business Page' : (inputType === 'name' ? 'e.g. John Smith' : null)
+  });
+
+  try {
+    await setDoc(doc(db, 'settings', 'products'), { list: products });
+    cacheProducts(products);
+    showToast('Product added', 'bg-green-600');
+    render();
+  } catch (e) {
+    showToast('Save failed: ' + e.message, 'bg-red-600');
+  }
+}
+
+async function saveConfig() {
+  try {
+    await setDoc(doc(db, 'settings', 'config'), config);
+    cacheConfig(config);
+    showToast('Saved to cloud', 'bg-green-600');
+  } catch (e) {
+    showToast('Save failed: ' + e.message, 'bg-red-600');
+  }
+}
+
+/* ============ GLOBAL HELPERS (called from inline onchange) ============ */
+window.__updateProduct = async (id, field, value) => {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  p[field] = value;
+  try {
+    await setDoc(doc(db, 'settings', 'products'), { list: products });
+    cacheProducts(products);
+    showToast('Saved', 'bg-green-600');
+  } catch (e) {
+    showToast('Save failed', 'bg-amber-600');
+  }
+};
+window.__toggleMethod = (r, i, val) => {
+  if (config.payments[r]?.methods[i]) {
+    config.payments[r].methods[i].enabled = val;
+    cacheConfig(config);
+  }
+};
+window.__updateMethod = (r, i, f, val) => {
+  if (config.payments[r]?.methods[i]) {
+    config.payments[r].methods[i][f] = val;
+    cacheConfig(config);
+  }
+};
+window.__updateSupport = (f, val) => {
+  config.support = config.support || {};
+  config.support[f] = val;
+  cacheConfig(config);
+};
+
+/* ============ LOGOUT ============ */
+document.getElementById('logout-btn').onclick = async () => {
+  if (!confirm('Logout?')) return;
+  await signOut(auth);
+  location.href = 'index.html';
+};
+</script>
+</body>
+  </html>
