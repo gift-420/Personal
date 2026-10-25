@@ -24,10 +24,21 @@ body {
   border: 1px solid rgba(224,243,255,.27);
   box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 12px 30px rgba(0,0,0,.17);
   backdrop-filter: blur(14px) saturate(145%);
+  -webkit-backdrop-filter: blur(14px) saturate(145%);
 }
 .glass-nav { background: rgba(8,22,43,.78); border-bottom: 1px solid rgba(180,225,255,.2); backdrop-filter: blur(14px); }
 .tab-btn { transition: all .15s ease; }
 .tab-btn.active { background: #2563eb; color: white; box-shadow: 0 4px 15px rgba(37,99,235,.4); }
+.notif-badge {
+  position: absolute; top: -4px; right: -4px;
+  background: #ef4444; color: white;
+  font-size: 9px; font-weight: 900;
+  border-radius: 999px; min-width: 16px; height: 16px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 4px;
+  animation: pop 0.3s ease;
+}
+@keyframes pop { 0% { transform: scale(0); } 70% { transform: scale(1.2); } 100% { transform: scale(1); } }
 </style>
 </head>
 <body class="antialiased pb-10">
@@ -43,7 +54,10 @@ body {
 </main>
 
 <script type="module">
-import { auth, onAuthStateChanged, db, collection, query, where, onSnapshot, signOut, ADMIN_EMAIL } from './js/firebase.js';
+import {
+  auth, onAuthStateChanged, signOut, ADMIN_EMAIL,
+  db, collection, query, where, onSnapshot, doc, updateDoc
+} from './js/firebase.js';
 import { renderHeader, showToast, esc } from './js/ui.js';
 import { cachedConfig } from './js/store.js';
 
@@ -51,8 +65,13 @@ renderHeader('dashboard');
 
 let currentUser = null;
 let myOrders = [];
+let notifications = [];
 let activeTab = 'pending';
+let orderUnsub = null;
+let notifUnsub = null;
+let lastNotifCount = 0;
 
+/* ============ AUTH GUARD ============ */
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     location.href = 'login.html?next=dashboard.html';
@@ -64,11 +83,15 @@ onAuthStateChanged(auth, (user) => {
   }
   currentUser = user;
   loadOrders(user);
+  loadNotifications(user);
+  requestNotifPermission();
 });
 
+/* ============ LOAD ORDERS ============ */
 function loadOrders(user) {
+  if (orderUnsub) orderUnsub();
   const q = query(collection(db, 'orders'), where('userId', '==', user.uid));
-  onSnapshot(q, (snap) => {
+  orderUnsub = onSnapshot(q, (snap) => {
     myOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }))
       .sort((a, b) => (b.createdMs || 0) - (a.createdMs || 0));
     document.getElementById('loading').classList.add('hidden');
@@ -79,7 +102,52 @@ function loadOrders(user) {
   });
 }
 
+/* ============ LOAD NOTIFICATIONS ============ */
+function loadNotifications(user) {
+  if (notifUnsub) notifUnsub();
+  const nq = query(collection(db, 'notifications'), where('userId', '==', user.uid));
+  notifUnsub = onSnapshot(nq, (snap) => {
+    const list = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (b.createdMs || 0) - (a.createdMs || 0));
+
+    // New notification toast (skip first load)
+    if (lastNotifCount > 0 && list.length > lastNotifCount) {
+      const newest = list[0];
+      if (!newest.read) {
+        showToast(newest.title + ' — ' + newest.body, 'bg-green-600');
+        if (window.Notification && Notification.permission === 'granted') {
+          try { new Notification(newest.title, { body: newest.body }); } catch {}
+        }
+      }
+    }
+    lastNotifCount = list.length;
+    notifications = list;
+    render();
+  });
+}
+
+function requestNotifPermission() {
+  if (window.Notification && Notification.permission === 'default') {
+    setTimeout(() => Notification.requestPermission(), 3000);
+  }
+}
+
+/* ============ RENDER ============ */
 function render() {
+  if (!currentUser) return;
+
+  const now = new Date();
+  const isToday = o => {
+    const d = o.createdMs ? new Date(o.createdMs) : null;
+    return d && d.toDateString() === now.toDateString();
+  };
+  const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+
+  const todayCount = myOrders.filter(isToday).length;
+  const weekCount = myOrders.filter(o => (o.createdMs || 0) >= weekAgo).length;
+  const recentOrders = myOrders.slice(0, 3);
+  const unreadCount = notifications.filter(n => !n.read).length;
+
   const stats = {
     pending: myOrders.filter(o => !['delivered', 'cancelled', 'replace_requested'].includes(o.status)).length,
     done: myOrders.filter(o => o.status === 'delivered').length,
@@ -95,16 +163,89 @@ function render() {
   const wa = String((cfg.support || {}).whatsapp || '').replace(/\D/g, '');
 
   document.getElementById('content').innerHTML = `
-    <div class="glass rounded-2xl p-5 mb-4 bg-gradient-to-br from-blue-900/40 to-cyan-900/20">
-      <p class="text-[10px] uppercase tracking-[.2em] font-bold text-sky-300">YOUR ACCOUNT</p>
+    <!-- Welcome card -->
+    <div class="glass rounded-2xl p-5 mb-4" style="background:linear-gradient(125deg,rgba(27,109,214,.55),rgba(37,191,231,.25) 48%,rgba(129,104,255,.28))">
+      <p class="text-[10px] uppercase tracking-[.2em] font-bold text-sky-200">YOUR ACCOUNT</p>
       <h1 class="text-2xl font-black text-white mt-1">Welcome, ${esc(currentUser.displayName || 'Customer')}</h1>
-      <p class="text-xs text-slate-300 mt-1 break-all">${esc(currentUser.email)}</p>
-      <div class="flex items-center justify-between mt-3 p-2 rounded-xl bg-white/10 border border-white/15">
+      <p class="text-xs text-slate-200 mt-1 break-all">${esc(currentUser.email)}</p>
+      <div class="flex items-center justify-between mt-3 p-2 rounded-xl bg-white/15 border border-white/20">
         <span class="text-xs font-bold text-white">Total Orders</span>
         <span class="text-2xl font-black text-white">${myOrders.length}</span>
       </div>
     </div>
 
+    <!-- Today / Week stats -->
+    <div class="grid grid-cols-2 gap-3 mb-3">
+      <div class="glass rounded-2xl p-3">
+        <div class="flex items-center gap-2 mb-1">
+          <div class="w-8 h-8 bg-cyan-500/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-calendar-day text-cyan-400 text-sm"></i>
+          </div>
+          <p class="text-[10px] font-bold text-slate-300 uppercase">Today</p>
+        </div>
+        <p class="text-2xl font-black text-white">${todayCount}</p>
+        <p class="text-[9px] text-slate-400">orders today</p>
+      </div>
+      <div class="glass rounded-2xl p-3">
+        <div class="flex items-center gap-2 mb-1">
+          <div class="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-clock-rotate-left text-purple-400 text-sm"></i>
+          </div>
+          <p class="text-[10px] font-bold text-slate-300 uppercase">Last 7 days</p>
+        </div>
+        <p class="text-2xl font-black text-white">${weekCount}</p>
+        <p class="text-[9px] text-slate-400">recent orders</p>
+      </div>
+    </div>
+
+    <!-- Notifications preview -->
+    ${notifications.length ? `
+    <div class="glass rounded-2xl p-4 mb-3">
+      <div class="flex justify-between items-center mb-2">
+        <h2 class="font-black text-sm text-white">
+          <i class="fas fa-bell text-yellow-400 mr-1"></i>Notifications
+          ${unreadCount > 0 ? `<span class="notif-badge" style="position:static;display:inline-flex;margin-left:6px">${unreadCount}</span>` : ''}
+        </h2>
+        <button onclick="window.__markAllRead()" class="text-[10px] font-bold text-blue-400 hover:text-blue-300">
+          Mark all read
+        </button>
+      </div>
+      ${notifications.slice(0, 3).map(n => `
+        <div class="py-2 border-b border-white/10 last:border-0 flex justify-between items-start gap-2 ${n.read ? 'opacity-50' : ''}">
+          <div class="flex-1 min-w-0">
+            <p class="text-xs font-bold text-white">${esc(n.title)}</p>
+            <p class="text-[11px] text-slate-300">${esc(n.body)}</p>
+            <p class="text-[9px] text-slate-500 mt-0.5">${new Date(n.createdMs || 0).toLocaleString()}</p>
+          </div>
+          ${!n.read ? `<span class="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></span>` : ''}
+        </div>
+      `).join('')}
+    </div>
+    ` : ''}
+
+    <!-- Recent orders -->
+    <div class="glass rounded-2xl p-4 mb-3">
+      <div class="flex justify-between items-center mb-2">
+        <h2 class="font-black text-sm text-white">
+          <i class="fas fa-bolt text-yellow-400 mr-1"></i>Recent Orders
+        </h2>
+        <span class="text-[10px] font-bold text-slate-400">Last 3</span>
+      </div>
+      ${recentOrders.length ? recentOrders.map(o => `
+        <div class="py-2 border-b border-white/10 last:border-0 flex justify-between items-start gap-2">
+          <div class="flex-1 min-w-0">
+            <p class="text-xs font-bold text-white truncate">${esc(o.productTitle)} × ${esc(o.quantity)}</p>
+            <p class="text-[10px] text-slate-400">${esc(o.orderId || o.id)}</p>
+          </div>
+          <div class="text-right shrink-0">
+            <p class="text-xs font-black text-blue-400">${esc(o.amount)}</p>
+            <p class="text-[9px] text-slate-500">${new Date(o.createdMs || 0).toLocaleDateString()}</p>
+          </div>
+        </div>
+      `).join('') : '<p class="text-xs text-slate-400 text-center py-2">No orders yet</p>'}
+    </div>
+
+    <!-- Status stat cards -->
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
       ${statCard('pending', 'Pending', 'fa-clock', stats.pending, '#7dd3fc', 'bg-sky-500/15')}
       ${statCard('delivered', 'Completed', 'fa-circle-check', stats.done, '#6ee7b7', 'bg-emerald-500/15')}
@@ -112,13 +253,15 @@ function render() {
       ${statCard('cancelled', 'Cancelled', 'fa-circle-xmark', stats.cancel, '#fda4af', 'bg-rose-500/15')}
     </div>
 
-    <div class="flex gap-2 mb-4 overflow-x-auto">
+    <!-- Tabs -->
+    <div class="flex gap-2 mb-4 overflow-x-auto pb-1">
       ${tabBtn('pending', 'Pending')}
       ${tabBtn('delivered', 'Completed')}
       ${tabBtn('replace_requested', 'Replace')}
       ${tabBtn('cancelled', 'Cancelled')}
     </div>
 
+    <!-- Orders list -->
     <div class="space-y-3">
       ${filtered.length ? filtered.map(o => orderCard(o)).join('') : `<div class="glass rounded-2xl p-8 text-center">
         <i class="fas fa-inbox text-3xl text-slate-500 mb-2"></i>
@@ -126,9 +269,10 @@ function render() {
       </div>`}
     </div>
 
+    <!-- Bottom actions -->
     <div class="grid grid-cols-2 gap-3 mt-6">
       <a href="index.html" class="py-3 text-center bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm">
-        <i class="fas fa-store mr-1"></i> Continue Shopping
+        <i class="fas fa-store mr-1"></i> Shop
       </a>
       <button id="logout-btn" class="py-3 bg-red-500/15 border border-red-400/30 text-red-300 font-bold rounded-xl text-sm">
         <i class="fas fa-sign-out-alt mr-1"></i> Logout
@@ -172,6 +316,18 @@ function orderCard(o) {
   const [stClass, stLabel] = statusMap[o.status] || statusMap.pending;
   const delivery = o.delivery?.fields || [];
 
+  // Replace window: 2 hours after delivery
+  let replaceBtn = '';
+  if (o.status === 'delivered' && !o.replaced) {
+    const left = (o.deliveredAt || 0) + 2 * 60 * 60 * 1000 - Date.now();
+    if (left > 0) {
+      const mins = Math.ceil(left / 60000);
+      replaceBtn = `<button data-replace="${o.id}" class="w-full py-2.5 mt-2 bg-orange-500/20 border border-orange-400/40 text-orange-200 font-black rounded-xl text-xs">
+        <i class="fas fa-arrows-rotate mr-1"></i>Request Replace (${mins} min left)
+      </button>`;
+    }
+  }
+
   return `<div class="glass rounded-2xl p-4">
     <div class="flex justify-between items-start gap-2 mb-2">
       <p class="font-black text-xs text-white break-all">${esc(o.orderId)}</p>
@@ -195,19 +351,54 @@ function orderCard(o) {
         `).join('')}
       </div>
     ` : ''}
+    ${replaceBtn}
   </div>`;
 }
 
+/* ============ GLOBAL HANDLERS ============ */
 window.__setTab = (tab) => {
   activeTab = tab;
   render();
 };
 
-// Copy handlers
-document.addEventListener('click', (e) => {
-  if (e.target.dataset.copy) {
-    navigator.clipboard.writeText(e.target.dataset.copy);
+window.__markAllRead = async () => {
+  const unread = notifications.filter(n => !n.read);
+  if (!unread.length) return;
+  try {
+    for (const n of unread) {
+      await updateDoc(doc(db, 'notifications', n.id), { read: true });
+    }
+    showToast('All notifications marked read', 'bg-green-600');
+  } catch (e) {
+    showToast('Failed: ' + e.message, 'bg-red-600');
+  }
+};
+
+/* Copy + Replace handlers (delegated) */
+document.addEventListener('click', async (e) => {
+  // Copy
+  const copyBtn = e.target.closest('[data-copy]');
+  if (copyBtn) {
+    navigator.clipboard.writeText(copyBtn.dataset.copy);
     showToast('Copied', 'bg-green-600');
+    return;
+  }
+
+  // Replace request
+  const repBtn = e.target.closest('[data-replace]');
+  if (repBtn) {
+    const id = repBtn.dataset.replace;
+    const problem = prompt('What is the problem with this account?');
+    if (!problem || !problem.trim()) return;
+    try {
+      await updateDoc(doc(db, 'orders', id), {
+        status: 'replace_requested',
+        replace: { problem: problem.trim(), at: Date.now() }
+      });
+      showToast('Replace request sent to admin', 'bg-green-600');
+    } catch (err) {
+      showToast('Failed: ' + err.message, 'bg-red-600');
+    }
   }
 });
 </script>
