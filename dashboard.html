@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>My Dashboard — NAIM</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script>
+tailwind.config = { theme: { extend: { fontFamily: { sans: ['Outfit', 'sans-serif'] } }}}
+</script>
+<style>
+body {
+  background: radial-gradient(ellipse at 8% 0%, rgba(22,119,255,.35), transparent 34%),
+    radial-gradient(ellipse at 92% 18%, rgba(55,224,255,.19), transparent 30%),
+    radial-gradient(ellipse at 80% 90%, rgba(133,89,255,.2), transparent 34%),
+    linear-gradient(145deg, #040a16 0%, #0a1a33 46%, #06101f 100%);
+  background-attachment: fixed; min-height: 100vh; color: #f3f8ff;
+}
+::-webkit-scrollbar { display: none; }
+.glass {
+  background: linear-gradient(135deg, rgba(255,255,255,.17), rgba(113,177,255,.075) 42%, rgba(255,255,255,.055));
+  border: 1px solid rgba(224,243,255,.27);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 12px 30px rgba(0,0,0,.17);
+  backdrop-filter: blur(14px) saturate(145%);
+}
+.glass-nav { background: rgba(8,22,43,.78); border-bottom: 1px solid rgba(180,225,255,.2); backdrop-filter: blur(14px); }
+.tab-btn { transition: all .15s ease; }
+.tab-btn.active { background: #2563eb; color: white; box-shadow: 0 4px 15px rgba(37,99,235,.4); }
+</style>
+</head>
+<body class="antialiased pb-10">
+
+<header id="site-header"></header>
+
+<main class="max-w-3xl mx-auto px-4 py-6">
+  <div id="loading" class="glass rounded-2xl p-8 text-center">
+    <i class="fas fa-spinner fa-spin text-3xl text-blue-400"></i>
+    <p class="mt-3 text-slate-300 text-sm">Loading dashboard...</p>
+  </div>
+  <div id="content" class="hidden"></div>
+</main>
+
+<script type="module">
+import { auth, onAuthStateChanged, db, collection, query, where, onSnapshot, signOut, ADMIN_EMAIL } from './js/firebase.js';
+import { renderHeader, showToast, esc } from './js/ui.js';
+import { cachedConfig } from './js/store.js';
+
+renderHeader('dashboard');
+
+let currentUser = null;
+let myOrders = [];
+let activeTab = 'pending';
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    location.href = 'login.html?next=dashboard.html';
+    return;
+  }
+  if (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+    location.href = 'admin.html';
+    return;
+  }
+  currentUser = user;
+  loadOrders(user);
+});
+
+function loadOrders(user) {
+  const q = query(collection(db, 'orders'), where('userId', '==', user.uid));
+  onSnapshot(q, (snap) => {
+    myOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (b.createdMs || 0) - (a.createdMs || 0));
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('content').classList.remove('hidden');
+    render();
+  }, (err) => {
+    document.getElementById('loading').innerHTML = `<p class="text-red-400 font-bold">Error: ${esc(err.message)}</p>`;
+  });
+}
+
+function render() {
+  const stats = {
+    pending: myOrders.filter(o => !['delivered', 'cancelled', 'replace_requested'].includes(o.status)).length,
+    done: myOrders.filter(o => o.status === 'delivered').length,
+    replace: myOrders.filter(o => o.status === 'replace_requested').length,
+    cancel: myOrders.filter(o => o.status === 'cancelled').length
+  };
+
+  const filtered = activeTab === 'pending'
+    ? myOrders.filter(o => !['delivered', 'cancelled', 'replace_requested'].includes(o.status))
+    : myOrders.filter(o => o.status === activeTab);
+
+  const cfg = cachedConfig() || { support: { whatsapp: '8801773204904' } };
+  const wa = String((cfg.support || {}).whatsapp || '').replace(/\D/g, '');
+
+  document.getElementById('content').innerHTML = `
+    <div class="glass rounded-2xl p-5 mb-4 bg-gradient-to-br from-blue-900/40 to-cyan-900/20">
+      <p class="text-[10px] uppercase tracking-[.2em] font-bold text-sky-300">YOUR ACCOUNT</p>
+      <h1 class="text-2xl font-black text-white mt-1">Welcome, ${esc(currentUser.displayName || 'Customer')}</h1>
+      <p class="text-xs text-slate-300 mt-1 break-all">${esc(currentUser.email)}</p>
+      <div class="flex items-center justify-between mt-3 p-2 rounded-xl bg-white/10 border border-white/15">
+        <span class="text-xs font-bold text-white">Total Orders</span>
+        <span class="text-2xl font-black text-white">${myOrders.length}</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+      ${statCard('pending', 'Pending', 'fa-clock', stats.pending, '#7dd3fc', 'bg-sky-500/15')}
+      ${statCard('delivered', 'Completed', 'fa-circle-check', stats.done, '#6ee7b7', 'bg-emerald-500/15')}
+      ${statCard('replace_requested', 'Replace', 'fa-arrows-rotate', stats.replace, '#c4b5fd', 'bg-violet-500/15')}
+      ${statCard('cancelled', 'Cancelled', 'fa-circle-xmark', stats.cancel, '#fda4af', 'bg-rose-500/15')}
+    </div>
+
+    <div class="flex gap-2 mb-4 overflow-x-auto">
+      ${tabBtn('pending', 'Pending')}
+      ${tabBtn('delivered', 'Completed')}
+      ${tabBtn('replace_requested', 'Replace')}
+      ${tabBtn('cancelled', 'Cancelled')}
+    </div>
+
+    <div class="space-y-3">
+      ${filtered.length ? filtered.map(o => orderCard(o)).join('') : `<div class="glass rounded-2xl p-8 text-center">
+        <i class="fas fa-inbox text-3xl text-slate-500 mb-2"></i>
+        <p class="font-bold text-white">No ${activeTab} orders yet</p>
+      </div>`}
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 mt-6">
+      <a href="index.html" class="py-3 text-center bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm">
+        <i class="fas fa-store mr-1"></i> Continue Shopping
+      </a>
+      <button id="logout-btn" class="py-3 bg-red-500/15 border border-red-400/30 text-red-300 font-bold rounded-xl text-sm">
+        <i class="fas fa-sign-out-alt mr-1"></i> Logout
+      </button>
+    </div>
+
+    <a href="https://wa.me/${wa}" target="_blank" rel="noopener" class="block mt-3 py-3 text-center glass text-white font-bold rounded-xl text-sm">
+      <i class="fab fa-whatsapp text-green-400 mr-1"></i> Contact Support
+    </a>
+  `;
+
+  document.getElementById('logout-btn').onclick = async () => {
+    await signOut(auth);
+    location.href = 'index.html';
+  };
+}
+
+function statCard(tab, label, icon, count, color, bg) {
+  return `<button onclick="window.__setTab('${tab}')" class="glass rounded-2xl p-3 text-left ${activeTab === tab ? 'ring-2 ring-blue-400' : ''}">
+    <div class="w-10 h-10 ${bg} rounded-xl flex items-center justify-center mb-2" style="color:${color}">
+      <i class="fas ${icon}"></i>
+    </div>
+    <p class="text-xs font-bold text-slate-300">${label}</p>
+    <p class="text-2xl font-black text-white">${count}</p>
+  </button>`;
+}
+
+function tabBtn(tab, label) {
+  return `<button onclick="window.__setTab('${tab}')" class="tab-btn ${activeTab === tab ? 'active' : 'glass text-white'} px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap">
+    ${label}
+  </button>`;
+}
+
+function orderCard(o) {
+  const statusMap = {
+    pending: ['bg-yellow-500/20 text-yellow-300 border-yellow-400/30', 'PENDING'],
+    delivered: ['bg-green-500/20 text-green-300 border-green-400/30', 'COMPLETED'],
+    replace_requested: ['bg-orange-500/20 text-orange-300 border-orange-400/30', 'REPLACE'],
+    cancelled: ['bg-red-500/20 text-red-300 border-red-400/30', 'CANCELLED']
+  };
+  const [stClass, stLabel] = statusMap[o.status] || statusMap.pending;
+  const delivery = o.delivery?.fields || [];
+
+  return `<div class="glass rounded-2xl p-4">
+    <div class="flex justify-between items-start gap-2 mb-2">
+      <p class="font-black text-xs text-white break-all">${esc(o.orderId)}</p>
+      <span class="text-[10px] font-black px-2 py-0.5 rounded border ${stClass}">${stLabel}</span>
+    </div>
+    <p class="text-sm font-black text-white">${esc(o.productTitle)} × ${esc(o.quantity)} <span class="text-blue-400">— ${esc(o.amount)}</span></p>
+    ${o.customValue ? `<p class="text-[11px] text-indigo-300 mt-1">${esc(o.customLabel)}: ${esc(o.customValue)}</p>` : ''}
+    ${o.status === 'pending' ? '<p class="text-[10px] text-amber-300 font-bold mt-2"><i class="fas fa-hourglass-half mr-1"></i>Admin is checking your payment</p>' : ''}
+    ${o.status === 'cancelled' ? `<p class="text-[11px] text-red-300 bg-red-500/10 border border-red-400/20 rounded-lg p-2 mt-2"><i class="fas fa-ban mr-1"></i>${esc(o.cancelReason || 'Order cancelled')}</p>` : ''}
+    ${o.status === 'replace_requested' ? '<p class="text-[10px] text-orange-300 font-bold mt-2"><i class="fas fa-arrows-rotate mr-1"></i>Replace requested — waiting for new account</p>' : ''}
+    ${o.status === 'delivered' && delivery.length ? `
+      <div class="bg-green-500/10 border border-green-400/20 rounded-lg p-2 mt-2 space-y-1.5">
+        ${delivery.map(f => `
+          <div>
+            <p class="text-[9px] font-bold text-green-300 uppercase">${esc(f.label)}</p>
+            <p class="font-mono text-xs text-white break-all flex items-start gap-1">
+              ${esc(f.value)}
+              <button data-copy="${esc(f.value)}" class="text-[10px] bg-white/10 px-1.5 py-0.5 rounded font-bold shrink-0">copy</button>
+            </p>
+          </div>
+        `).join('')}
+      </div>
+    ` : ''}
+  </div>`;
+}
+
+window.__setTab = (tab) => {
+  activeTab = tab;
+  render();
+};
+
+// Copy handlers
+document.addEventListener('click', (e) => {
+  if (e.target.dataset.copy) {
+    navigator.clipboard.writeText(e.target.dataset.copy);
+    showToast('Copied', 'bg-green-600');
+  }
+});
+</script>
+</body>
+</html>
